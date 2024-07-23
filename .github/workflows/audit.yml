@@ -1,0 +1,16 @@
+name: Audit
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  audit:
+    uses: inrupt/typescript-sdk-tools/.github/workflows/reusable-audit.yml@v3
+    secrets:
+      WEBHOOK_E2E_FAILURE: "REQUIRED BUT ONLY USED FOR SCHEDULED RUNS"

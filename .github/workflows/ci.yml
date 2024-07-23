@@ -1,0 +1,44 @@
+name: Wallet Frontend Application CI
+
+on:
+  pull_request: {}
+  push:
+    branches: [ main ]
+
+env:
+  CI: true
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    uses: inrupt/typescript-sdk-tools/.github/workflows/reusable-lint.yml@v3
+
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest ]
+        node-version: [ "20.x" ]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+      - run: npm ci
+
+  sonarqube:
+    name: run sonarqube
+    if: ${{ github.actor != 'dependabot[bot]' }}
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checking out
+        uses: actions/checkout@v4
+        with:
+          # Disabling shallow clone is recommended for improving relevancy of reporting
+          fetch-depth: 0
+      - name: SonarQube Scan
+        uses: kitabisa/sonarqube-action@v1.2.1
+        with:
+          host: ${{ secrets.SONARQUBE_HOST }}
+          login: ${{ secrets.SONARQUBE_DEV_INRUPT_COM_GITHUB_TOKEN }}

@@ -74,6 +74,13 @@ WALLET_UPLOAD_KEY_PASSWORD=<keystore password>
 
 ## Running
 
+If you are going to run the application in an emulator or simulator, you need to build the development version using
+one of the following:
+   ```bash
+    npm run android
+    npm run ios
+   ```
+
 Start the application:
 
    ```bash

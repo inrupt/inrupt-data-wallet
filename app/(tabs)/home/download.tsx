@@ -47,7 +47,7 @@ const Page: React.FC<FileDetailProps> = () => {
     },
     onError: (error) => {
       // TODO: there needs to be better error handling here...
-      console.warn(error)
+      console.warn(error);
     },
     mutationKey: ["filesMutation"],
   });
@@ -61,10 +61,10 @@ const Page: React.FC<FileDetailProps> = () => {
   const { goBack } = useNavigation();
   const onSaveToWallet = async () => {
     mutation.mutate({
-        uri: uri as String,
-        name: fileName,
-        contentType: contentType
-    })
+      uri: uri as string,
+      name: fileName,
+      contentType,
+    });
     goBack();
   };
   useLayoutEffect(() => {

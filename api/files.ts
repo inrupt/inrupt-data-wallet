@@ -35,26 +35,36 @@ export const postFile = async (file: FileObject): Promise<void> => {
   const formData = new FormData();
   formData.append("file", {
     name: file.name,
-    type: file.contentType || mime.getType(file.name) || "application/octet-stream",
+    type:
+      file.contentType || mime.getType(file.name) || "application/octet-stream",
     uri: file.uri,
   } as unknown as Blob);
 
   try {
-    const response = await fetch(`${process.env.EXPO_PUBLIC_WALLET_API}/wallet`, {
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_WALLET_API}/wallet`,
+      {
         method: "PUT",
         body: formData,
-    });
+      }
+    );
 
     if (response.ok) {
-        console.debug("Uploaded file to Wallet. HTTP response status:" + response.status);
+      console.debug(
+        `Uploaded file to Wallet. HTTP response status:${response.status}`
+      );
     } else {
-      throw Error("Failed to upload file to Wallet. HTTP response status from Wallet Backend service:" +
-        response.status);
+      throw Error(
+        `Failed to upload file to Wallet. HTTP response status from Wallet Backend service:${
+          response.status
+        }`
+      );
     }
   } catch (error) {
-    throw Error("Failed to retrieve and upload file to Wallet", { cause: error });
+    throw Error("Failed to retrieve and upload file to Wallet", {
+      cause: error,
+    });
   }
-
 };
 
 export const deleteFile = async (fileId: string): Promise<void> => {

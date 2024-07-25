@@ -32,19 +32,29 @@ export const fetchFiles = async (): Promise<WalletFile[]> => {
 };
 
 export const postFile = async (file: FileObject): Promise<void> => {
-  console.log(process.env.EXPO_PUBLIC_WALLET_API);
-
   const formData = new FormData();
   formData.append("file", {
     name: file.name,
-    type: mime.getType(file.name) || "application/octet-stream",
+    type: file.contentType || mime.getType(file.name) || "application/octet-stream",
     uri: file.uri,
   } as unknown as Blob);
 
-  await fetch(`${process.env.EXPO_PUBLIC_WALLET_API}/wallet`, {
-    method: "PUT",
-    body: formData,
-  });
+  try {
+    const response = await fetch(`${process.env.EXPO_PUBLIC_WALLET_API}/wallet`, {
+        method: "PUT",
+        body: formData,
+    });
+
+    if (response.ok) {
+        console.debug("Uploaded file to Wallet. HTTP response status:" + response.status);
+    } else {
+      throw Error("Failed to upload file to Wallet. HTTP response status from Wallet Backend service:" +
+        response.status);
+    }
+  } catch (error) {
+    throw Error("Failed to retrieve and upload file to Wallet", { cause: error });
+  }
+
 };
 
 export const deleteFile = async (fileId: string): Promise<void> => {
@@ -55,12 +65,5 @@ export const getFile = async (fileId: string): Promise<Blob> => {
   return makeApiRequest<Blob>(
     `wallet/${encodeURIComponent(fileId)}?raw=true`,
     "GET"
-  );
-};
-
-export const collectFileToPod = async (uri: string): Promise<Blob> => {
-  return makeApiRequest<Blob>(
-    `wallet/collect?url=${encodeURIComponent(uri)}`,
-    "PUT"
   );
 };

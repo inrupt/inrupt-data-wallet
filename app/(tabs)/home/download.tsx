@@ -24,7 +24,7 @@ import { useLocalSearchParams, useNavigation } from "expo-router";
 import { ThemedText } from "@/components/ThemedText";
 import CustomButton from "@/components/Button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { collectFileToPod } from "@/api/files";
+import { postFile } from "@/api/files";
 import { FontAwesome6 } from "@expo/vector-icons";
 import IconResourceName from "@/components/common/IconResourceName";
 import { RDF_CONTENT_TYPE } from "@/utils/constants";
@@ -41,9 +41,13 @@ const Page: React.FC<FileDetailProps> = () => {
   const parentNavigation = useNavigation("/(tabs)");
 
   const mutation = useMutation({
-    mutationFn: collectFileToPod,
+    mutationFn: postFile,
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["files"] });
+    },
+    onError: (error) => {
+      // TODO: there needs to be better error handling here...
+      console.warn(error);
     },
     mutationKey: ["filesMutation"],
   });
@@ -56,7 +60,11 @@ const Page: React.FC<FileDetailProps> = () => {
 
   const { goBack } = useNavigation();
   const onSaveToWallet = async () => {
-    mutation.mutate(uri as string);
+    mutation.mutate({
+      uri: uri as string,
+      name: fileName,
+      contentType,
+    });
     goBack();
   };
   useLayoutEffect(() => {

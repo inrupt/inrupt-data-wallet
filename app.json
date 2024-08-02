@@ -31,7 +31,12 @@
     "plugins": [
       "expo-router",
       "expo-secure-store",
-      "@config-plugins/detox"
+      "@config-plugins/detox",
+      ["expo-build-properties", {
+        "android": {
+          "allowBackup": false
+        }
+      }]
     ],
     "experiments": {
       "typedRoutes": true

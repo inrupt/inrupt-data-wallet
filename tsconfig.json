@@ -17,7 +17,6 @@
     "resolveJsonModule": true,
     "target": "ESNext",
     "moduleResolution": "node",
-    "noEmit": true
   },
   "include": [
     "**/*.ts",

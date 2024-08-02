@@ -23,6 +23,7 @@ import { useQuery } from "@tanstack/react-query";
 import { StyleSheet, View } from "react-native";
 import WebIdAccessGrantList from "@/components/accessGrants/WebIdAccessGrantList";
 import useRefreshOnFocus from "@/hooks/useRefreshOnFocus";
+import type { AccessGrantGroup } from "@/types/accessGrant";
 
 export default function AccessGrantScreen() {
   const {

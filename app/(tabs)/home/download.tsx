@@ -63,7 +63,7 @@ const Page: React.FC<FileDetailProps> = () => {
     mutation.mutate({
       uri: uri as string,
       name: fileName,
-      contentType,
+      type: contentType as string,
     });
     goBack();
   };

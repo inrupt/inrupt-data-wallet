@@ -24,6 +24,7 @@ import { FlatList, StyleSheet, View } from "react-native";
 import WebIdAccessGrantCard from "@/components/accessGrants/WebIdAccessGrantCard";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
+import type { AccessGrantGroup } from "@/types/accessGrant";
 import Loading from "../LoadingButton";
 
 interface WebIdAccessGrantListProps

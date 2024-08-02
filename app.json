@@ -21,7 +21,13 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.inrupt.wallet"
+      "package": "com.inrupt.wallet",
+      "blockedPermissions": [
+          "android.permission.RECORD_AUDIO",
+          "android.permission.READ_EXTERNAL_STORAGE",
+          "android.permission.WRITE_EXTERNAL_STORAGE"
+        ],
+        "allowBackup": false
     },
     "web": {
       "bundler": "metro",
@@ -34,7 +40,7 @@
       "@config-plugins/detox",
       ["expo-build-properties", {
         "android": {
-          "allowBackup": false
+          "usesCleartextTraffic": false
         }
       }]
     ],

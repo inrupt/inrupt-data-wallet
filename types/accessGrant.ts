@@ -35,7 +35,7 @@ export interface AccessGrant {
   modes: AccessRequestMode[];
 }
 
-interface AccessGrantGroup {
+export interface AccessGrantGroup {
   webId: string;
   logo: string;
   ownerName: string;

@@ -80,9 +80,7 @@ export const makeApiRequest = async <T>(
   return result;
 };
 
-export const objectToParams = (
-  obj: Record<string, string | number | boolean | null | undefined>
-): string => {
+export const objectToParams = (obj: object): string => {
   const params = new URLSearchParams();
 
   Object.entries(obj).forEach(([key, value]) => {

@@ -18,26 +18,17 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-import type { AccessRequestMode } from "./enums";
-
-interface AccessGrant {
-  uuid: string;
-  identifier: string;
+export interface AccessPromptQR {
   webId: string;
-  logo: string;
-  ownerName: string;
-  resource: string;
-  resourceName: string;
-  forPurpose: string;
-  expirationDate: Date;
-  issuedDate: Date;
-  isRDFResource: boolean;
-  modes: AccessRequestMode[];
+  accessPromptUrl: string;
+  type: string;
 }
 
-interface AccessGrantGroup {
+export interface AccessPromptResource {
   webId: string;
+  accessPromptUrl: string;
+  resource: string;
+  resourceName: string;
   logo: string;
   ownerName: string;
-  items: AccessGrant[];
 }

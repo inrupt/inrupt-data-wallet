@@ -35,8 +35,7 @@ export const postFile = async (file: FileObject): Promise<void> => {
   const formData = new FormData();
   formData.append("file", {
     name: file.name,
-    type:
-      file.contentType || mime.getType(file.name) || "application/octet-stream",
+    type: file.type || mime.getType(file.name) || "application/octet-stream",
     uri: file.uri,
   } as unknown as Blob);
 

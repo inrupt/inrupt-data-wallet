@@ -28,6 +28,7 @@ import { fetchFiles } from "@/api/files";
 import FileList from "@/components/files/FileList";
 import useRefreshOnFocus from "@/hooks/useRefreshOnFocus";
 import { Colors } from "@/constants/Colors";
+import type { WalletFile } from "@/types/WalletFile";
 
 const HomeScreen = () => {
   const { data, isLoading, isFetching, refetch } = useQuery<WalletFile[]>({

@@ -30,6 +30,7 @@ import * as FileSystem from "expo-file-system";
 import QRCode from "react-native-qrcode-svg";
 import { formatResourceName } from "@/utils/fileUtils";
 import type { UserInfo } from "@/constants/user";
+import type { WalletFile } from "@/types/WalletFile";
 import { ThemedText } from "../ThemedText";
 import ConfirmModal from "../common/ConfirmModal";
 

@@ -19,6 +19,7 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 import mime from "mime";
+import type { WalletFile } from "@/types/WalletFile";
 import { makeApiRequest } from "./apiRequest";
 
 interface FileObject {

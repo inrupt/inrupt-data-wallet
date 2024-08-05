@@ -33,6 +33,7 @@ import { faEllipsis } from "@fortawesome/free-solid-svg-icons/faEllipsis";
 import { useRouter } from "expo-router";
 import { useIsMutating } from "@tanstack/react-query";
 import Loading from "@/components/LoadingButton";
+import type { WalletFile } from "@/types/WalletFile";
 import BottomModal from "./BottomModal";
 import { ThemedText } from "../ThemedText";
 

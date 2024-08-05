@@ -31,6 +31,7 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import VcCard from "@/components/files/VcCard";
 import BottomModal from "@/components/files/BottomModal";
+import type { WalletFile } from "@/types/WalletFile";
 
 interface FileDetailProps {
   file: WalletFile;

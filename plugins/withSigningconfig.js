@@ -18,37 +18,42 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-const { withAppBuildGradle, withGradleProperties } = require("expo/config-plugins");
+const {
+  withAppBuildGradle,
+  withGradleProperties,
+} = require("expo/config-plugins");
 const { readFile } = require("fs/promises");
 
-
-module.exports = function withSigningConfig(
-  config,
-) {
+module.exports = function withSigningConfig(config) {
   // Add path to gradle signing snippet to gradle.properties.
   // This is then used by the android/app/build.gradle mod.
   withGradleProperties(config, async (gradleProps) => {
     gradleProps.modResults.push({
-      "type": "comment",
-      "value": "Path to the signing configuration gradle snippet"
+      type: "comment",
+      value: "Path to the signing configuration gradle snippet",
     });
     if (process.env.SIGNING_CONFIG_PATH === undefined) {
       throw new Error("Missing environment variable SIGNING_CONFIG_PATH");
     }
     gradleProps.modResults.push({
-      "type": "property",
-      "key": "inrupt.wallet.frontend.signing",
-      "value": process.env.SIGNING_CONFIG_PATH
+      type: "property",
+      key: "inrupt.wallet.frontend.signing",
+      value: process.env.SIGNING_CONFIG_PATH,
     });
-    return gradleProps
-  })
+    return gradleProps;
+  });
   // Append a block to android/app/build.gradle to reuse signing config
   // from /android-config/signing-config.gradle.
   withAppBuildGradle(config, async (buildGradle) => {
+    const updatedBuildGradle = { ...buildGradle };
     // The following path is relative to the project root
-    const buildGradleSnippet = await readFile("./android-config/extend-build.gradle", { encoding: "utf8" });
-    buildGradle.modResults.contents = buildGradle.modResults.contents.concat("\n", buildGradleSnippet)
-    return buildGradle;
-  })
+    const buildGradleSnippet = await readFile(
+      "./android-config/extend-build.gradle",
+      { encoding: "utf8" }
+    );
+    updatedBuildGradle.modResults.contents =
+      buildGradle.modResults.contents.concat("\n", buildGradleSnippet);
+    return updatedBuildGradle;
+  });
   return config;
-}
+};

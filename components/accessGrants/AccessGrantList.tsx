@@ -21,6 +21,7 @@
 import React from "react";
 import { FlatList } from "react-native";
 import AccessGrantCard from "@/components/accessGrants/AccessGrantCard";
+import type { AccessGrant, AccessGrantGroup } from "@/types/accessGrant";
 
 interface AccessGrantListProps {
   data: AccessGrantGroup;

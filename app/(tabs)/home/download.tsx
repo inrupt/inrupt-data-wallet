@@ -28,6 +28,7 @@ import { postFile } from "@/api/files";
 import { FontAwesome6 } from "@expo/vector-icons";
 import IconResourceName from "@/components/common/IconResourceName";
 import { RDF_CONTENT_TYPE } from "@/utils/constants";
+import type { WalletFile } from "@/types/WalletFile";
 
 interface FileDetailProps {
   file: WalletFile;
@@ -63,7 +64,7 @@ const Page: React.FC<FileDetailProps> = () => {
     mutation.mutate({
       uri: uri as string,
       name: fileName,
-      contentType,
+      type: contentType as string,
     });
     goBack();
   };

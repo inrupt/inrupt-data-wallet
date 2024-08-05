@@ -23,6 +23,7 @@ import { faImage } from "@fortawesome/free-solid-svg-icons/faImage";
 import { faIdCard } from "@fortawesome/free-solid-svg-icons/faIdCard";
 import { faWallet } from "@fortawesome/free-solid-svg-icons/faWallet";
 import { AccessRequestMode } from "@/types/enums";
+import type { WalletFile } from "@/types/WalletFile";
 
 function capitalize(word: string): string {
   return word.charAt(0).toUpperCase() + word.slice(1);

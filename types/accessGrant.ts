@@ -20,7 +20,7 @@
 //
 import type { AccessRequestMode } from "./enums";
 
-interface AccessGrant {
+export interface AccessGrant {
   uuid: string;
   identifier: string;
   webId: string;
@@ -35,7 +35,7 @@ interface AccessGrant {
   modes: AccessRequestMode[];
 }
 
-interface AccessGrantGroup {
+export interface AccessGrantGroup {
   webId: string;
   logo: string;
   ownerName: string;

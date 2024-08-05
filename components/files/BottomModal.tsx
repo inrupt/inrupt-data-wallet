@@ -29,6 +29,8 @@ import * as Sharing from "expo-sharing";
 import * as FileSystem from "expo-file-system";
 import QRCode from "react-native-qrcode-svg";
 import { formatResourceName } from "@/utils/fileUtils";
+import type { UserInfo } from "@/constants/user";
+import type { WalletFile } from "@/types/WalletFile";
 import { ThemedText } from "../ThemedText";
 import ConfirmModal from "../common/ConfirmModal";
 
@@ -67,6 +69,9 @@ const BottomModal: React.FC<BottomModalProps> = ({
     const fr = new FileReader();
     fr.onload = async () => {
       const fileUri = `${FileSystem.documentDirectory}/${fileName}`;
+      if (typeof fr.result !== "string") {
+        throw new Error("An error happened while reading the file.");
+      }
       await FileSystem.writeAsStringAsync(fileUri, fr.result?.split(",")[1], {
         encoding: FileSystem.EncodingType.Base64,
       });

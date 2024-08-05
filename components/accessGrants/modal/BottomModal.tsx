@@ -26,6 +26,7 @@ import { Colors } from "@/constants/Colors";
 import { ThemedText } from "@/components/ThemedText";
 import IconResourceName from "@/components/common/IconResourceName";
 import WebIdDisplay from "@/components/common/WebIdDisplay";
+import type { AccessGrant, AccessGrantGroup } from "@/types/accessGrant";
 
 interface BottomModalProps {
   accessGrant?: AccessGrant;

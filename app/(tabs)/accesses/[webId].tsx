@@ -38,6 +38,7 @@ import { faEllipsis } from "@fortawesome/free-solid-svg-icons/faEllipsis";
 import WebIdDisplay from "@/components/common/WebIdDisplay";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import Loading from "@/components/LoadingButton";
+import type { AccessGrant, AccessGrantGroup } from "@/types/accessGrant";
 
 interface AccessGrantProps {}
 
@@ -63,7 +64,7 @@ const Page: React.FC<AccessGrantProps> = () => {
     onSuccess: async () => {
       setModalVisible(false);
       setUpdating(false);
-      if (selectedRequest.items.length <= 1) {
+      if (selectedRequest && selectedRequest.items.length <= 1) {
         navigation.goBack();
       } else {
         // eslint-disable-next-line no-console
@@ -83,7 +84,7 @@ const Page: React.FC<AccessGrantProps> = () => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerTitle: selectedRequest.ownerName,
+      headerTitle: selectedRequest?.ownerName,
       headerLeft: () => (
         <TouchableOpacity
           onPress={() => navigation.goBack()}
@@ -96,7 +97,7 @@ const Page: React.FC<AccessGrantProps> = () => {
         <TouchableOpacity
           onPress={() => {
             setSelectedAG(undefined);
-            setSelectedWebId(selectedRequest.webId);
+            setSelectedWebId(selectedRequest?.webId);
             bottomSheetModalRef.current?.present();
           }}
         >

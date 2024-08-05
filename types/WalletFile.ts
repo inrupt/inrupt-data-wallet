@@ -18,19 +18,8 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-import type { AccessRequestMode } from "./enums";
-
-interface AccessRequest {
-  uuid: string;
+export interface WalletFile {
   identifier: string;
-  webId: string;
-  logo: string;
-  ownerName: string;
-  resource: string;
-  resourceName: string;
+  fileName: string;
   isRDFResource: boolean;
-  forPurpose: string;
-  expirationDate: Date;
-  issuedDate: Date;
-  modes: AccessRequestMode[];
 }

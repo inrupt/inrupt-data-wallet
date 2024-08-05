@@ -88,11 +88,13 @@ export default function Profile() {
               borderRadius={50}
             />
           ) : (
-            <AccessSolid style={styles.profileUri} borderRadius={50} />
+            <AccessSolid style={styles.profileUri} />
           )}
           <View style={styles.profileDetail}>
             <ThemedText style={styles.profileName}>
-              {name || webId ? formatResourceName(webId, false, webId) : null}
+              {name || webId
+                ? formatResourceName(name || webId || "", false, webId)
+                : null}
             </ThemedText>
             <ThemedText fontWeight="light" style={styles.profileWebId}>
               {webId}

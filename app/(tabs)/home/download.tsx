@@ -20,7 +20,7 @@
 //
 import React, { useEffect, useLayoutEffect } from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
-import { useLocalSearchParams, useNavigation } from "expo-router";
+import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { ThemedText } from "@/components/ThemedText";
 import CustomButton from "@/components/Button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -40,6 +40,7 @@ const Page: React.FC<FileDetailProps> = () => {
   const queryClient = useQueryClient();
   const currentNavigation = useNavigation();
   const parentNavigation = useNavigation("/(tabs)");
+  const { replace } = useRouter();
 
   const mutation = useMutation({
     mutationFn: postFile,
@@ -59,14 +60,15 @@ const Page: React.FC<FileDetailProps> = () => {
   const isRdfFile =
     (contentType && RDF_CONTENT_TYPE.includes(contentType as string)) || false;
 
-  const { goBack } = useNavigation();
   const onSaveToWallet = async () => {
     mutation.mutate({
       uri: uri as string,
       name: fileName,
       type: contentType as string,
     });
-    goBack();
+    // This used to be goBack() but that leaves the download page on the stack so subsequent file uploads are blocked by it.
+    // Using replace to return to the homepage my not be ideal, but it works (here and in the cancel handler below).
+    replace("/");
   };
   useLayoutEffect(() => {
     currentNavigation.setOptions({
@@ -116,7 +118,7 @@ const Page: React.FC<FileDetailProps> = () => {
           <CustomButton
             variant="secondary"
             title="Cancel"
-            onPress={() => goBack()}
+            onPress={() => replace("/")}
             customStyle={styles.button}
           />
         </View>

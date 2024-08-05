@@ -19,9 +19,10 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 import React, { useRef } from "react";
-import { TouchableOpacity, StyleSheet, Dimensions } from "react-native";
+import { Dimensions, StyleSheet, TouchableOpacity } from "react-native";
 import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
+import { PermissionStatus } from "expo-image-picker";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postFile } from "@/api/files";
 import { useRouter } from "expo-router";
@@ -86,7 +87,7 @@ const PopupMenu: React.FC<PopupMenuProps> = ({
 
   const takePicture = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
-    if (status !== "granted") {
+    if (status !== PermissionStatus.GRANTED) {
       return;
     }
     const result = await ImagePicker.launchCameraAsync({
@@ -114,7 +115,7 @@ const PopupMenu: React.FC<PopupMenuProps> = ({
     } else if (item === "Photo") {
       const { status } =
         await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (status !== "granted") {
+      if (status !== PermissionStatus.GRANTED) {
         return;
       }
       const result = await ImagePicker.launchImageLibraryAsync();

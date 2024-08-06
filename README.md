@@ -161,7 +161,8 @@ npx detox build --configuration android.emu.release
 ```
 
 For local development (a back-end server running on localhost or at an alternative location), use
-the `android.emu.debug` configuration.
+the `android.emu.debug` configuration. If running the debug configuration, make sure to run the
+development server (`npx expo start`).
 
 Once built, run the detox tests for the relevant configuration:
 

@@ -64,7 +64,7 @@ export default {
         "expo-build-properties",
         {
           android: {
-            usesCleartextTraffic: false,
+            usesCleartextTraffic: process.env.NODE_ENV === "development",
           },
         },
       ],

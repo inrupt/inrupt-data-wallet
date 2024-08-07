@@ -72,7 +72,7 @@ WALLET_UPLOAD_KEY_ALIAS=wallet
 WALLET_UPLOAD_KEY_PASSWORD=<keystore password>
 ```
 
-## Running
+## Running the application
 
 If you are going to run the application in an emulator or simulator, you need to build the development version using
 one of the following:
@@ -96,31 +96,15 @@ In the output, you'll find options to open the app in a
 
 Note: When running on the android emulator, there is a special loopback IP, 10.0.2.2, which points to the host machine 127.0.0.1. You can use it if the emulator complains about cleartext communication to the local network IP of the host.
 
+## Running the UI-based tests
+
 ### Configure test environment
 
 The tests require access credentials for a Pod which will be used by this instance of the wallet.
-Update your .env file with the following environment variables:
-```bash
-TEST_ACCOUNT_USERNAME=<Wallet Pod username>
-TEST_ACCOUNT_PASSWORD=<Wallet Pod password>
-IOS_BINARY_PATH=<Path to the built iOS binary>
-TEST_IOS_SIM=<Name of the iOS simulator on your device>
-ANDROID_BINARY_PATH=<Path to the main Android binary>
-ANDROID_TEST_BINARY_PATH=<Path to the test Android binary>
-TEST_ANDROID_EMU=<Name of the Android emulator on your device>
-```
-Replace placeholders with actual values specific to your setup.
+Make a copy of the provided `.env.sample` named `.env`, and replace placeholders with actual values
+specific to your setup.
 
-For Android development, ensure that the `TEST_ANDROID_EMU` configuration aligns with
-a device emulator in Android Studio, e.g.:
-
-```bash
-TEST_ANDROID_EMU=Android_34
-```
-
-### Test native versions
-
-#### iOS app
+#### Running the tests on iOS
 
 To build the iOS wallet app in an iOS simulator, just run the following command:
 
@@ -150,9 +134,15 @@ Execute the command below to start Detox test on iOS.
 npx detox test --configuration=ios.sim.release
 ```
 
-#### Android app
+#### Running the tests on Android
 
 Ensure that a virtual device has been added to the Android emulator.
+
+First, you'll need to generate the app metadata with the following command:
+
+```bash
+npx expo prebuild --platform android
+```
 
 Run the following command to build the Android app. This process may take up to 30 minutes to complete.
 

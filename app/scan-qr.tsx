@@ -45,16 +45,12 @@ export default function Logout() {
     setScanned(true);
     try {
       const resourceInfo = JSON.parse(data);
-      if (
-        resourceInfo.webId &&
-        resourceInfo.accessPromptUrl &&
-        resourceInfo.type
-      ) {
+      if (resourceInfo.webId && resourceInfo.client && resourceInfo.type) {
         replace({
           pathname: "/access-prompt",
           params: {
             webId: resourceInfo.webId,
-            accessPromptUrl: resourceInfo.accessPromptUrl,
+            client: resourceInfo.client,
             type: resourceInfo.type,
           },
         });

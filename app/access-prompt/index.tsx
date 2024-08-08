@@ -37,15 +37,15 @@ import CardInfo from "@/components/common/CardInfo";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
 const Page: React.FC = () => {
-  const { webId, type, accessPromptUrl } = useLocalSearchParams();
+  const { webId, client, type } = useLocalSearchParams();
   const router = useRouter();
   const { data } = useQuery<AccessPromptResource>({
     queryKey: ["accessPromptResource"],
     queryFn: () =>
       getAccessPromptResource({
         type: type as string,
+        client: client as string,
         webId: webId as string,
-        accessPromptUrl: accessPromptUrl as string,
       }),
   });
   const navigation = useNavigation();
@@ -75,7 +75,7 @@ const Page: React.FC = () => {
     if (!data) return;
     mutation.mutate({
       resource: data.resource,
-      accessPromptUrl: accessPromptUrl as string,
+      client: client as string,
     });
     router.replace({
       pathname: "/access-prompt/confirmed",

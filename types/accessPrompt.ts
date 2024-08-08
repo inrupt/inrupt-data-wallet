@@ -20,13 +20,12 @@
 //
 export interface AccessPromptQR {
   webId: string;
-  accessPromptUrl: string;
+  client: string;
   type: string;
 }
 
 export interface AccessPromptResource {
   webId: string;
-  accessPromptUrl: string;
   resource: string;
   resourceName: string;
   logo: string;

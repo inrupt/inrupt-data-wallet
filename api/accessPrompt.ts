@@ -36,14 +36,14 @@ export const getAccessPromptResource = async (
 
 export const requestAccessPrompt = async (params: {
   resource: string;
-  accessPromptUrl: string;
+  client: string;
 }): Promise<void> => {
   await makeApiRequest<AccessRequest[]>(
     "accessprompt",
     "POST",
     JSON.stringify({
       resource: params.resource,
-      accessPromptUrl: params.accessPromptUrl,
+      client: params.client,
     })
   );
 };

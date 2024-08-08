@@ -50,6 +50,12 @@ module.exports = {
         argsIgnorePattern: "^_",
       },
     ],
+    "@typescript-eslint/no-var-requires": [
+      "error", {
+        // These exceptions cover imports from CJS configuration modules (e.g. app.config.js, plugins/*.js)
+        allow: ["plugins", "fs"]
+      }
+    ],
     "import/prefer-default-export": "off",
     "no-console": "off",
   },

@@ -15,9 +15,10 @@ buildscript {
         mavenCentral()
     }
     dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath('com.android.tools.build:gradle')
         classpath('com.facebook.react:react-native-gradle-plugin')
-        classpath('org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion')
+        classpath('org.jetbrains.kotlin:kotlin-gradle-plugin')
     }
 }
 
@@ -37,10 +38,12 @@ allprojects {
         google()
         mavenCentral()
         maven { url 'https://www.jitpack.io' }
-        maven { url("$rootDir/../node_modules/detox/Detox-android")}
     }
 }
 // @generated begin expo-camera-import - expo prebuild (DO NOT MODIFY) sync-f244f4f3d8bf7229102e8f992b525b8602c74770
 def expoCameraMavenPath = new File(["node", "--print", "require.resolve('expo-camera/package.json')"].execute(null, rootDir).text.trim(), "../android/maven")
 allprojects { repositories { maven { url(expoCameraMavenPath) } } }
-// @generated end expo-camera-import
+// @generated end expo-camera-import// @generated begin detox-import - expo prebuild (DO NOT MODIFY) sync-1c7ed0e9d1c19e4a2b5b79bb7ec877ac879fce8d
+def detoxMavenPath = new File(["node", "--print", "require.resolve('detox/package.json')"].execute(null, rootDir).text.trim(), "../Detox-android")
+allprojects { repositories { maven { url(detoxMavenPath) } } }
+// @generated end detox-import

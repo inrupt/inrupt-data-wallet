@@ -14,7 +14,11 @@ RUN sdkmanager --verbose ${ANDROID_SDK_PACKAGES}
 RUN avdmanager --verbose create avd --name "pixel_7" --device "pixel_7" --package "system-images;android-34;google_apis_playstore;x86_64"
 
 WORKDIR /inrupt-wallet-frontend/
+COPY package.json package-lock.json ./
+RUN echo "Installing the dependencies"
+RUN npm ci
 
+COPY .detoxrc.js app.config.ts metro.config.js tsconfig.json ./
 COPY android-config/ ./android-config/
 COPY api/ ./api/
 COPY app/ ./app/
@@ -26,20 +30,15 @@ COPY hooks/ ./hooks/
 COPY plugins/ ./plugins/
 COPY types/ ./types/
 COPY utils/ ./utils/
-COPY .detoxrc.js app.config.ts metro.config.js package.json package-lock.json run-ui-tests.sh tsconfig.json ./
 # The APK must be compiled beforehand
 # TODO: Add a test checking for its presence
-COPY android/app/build/outputs/apk/androidTest/release/app-release-androidTest.apk .
+COPY android/app/build/outputs/apk/release/app-release.apk ./android/app/build/outputs/apk/release/app-release.apk
+COPY android/app/build/outputs/apk/androidTest/release/app-release-androidTest.apk ./android/app/build/outputs/apk/androidTest/release/app-release-androidTest.apk
 
 RUN chown circleci .
 
 ENV CI=true
 ENV SIGNING_CONFIG_PATH=/inrupt-wallet-frontend/android-config/signing-config.gradle
-
-RUN echo "Installing the dependencies"
-RUN npm ci
-
-# The following starts an emulator, it seems successfully
-#emulator @pixel -no-snapshot -accel off -no-window -noaudio -no-boot-anim -camera-back none
+ENV TEST_ANDROID_EMU="pixel_7"
 
 CMD ["bash", "-c", "npx detox test --configuration android.emu.release"]

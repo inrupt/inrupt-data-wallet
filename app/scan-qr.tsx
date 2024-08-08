@@ -59,7 +59,6 @@ export default function Logout() {
           },
         });
       } else if (resourceInfo.uri && resourceInfo.contentType) {
-        console.log(JSON.stringify(resourceInfo));
         navigate({
           pathname: "/home/download",
           params: {

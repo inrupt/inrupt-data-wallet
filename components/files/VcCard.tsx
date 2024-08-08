@@ -45,7 +45,11 @@ const VcCard: React.FC<IComponentProps> = ({ data }) => {
           <FieldInfo
             key={subject[0]}
             title={addSpacesToCamelCase(subject[0])}
-            content={typeof subject[1] === "string" ? subject[1] : ""}
+            content={
+              typeof subject[1] === "string" || typeof subject[1] === "number"
+                ? (subject[1] as string)
+                : ""
+            }
           />
         ))}
       <View style={styles.issuerContainer}>

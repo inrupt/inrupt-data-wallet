@@ -183,7 +183,7 @@ export default function TabLayout() {
                   toggleMenu("bottomLeft", rightHeaderAddButtonRef)
                 }
               >
-              <FontAwesome6 size={32} name="circle-plus" />
+                <FontAwesome6 size={32} name="circle-plus" />
               </TouchableOpacity>
             ),
             headerRightContainerStyle: { paddingRight: 16 },

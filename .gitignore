@@ -2,10 +2,8 @@ node_modules/
 .expo/
 dist/
 /build/
-ios
-android/app/debug
-android/app/profile
-android/app/release
+ios/
+android/
 artifacts/
 npm-debug.*
 *.jks
@@ -16,7 +14,7 @@ npm-debug.*
 *.orig.*
 web-build/
 .idea
-android/.gradle
+
 # macOS
 .DS_Store
 .env.local

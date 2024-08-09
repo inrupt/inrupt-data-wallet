@@ -47,7 +47,7 @@ const VcCard: React.FC<IComponentProps> = ({ data }) => {
             title={addSpacesToCamelCase(subject[0])}
             content={
               typeof subject[1] === "string" || typeof subject[1] === "number"
-                ? new String(subject[1]).toString()
+                ? String(subject[1])
                 : ""
             }
           />

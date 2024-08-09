@@ -27,9 +27,11 @@ export interface AccessPromptQR {
 export function isAccessPromptQR(
   qr: unknown | AccessPromptQR
 ): qr is AccessPromptQR {
-  return isValidUrl((qr as AccessPromptQR).webId) &&
+  return (
+    isValidUrl((qr as AccessPromptQR).webId) &&
     typeof (qr as AccessPromptQR).client === "string" &&
-    typeof (qr as AccessPromptQR).type === "string";
+    typeof (qr as AccessPromptQR).type === "string"
+  );
 }
 
 export interface AccessPromptResource {
@@ -45,11 +47,11 @@ export interface DownloadQR {
   contentType: string;
 }
 
-export function isDownloadQR(
-  qr: unknown | DownloadQR,
-): qr is DownloadQR {
-  return isValidUrl((qr as DownloadQR).uri) &&
-    typeof (qr as DownloadQR).contentType === "string";
+export function isDownloadQR(qr: unknown | DownloadQR): qr is DownloadQR {
+  return (
+    isValidUrl((qr as DownloadQR).uri) &&
+    typeof (qr as DownloadQR).contentType === "string"
+  );
 }
 
 const isValidUrl = (str: string): boolean => {

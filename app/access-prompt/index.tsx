@@ -31,7 +31,8 @@ import {
   getAccessPromptResource,
   requestAccessPrompt,
 } from "@/api/accessPrompt";
-import { AccessPromptResource, isAccessPromptQR } from "@/types/accessPrompt";
+import type { AccessPromptResource } from "@/types/accessPrompt";
+import { isAccessPromptQR } from "@/types/accessPrompt";
 import { faEye } from "@fortawesome/free-solid-svg-icons/faEye";
 import CardInfo from "@/components/common/CardInfo";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -39,7 +40,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 const Page: React.FC = () => {
   const params = useLocalSearchParams();
   if (!isAccessPromptQR(params)) {
-    throw new Error("Incorrect params for access prompt request")
+    throw new Error("Incorrect params for access prompt request");
   }
   const router = useRouter();
   const { data } = useQuery<AccessPromptResource>({

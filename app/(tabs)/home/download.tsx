@@ -40,7 +40,7 @@ interface FileDetailProps {
 const Page: React.FC<FileDetailProps> = () => {
   const params = useLocalSearchParams();
   if (!isDownloadQR(params)) {
-    throw new Error("Incorrect params for download request")
+    throw new Error("Incorrect params for download request");
   }
   const queryClient = useQueryClient();
   const currentNavigation = useNavigation();
@@ -58,11 +58,10 @@ const Page: React.FC<FileDetailProps> = () => {
     },
     mutationKey: ["filesMutation"],
   });
-  const fileName = params.uri?.substring(
-    params.uri.lastIndexOf("/") + 1
-  );
+  const fileName = params.uri?.substring(params.uri.lastIndexOf("/") + 1);
   const isRdfFile =
-    (params.contentType && RDF_CONTENT_TYPE.includes(params.contentType)) || false;
+    (params.contentType && RDF_CONTENT_TYPE.includes(params.contentType)) ||
+    false;
 
   const onSaveToWallet = async () => {
     mutation.mutate({

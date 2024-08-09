@@ -32,7 +32,6 @@ import { faBell } from "@fortawesome/free-solid-svg-icons/faBell";
 import { faUser } from "@fortawesome/free-solid-svg-icons/faUser";
 import { useSession } from "@/hooks/session";
 import {
-  Animated,
   Dimensions,
   StyleSheet,
   TouchableOpacity,
@@ -73,8 +72,6 @@ export default function TabLayout() {
     },
   });
 
-  const rotation = useRef(new Animated.Value(0)).current;
-
   const [menuVisible, setMenuVisible] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const [positionType, setPositionType] = useState<
@@ -95,16 +92,9 @@ export default function TabLayout() {
   const rightHeaderAddButtonRef = useRef(null);
   const toggleMenu = (
     type: "topMiddle" | "bottomLeft" | "bottomMiddle" = "topMiddle",
-    buttonRef: MutableRefObject<null> = rightHeaderAddButtonRef,
-    animated = false
+    buttonRef: MutableRefObject<null> = rightHeaderAddButtonRef
   ) => {
     if (buttonRef && buttonRef.current) {
-      if (animated)
-        Animated.timing(rotation, {
-          toValue: menuVisible ? 0 : 1,
-          duration: 300,
-          useNativeDriver: true,
-        }).start(() => {});
       (
         buttonRef.current as unknown as {
           measure: (
@@ -133,14 +123,6 @@ export default function TabLayout() {
         }
       );
     }
-  };
-  const rotateInterpolate = rotation.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["0deg", "45deg"],
-  });
-
-  const animatedStyle = {
-    transform: [{ rotate: rotateInterpolate }],
   };
 
   if (!session) {
@@ -198,12 +180,10 @@ export default function TabLayout() {
               <TouchableOpacity
                 ref={rightHeaderAddButtonRef}
                 onPress={() =>
-                  toggleMenu("bottomLeft", rightHeaderAddButtonRef, true)
+                  toggleMenu("bottomLeft", rightHeaderAddButtonRef)
                 }
               >
-                <Animated.View style={animatedStyle}>
-                  <FontAwesome6 size={32} name="circle-plus" />
-                </Animated.View>
+                <FontAwesome6 size={32} name="circle-plus" />
               </TouchableOpacity>
             ),
             headerRightContainerStyle: { paddingRight: 16 },
@@ -270,7 +250,7 @@ export default function TabLayout() {
       </Tabs>
       <PopupMenu
         visible={menuVisible}
-        onClose={() => toggleMenu("topMiddle", rightHeaderAddButtonRef, true)}
+        onClose={() => toggleMenu("topMiddle", rightHeaderAddButtonRef)}
         position={menuPosition}
         positionType={positionType}
       />

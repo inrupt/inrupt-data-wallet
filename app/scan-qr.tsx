@@ -24,6 +24,7 @@ import { useEffect, useState } from "react";
 import { ThemedText } from "@/components/ThemedText";
 import type { BarcodeScanningResult } from "expo-camera";
 import { Camera, CameraView } from "expo-camera";
+import { isAccessPromptQR, isDownloadQR } from "@/types/accessPrompt";
 
 const { width } = Dimensions.get("window");
 
@@ -45,7 +46,7 @@ export default function Logout() {
     setScanned(true);
     try {
       const resourceInfo = JSON.parse(data);
-      if (resourceInfo.webId && resourceInfo.client && resourceInfo.type) {
+      if (isAccessPromptQR(resourceInfo)) {
         replace({
           pathname: "/access-prompt",
           params: {
@@ -54,7 +55,7 @@ export default function Logout() {
             type: resourceInfo.type,
           },
         });
-      } else if (resourceInfo.uri && resourceInfo.contentType) {
+      } else if (isDownloadQR(resourceInfo)) {
         navigate({
           pathname: "/home/download",
           params: {
@@ -62,9 +63,15 @@ export default function Logout() {
             contentType: resourceInfo.contentType,
           },
         });
+      } else {
+        throw new Error("QR code not a recognized type");
       }
-      setScanned(false);
-    } catch {
+    } catch (err) {
+      if ((err as Error).name === "SyntaxError") {
+        console.warn("QR code not a valid format");
+      } else {
+        console.warn(err);
+      }
       goBack();
     }
   };

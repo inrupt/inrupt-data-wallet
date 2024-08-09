@@ -29,6 +29,7 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import IconResourceName from "@/components/common/IconResourceName";
 import { RDF_CONTENT_TYPE } from "@/utils/constants";
 import type { WalletFile } from "@/types/WalletFile";
+import { isDownloadQR } from "@/types/accessPrompt";
 
 interface FileDetailProps {
   file: WalletFile;
@@ -37,6 +38,10 @@ interface FileDetailProps {
 }
 
 const Page: React.FC<FileDetailProps> = () => {
+  const params = useLocalSearchParams();
+  if (!isDownloadQR(params)) {
+    throw new Error("Incorrect params for download request")
+  }
   const queryClient = useQueryClient();
   const currentNavigation = useNavigation();
   const parentNavigation = useNavigation("/(tabs)");
@@ -53,18 +58,17 @@ const Page: React.FC<FileDetailProps> = () => {
     },
     mutationKey: ["filesMutation"],
   });
-  const { uri, contentType } = useLocalSearchParams();
-  const fileName = (uri as string)?.substring(
-    (uri as string).lastIndexOf("/") + 1
+  const fileName = params.uri?.substring(
+    params.uri.lastIndexOf("/") + 1
   );
   const isRdfFile =
-    (contentType && RDF_CONTENT_TYPE.includes(contentType as string)) || false;
+    (params.contentType && RDF_CONTENT_TYPE.includes(params.contentType)) || false;
 
   const onSaveToWallet = async () => {
     mutation.mutate({
-      uri: uri as string,
+      uri: params.uri,
       name: fileName,
-      type: contentType as string,
+      type: params.contentType,
     });
     // This used to be goBack() but that leaves the download page on the stack so subsequent file uploads are blocked by it.
     // Using replace to return to the homepage my not be ideal, but it works (here and in the cancel handler below).
@@ -105,7 +109,7 @@ const Page: React.FC<FileDetailProps> = () => {
             DOWNLOAD FROM
           </ThemedText>
           <ThemedText style={styles.detail} fontWeight="regular">
-            {uri}
+            {params.uri}
           </ThemedText>
         </View>
         <View style={styles.buttonContainer}>

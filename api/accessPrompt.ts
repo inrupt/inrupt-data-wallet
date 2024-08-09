@@ -19,14 +19,13 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 import type { AccessRequest } from "@/types/accessRequest";
-import type {
-  AccessPromptQR,
-  AccessPromptResource,
-} from "@/types/accessPrompt";
+import { AccessPromptResource } from "@/types/accessPrompt";
 import { makeApiRequest, objectToParams } from "./apiRequest";
 
-export const getAccessPromptResource = async (
-  accessPrompt: AccessPromptQR
+export const getAccessPromptResource = async (accessPrompt: {
+    webId: string;
+    type: string;
+  }
 ): Promise<AccessPromptResource> => {
   return makeApiRequest<AccessPromptResource>(
     `accessprompt/resource?${objectToParams(accessPrompt)}`,
@@ -41,9 +40,6 @@ export const requestAccessPrompt = async (params: {
   await makeApiRequest<AccessRequest[]>(
     "accessprompt",
     "POST",
-    JSON.stringify({
-      resource: params.resource,
-      client: params.client,
-    })
+    JSON.stringify(params)
   );
 };

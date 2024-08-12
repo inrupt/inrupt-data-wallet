@@ -39,6 +39,8 @@ jobs:
       - run: npm ci
       # Build the test apk to be loaded in the container.
       - run: npx expo prebuild --platform android
+        env:
+          SIGNING_CONFIG_PATH: ${{ github.workspace }}/android-config/signing-config.gradle
       - run: npx detox build --configuration android.emu.release
       # Build the docker image containing the Android emulator and all the test dependencies.
       - run: |

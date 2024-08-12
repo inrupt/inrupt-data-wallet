@@ -15,11 +15,11 @@ RUN avdmanager --verbose create avd --name "pixel_7" --device "pixel_7" --packag
 
 WORKDIR /inrupt-wallet-frontend/
 COPY package.json package-lock.json ./
-RUN echo "Installing the dependencies"
+
 RUN npm ci
 
 COPY --chown=circleci .detoxrc.js app.config.ts metro.config.js tsconfig.json run_docker_ui_tests.sh ./
-COPY android-config/ ./android-config/
+COPY ../../android-config/ ./android-config/
 COPY api/ ./api/
 COPY app/ ./app/
 COPY assets/ ./assets/

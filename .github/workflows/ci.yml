@@ -53,10 +53,15 @@ jobs:
       - run: npx detox build --configuration android.emu.release
       # Build the docker image containing the Android emulator and all the test dependencies.
       - run: |
-          docker build --network=host --tag inrupt-wallet-frontend-ui-tests:test .
+          docker build \
+            --network=host \
+            --tag inrupt-wallet-frontend-ui-tests:test \
+            --env KEYSTORE_PATH=${{ github.workspace }}/wallet.keystore
+            --env KEYSTORE_PASSWORD="${{ secrets.KEYSTORE_PASSWORD }}"
+            .
       # Run the Detox tests in the emulator container.
       - run: |
-          docker run -it \
+          docker run \
             --env EXPO_PUBLIC_LOGIN_URL="https://datawallet.inrupt.com/oauth2/authorization/wallet-app" \
             --env EXPO_PUBLIC_WALLET_API="https://datawallet.inrupt.com" \
             # FIXME read these from secrets, this is just for initial testing

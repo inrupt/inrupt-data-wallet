@@ -18,7 +18,7 @@ COPY package.json package-lock.json ./
 RUN echo "Installing the dependencies"
 RUN npm ci
 
-COPY .detoxrc.js app.config.ts metro.config.js tsconfig.json ./
+COPY --chown=circleci .detoxrc.js app.config.ts metro.config.js tsconfig.json run_docker_ui_tests.sh ./
 COPY android-config/ ./android-config/
 COPY api/ ./api/
 COPY app/ ./app/
@@ -36,9 +36,10 @@ COPY android/app/build/outputs/apk/release/app-release.apk ./android/app/build/o
 COPY android/app/build/outputs/apk/androidTest/release/app-release-androidTest.apk ./android/app/build/outputs/apk/androidTest/release/app-release-androidTest.apk
 
 RUN chown circleci .
+RUN chmod u+x run_docker_ui_tests.sh
 
 ENV CI=true
 ENV SIGNING_CONFIG_PATH=/inrupt-wallet-frontend/android-config/signing-config.gradle
 ENV TEST_ANDROID_EMU="pixel_7"
 
-CMD ["bash", "-c", "npx detox test --configuration android.emu.release"]
+CMD ["bash", "-c", "./run_docker_ui_tests.sh"]

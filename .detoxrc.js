@@ -49,7 +49,7 @@ module.exports = {
         avdName: process.env.TEST_ANDROID_EMU
       },
       // If running in CI, the emulator requires additional configuration options.
-      bootArgs: process.env.NODE_ENV === "development" ? "" : "-no-snapshot -accel off -noaudio -no-boot-anim -camera-back none",
+      bootArgs: process.env.NODE_ENV === "development" ? "" : "-no-snapshot -noaudio -no-boot-anim -camera-back none",
       headless: process.env.NODE_ENV !== "development"
     }
   },

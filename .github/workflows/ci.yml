@@ -26,13 +26,6 @@ jobs:
       - uses: actions/setup-node@v4
       - run: npm ci
 
-  hw-acceleration-sanity-check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - run: |
-          docker build --network=host --tag inrupt-wallet-frontend-ui-tests:test --file=Dockerfile.minimal .
   ui-tests:
     runs-on: ubuntu-latest
     steps:

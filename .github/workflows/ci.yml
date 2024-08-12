@@ -34,10 +34,10 @@ jobs:
       - run: |
           docker build --network=host --tag inrupt-wallet-frontend-ui-tests:test --file=Dockerfile.minimal .
       - run: |
+          # FIXME read these from secrets, this is just for initial testing
           docker run -it \
             --env EXPO_PUBLIC_LOGIN_URL="https://datawallet.inrupt.com/oauth2/authorization/wallet-app" \
             --env EXPO_PUBLIC_WALLET_API="https://datawallet.inrupt.com" \
-            # FIXME read these from secrets, this is just for initial testing
             --env TEST_ACCOUNT_USERNAME="some-username" \
             --env TEST_ACCOUNT_PASSWORD="some-password" \
             inrupt-wallet-frontend-ui-tests:test

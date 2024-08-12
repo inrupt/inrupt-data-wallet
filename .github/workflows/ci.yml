@@ -34,7 +34,7 @@ jobs:
       - run: |
           docker build --network=host --tag inrupt-wallet-frontend-ui-tests:test --file=Dockerfile.minimal .
       - run: |
-          docker run -it \
+          docker run \
             --env EXPO_PUBLIC_LOGIN_URL="https://datawallet.inrupt.com/oauth2/authorization/wallet-app" \
             --env EXPO_PUBLIC_WALLET_API="https://datawallet.inrupt.com" \
             --env TEST_ACCOUNT_USERNAME="some-username" \

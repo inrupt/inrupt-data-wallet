@@ -35,7 +35,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: 17
-          cache: 'maven'
+          cache: 'gradle'
       - run: npm ci
       # Build the test apk to be loaded in the container.
       - run: npx expo prebuild --platform android

@@ -70,6 +70,18 @@ KEYSTORE_PATH=<path>/inrupt-wallet-frontend/android/app/wallet.keystore
 KEYSTORE_PASSWORD=<keystore password>
 ```
 
+#### Make the keystore available to CI
+
+In order to make the keystore available to CI, it has to be present in the repository secret.
+To 
+- Encrypting the keystore with a GPG key to get a Base64 representation: `gpg -c --armor wallet.keystore`
+- Create Github repository secrets:
+  - ENCRYPTED_KEYSTORE with the Base64-encoded encrypted keystore
+  - KEYSTORE_DECRYPTION_KEY with the GPG key
+  - KEYSTORE_PASSWORD with the keystore password
+- In CI, decrypt the keystore back: `gpg -d --passphrase "..." --batch wallet.keystore.asc > wallet.keystore`
+
+
 ## Running the application
 
 If you are going to run the application in an emulator or simulator, you need to build the development version using

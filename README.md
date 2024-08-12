@@ -64,12 +64,10 @@ keytool -genkeypair -v -storetype PKCS12 \
  -noprompt -dname "CN=wallet.example.com"
 ```
 
-Add the following to: `~/.gradle/gradle.properties` and update the placeholders.
+Add the following to: `.env` and update the placeholders.
 ```text
-WALLET_UPLOAD_STORE_FILE=<path>/inrupt-wallet-frontend/android/app/wallet.keystore
-WALLET_UPLOAD_STORE_PASSWORD=<keystore password>
-WALLET_UPLOAD_KEY_ALIAS=wallet
-WALLET_UPLOAD_KEY_PASSWORD=<keystore password>
+KEYSTORE_PATH=<path>/inrupt-wallet-frontend/android/app/wallet.keystore
+KEYSTORE_PASSWORD=<keystore password>
 ```
 
 ## Running the application

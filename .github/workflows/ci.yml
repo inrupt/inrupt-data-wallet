@@ -36,24 +36,27 @@ jobs:
           distribution: 'temurin'
           java-version: 17
           cache: 'gradle'
-      - run: echo "${{ secrets.ENCRYPTED_KEYSTORE }}" > wallet.keystore.asc
-      - run: gpg -d --passphrase "${{ secrets.KEYSTORE_DECRYPTION_KEY }}" --batch wallet.keystore.asc > wallet.keystore
+      - name: Dump the encrypted keystore into a file
+        run: echo "${{ secrets.ENCRYPTED_KEYSTORE }}" > wallet.keystore.asc
+      - name: Decrypt the keystore into its canonical location
+        run: gpg -d --passphrase "${{ secrets.KEYSTORE_DECRYPTION_KEY }}" --batch wallet.keystore.asc > wallet.keystore
       - run: npm ci
-      # Build the test apk to be loaded in the container.
-      - run: npx expo prebuild --platform android
+      - name: Generate the android metadata files
+        run: npx expo prebuild --platform android
         env:
+          KEYSTORE_PATH: ${{ github.workspace }}/wallet.keystore
+          KEYSTORE_PASSWORD: "${{ secrets.KEYSTORE_PASSWORD }}"
           SIGNING_CONFIG_PATH: ${{ github.workspace }}/android-config/signing-config.gradle
-      - run: npx detox build --configuration android.emu.release
-      # Build the docker image containing the Android emulator and all the test dependencies.
-      - run: |
+      - name: Build the APK to be uploaded in the test container
+        run: npx detox build --configuration android.emu.release
+      - name: Build the docker image containing the Android emulator and all the test dependencies.
+        run: |
           docker build \
             --network=host \
             --tag inrupt-wallet-frontend-ui-tests:test \
-            --env KEYSTORE_PATH=${{ github.workspace }}/wallet.keystore
-            --env KEYSTORE_PASSWORD="${{ secrets.KEYSTORE_PASSWORD }}"
             .
-      # Run the Detox tests in the emulator container.
-      - run: |
+      - name: Run the Detox tests in the emulator container
+        run: |
           docker run \
             --env EXPO_PUBLIC_LOGIN_URL="https://datawallet.inrupt.com/oauth2/authorization/wallet-app" \
             --env EXPO_PUBLIC_WALLET_API="https://datawallet.inrupt.com" \

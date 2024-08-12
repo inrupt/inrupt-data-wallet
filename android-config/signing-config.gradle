@@ -1,10 +1,6 @@
 android {
   signingConfigs {
     release {
-      //     inrupt.wallet.frontend.keystore.file=<path>/inrupt-wallet-frontend/android/app/wallet.keystore
-    // inrupt.wallet.frontend.keystore.password=<keystore password>
-    // inrupt.wallet.frontend.key.alias=wallet
-    // inrupt.wallet.frontend.key.password=<keystore password></keystore>
       if (project.hasProperty('inrupt.wallet.frontend.keystore.file')) {
         storeFile file(inrupt.wallet.frontend.keystore.file)
         storePassword inrupt.wallet.frontend.keystore.password

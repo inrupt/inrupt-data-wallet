@@ -26,6 +26,22 @@ jobs:
       - uses: actions/setup-node@v4
       - run: npm ci
 
+  ui-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Build the docker image containing the Android emulator and all the test dependencies.
+      - run: |
+          docker build --network=host --tag inrupt-wallet-frontend-ui-tests:test .
+      # Run the Detox tests in the emulator container.
+      - run: |
+          docker run -it \
+            --env EXPO_PUBLIC_LOGIN_URL="https://datawallet.inrupt.com/oauth2/authorization/wallet-app" \
+            --env EXPO_PUBLIC_WALLET_API="https://datawallet.inrupt.com" \
+            # FIXME read these from secrets, this is just for initial testing
+            --env TEST_ACCOUNT_USERNAME="some-username" \
+            --env TEST_ACCOUNT_PASSWORD="some-password" \
+            inrupt-wallet-frontend-ui-tests:test
   sonarqube:
     name: run sonarqube
     if: ${{ github.actor != 'dependabot[bot]' }}

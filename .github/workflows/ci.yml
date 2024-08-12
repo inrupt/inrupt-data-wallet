@@ -31,7 +31,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: |
-          docker build --network=host --tag inrupt-wallet-frontend-ui-tests:test ./Docker.minimal
+          docker build --network=host --tag inrupt-wallet-frontend-ui-tests:test ./Dockerfile.minimal
       - run: |
           docker run -it \
             --env EXPO_PUBLIC_LOGIN_URL="https://datawallet.inrupt.com/oauth2/authorization/wallet-app" \

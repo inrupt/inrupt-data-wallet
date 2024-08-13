@@ -32,7 +32,6 @@ class PermissionPage {
 
   async clickContinueButton() {
     await expect(this.continueButton).toExist();
-    // await waitFor(this.continueButton).toExist().withTimeout(5000);
     await this.continueButton.tap();
   }
 }

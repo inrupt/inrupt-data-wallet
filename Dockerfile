@@ -41,5 +41,6 @@ RUN chmod u+x run_docker_ui_tests.sh
 ENV CI=true
 ENV SIGNING_CONFIG_PATH=/inrupt-wallet-frontend/android-config/signing-config.gradle
 ENV TEST_ANDROID_EMU="pixel_7"
+ENV NODE_ENV="docker"
 
 CMD ["bash", "-c", "./run_docker_ui_tests.sh"]

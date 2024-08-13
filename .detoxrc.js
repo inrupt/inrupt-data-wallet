@@ -49,8 +49,8 @@ module.exports = {
         avdName: process.env.TEST_ANDROID_EMU
       },
       // If running in CI, the emulator requires additional configuration options.
-      bootArgs: process.env.NODE_ENV === "development" ? "" : "-no-snapshot -noaudio -no-boot-anim -camera-back none",
-      headless: process.env.NODE_ENV !== "development"
+      bootArgs: process.env.NODE_ENV === "docker" ? "" : "-no-snapshot -noaudio -no-boot-anim -camera-back none",
+      headless: process.env.NODE_ENV === "docker"
     }
   },
   configurations: {
@@ -72,6 +72,23 @@ module.exports = {
     }
   },
   custom: {
-    defaultTestTimeout: 5000
+    defaultTestTimeout: 15000
+  },
+  artifacts: {
+    rootDir: process.env.NODE_ENV === "docker" ? "/screenshots/" : "./screenshots/",
+    plugins: {
+      log: {"enabled": true},
+      uiHierarchy: {"enabled": true},
+      screenshot: {
+        keepOnlyFailedTestsArtifacts: false,
+        takeWhen: {
+          "testStart": true,
+          "testDone": true
+        }
+      },
+      video: {
+        enabled: true
+      }
+    }
   }
 };

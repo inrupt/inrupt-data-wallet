@@ -81,7 +81,6 @@ To
   - KEYSTORE_PASSWORD with the keystore password
 - In CI, decrypt the keystore back: `gpg -d --passphrase "..." --batch wallet.keystore.asc > wallet.keystore`
 
-
 ## Running the application
 
 If you are going to run the application in an emulator or simulator, you need to build the development version using
@@ -114,7 +113,7 @@ The tests require access credentials for a Pod which will be used by this instan
 Make a copy of the provided `.env.sample` named `.env`, and replace placeholders with actual values
 specific to your setup.
 
-#### Running the tests on iOS
+### Running the tests on iOS
 
 To build the iOS wallet app in an iOS simulator, just run the following command:
 
@@ -144,7 +143,7 @@ Execute the command below to start Detox test on iOS.
 npx detox test --configuration=ios.sim.release
 ```
 
-#### Running the tests on Android
+### Running the tests on Android
 
 Ensure that a virtual device has been added to the Android emulator.
 
@@ -176,6 +175,28 @@ After completion, the binary apps will be located in:
 ```
 
 You can share the .apk files with others who need to run the Detox tests without building the Android app locally.
+
+### Running the tests in Docker
+
+The UI-based tests can be packaged to run in Docker (experimental at the time of writing).
+
+- Follow the build steps above (keystore, detox android build) to generate the release build with the Detox version of the APK.
+- Build the docker container from the provided Dockerfile: 
+```
+docker build --network=host --tag inrupt-wallet-frontend-ui-tests:test .
+```
+- Run the docker container (after replacing the placeholders)
+```
+docker run -it \
+  --privileged \
+  --device /dev/kvm \
+  --mount type=bind,source=./screenshots/,target=/screenshots \
+  --env TEST_ACCOUNT_USERNAME=<test username> \
+  --env TEST_ACCOUNT_PASSWORD=<test user password> \
+  --env EXPO_PUBLIC_LOGIN_URL="https://datawallet.inrupt.com/oauth2/authorization/wallet-app" \
+  --env EXPO_PUBLIC_WALLET_API="https://datawallet.inrupt.com" \
+  inrupt-wallet-frontend-ui-tests:test
+```
 
 ## UI overview
 

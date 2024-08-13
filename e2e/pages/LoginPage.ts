@@ -19,6 +19,7 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 import { by, element, expect, web } from "detox";
+
 import detoxConfig from "../../.detoxrc";
 import HomePage from "./HomePage";
 import PermissionPage from "./PermissionPage";
@@ -58,19 +59,17 @@ class LoginPage {
 
     // Perform login
     await expect(this.signInFormUsernameInput).toExist();
-    await this.signInFormUsernameInput.runScript(`(element) => {
-        element.value = "${username}";
-      }`);
+    await this.signInFormUsernameInput.replaceText(username);
 
     await expect(this.signInFormPasswordInput).toExist();
-    await this.signInFormPasswordInput.runScript(`(element) => {
-        element.value = "${password}";
-      }`);
+    await this.signInFormPasswordInput.replaceText(password);
+
+    await new Promise((resolve) => {
+      setTimeout(resolve, timeout * 5);
+    });
 
     await expect(this.signInSubmitButton).toExist();
-    await this.signInSubmitButton.runScript((buttonElement) => {
-      buttonElement.click();
-    });
+    await this.signInSubmitButton.tap();
 
     // Handle permission screen
     await new Promise((resolve) => {

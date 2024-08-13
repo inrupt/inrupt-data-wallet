@@ -40,7 +40,9 @@ interface FileDetailProps {
 const Page: React.FC<FileDetailProps> = () => {
   const params = useLocalSearchParams();
   if (!isDownloadQR(params)) {
-    throw new Error("Incorrect params for download request");
+    throw new Error(
+      "Incorrect params for download request: uri and contentType are required"
+    );
   }
   const queryClient = useQueryClient();
   const currentNavigation = useNavigation();

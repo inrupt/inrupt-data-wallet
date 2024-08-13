@@ -40,7 +40,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 const Page: React.FC = () => {
   const params = useLocalSearchParams();
   if (!isAccessPromptQR(params)) {
-    throw new Error("Incorrect params for access prompt request");
+    throw new Error(
+      "Incorrect params for access prompt request: webId, client and type are required"
+    );
   }
   const router = useRouter();
   const { data } = useQuery<AccessPromptResource>({

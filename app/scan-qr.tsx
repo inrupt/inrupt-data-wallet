@@ -28,6 +28,12 @@ import { isAccessPromptQR, isDownloadQR } from "@/types/accessPrompt";
 
 const { width } = Dimensions.get("window");
 
+class UnrecognisedQrCodeError extends Error {
+  constructor() {
+    super("QR code not a recognized type");
+  }
+}
+
 export default function Logout() {
   const { goBack } = useNavigation();
   const { replace, navigate } = useRouter();
@@ -64,13 +70,13 @@ export default function Logout() {
           },
         });
       } else {
-        throw new Error("QR code not a recognized type");
+        throw new UnrecognisedQrCodeError();
       }
     } catch (err) {
-      if ((err as Error).name === "SyntaxError") {
-        console.warn("QR code not a valid format");
-      } else {
+      if (err instanceof UnrecognisedQrCodeError) {
         console.warn(err);
+      } else {
+        console.warn("QR code not a valid format");
       }
       goBack();
     }

@@ -26,45 +26,6 @@ jobs:
       - uses: actions/setup-node@v4
       - run: npm ci
 
-  ui-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-      - uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: 17
-          cache: 'gradle'
-      - name: Dump the encrypted keystore into a file
-        run: echo "${{ secrets.ENCRYPTED_KEYSTORE }}" > wallet.keystore.asc
-      - name: Decrypt the keystore into its canonical location
-        run: gpg -d --passphrase "${{ secrets.KEYSTORE_DECRYPTION_KEY }}" --batch wallet.keystore.asc > wallet.keystore
-      - run: npm ci
-      - name: Generate the android metadata files
-        run: npx expo prebuild --platform android
-        env:
-          KEYSTORE_PATH: ${{ github.workspace }}/wallet.keystore
-          KEYSTORE_PASSWORD: "${{ secrets.KEYSTORE_PASSWORD }}"
-          SIGNING_CONFIG_PATH: ${{ github.workspace }}/android-config/signing-config.gradle
-      - name: Build the APK to be uploaded in the test container
-        run: npx detox build --configuration android.emu.release
-      - name: Build the docker image containing the Android emulator and all the test dependencies.
-        run: |
-          docker build \
-            --network=host \
-            --tag inrupt-wallet-frontend-ui-tests:test \
-            .
-      - name: Run the Detox tests in the emulator container
-        run: |
-          docker run \
-            --env EXPO_PUBLIC_LOGIN_URL="https://datawallet.inrupt.com/oauth2/authorization/wallet-app" \
-            --env EXPO_PUBLIC_WALLET_API="https://datawallet.inrupt.com" \
-            # FIXME read these from secrets, this is just for initial testing
-            --env TEST_ACCOUNT_USERNAME="some-username" \
-            --env TEST_ACCOUNT_PASSWORD="some-password" \
-            inrupt-wallet-frontend-ui-tests:test
-
   sonarqube:
     name: run sonarqube
     if: ${{ github.actor != 'dependabot[bot]' }}

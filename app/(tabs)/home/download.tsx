@@ -61,7 +61,7 @@ const Page: React.FC<FileDetailProps> = () => {
     mutationKey: ["filesMutation"],
   });
   const fileName = params.uri?.substring(params.uri.lastIndexOf("/") + 1);
-  const contentType: string = params.contentType.split(";")[0];
+  const contentType: string = params.contentType.split(";")[0].trim();
   const isRdfFile =
     (contentType && RDF_CONTENT_TYPE.includes(contentType)) || false;
   const onSaveToWallet = async () => {

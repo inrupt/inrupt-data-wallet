@@ -24,8 +24,15 @@ import { useEffect, useState } from "react";
 import { ThemedText } from "@/components/ThemedText";
 import type { BarcodeScanningResult } from "expo-camera";
 import { Camera, CameraView } from "expo-camera";
+import { isAccessPromptQR, isDownloadQR } from "@/types/accessPrompt";
 
 const { width } = Dimensions.get("window");
+
+class UnrecognisedQrCodeError extends Error {
+  constructor() {
+    super("QR code not a recognized type");
+  }
+}
 
 export default function Logout() {
   const { goBack } = useNavigation();
@@ -45,20 +52,16 @@ export default function Logout() {
     setScanned(true);
     try {
       const resourceInfo = JSON.parse(data);
-      if (
-        resourceInfo.webId &&
-        resourceInfo.accessPromptUrl &&
-        resourceInfo.type
-      ) {
+      if (isAccessPromptQR(resourceInfo)) {
         replace({
           pathname: "/access-prompt",
           params: {
             webId: resourceInfo.webId,
-            accessPromptUrl: resourceInfo.accessPromptUrl,
+            client: resourceInfo.client,
             type: resourceInfo.type,
           },
         });
-      } else if (resourceInfo.uri && resourceInfo.contentType) {
+      } else if (isDownloadQR(resourceInfo)) {
         navigate({
           pathname: "/home/download",
           params: {
@@ -66,9 +69,15 @@ export default function Logout() {
             contentType: resourceInfo.contentType,
           },
         });
+      } else {
+        throw new UnrecognisedQrCodeError();
       }
-      setScanned(false);
-    } catch {
+    } catch (err) {
+      if (err instanceof UnrecognisedQrCodeError) {
+        console.warn(err);
+      } else {
+        console.warn("QR code not a valid format");
+      }
       goBack();
     }
   };

@@ -32,20 +32,25 @@ import {
   requestAccessPrompt,
 } from "@/api/accessPrompt";
 import type { AccessPromptResource } from "@/types/accessPrompt";
+import { isAccessPromptQR } from "@/types/accessPrompt";
 import { faEye } from "@fortawesome/free-solid-svg-icons/faEye";
 import CardInfo from "@/components/common/CardInfo";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
 const Page: React.FC = () => {
-  const { webId, type, accessPromptUrl } = useLocalSearchParams();
+  const params = useLocalSearchParams();
+  if (!isAccessPromptQR(params)) {
+    throw new Error(
+      "Incorrect params for access prompt request: webId, client and type are required"
+    );
+  }
   const router = useRouter();
   const { data } = useQuery<AccessPromptResource>({
     queryKey: ["accessPromptResource"],
     queryFn: () =>
       getAccessPromptResource({
-        type: type as string,
-        webId: webId as string,
-        accessPromptUrl: accessPromptUrl as string,
+        type: params.type,
+        webId: params.webId,
       }),
   });
   const navigation = useNavigation();
@@ -75,12 +80,12 @@ const Page: React.FC = () => {
     if (!data) return;
     mutation.mutate({
       resource: data.resource,
-      accessPromptUrl: accessPromptUrl as string,
+      client: params.client,
     });
     router.replace({
       pathname: "/access-prompt/confirmed",
       params: {
-        webId,
+        webId: params.webId,
         resourceName: data.resourceName,
         ownerName: data.ownerName,
         logo: data.logo,
@@ -98,7 +103,7 @@ const Page: React.FC = () => {
 
         <WebIdDisplay
           ownerName={data?.ownerName || ""}
-          webId={webId as string}
+          webId={params.webId}
           containerStyle={{
             backgroundColor: Colors.light.secondaryBackground,
           }}

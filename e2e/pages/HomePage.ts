@@ -67,7 +67,7 @@ class HomePage {
     } catch {
       // eslint-disable-next-line no-console
       console.warn(
-        `Warning: Home screen did not load within ${timeout}ms, login may be required`,
+        `Warning: Home screen did not load within ${timeout}ms, login may be required`
       );
       return false;
     }

@@ -64,11 +64,10 @@ class HomePage {
       // eslint-disable-next-line no-console
       console.log("Home screen is visible");
       return true;
-    } catch (error) {
+    } catch {
       // eslint-disable-next-line no-console
-      console.error(
-        `Error: Home screen did not load within ${timeout}ms`,
-        error
+      console.warn(
+        `Warning: Home screen did not load within ${timeout}ms, login may be required`,
       );
       return false;
     }

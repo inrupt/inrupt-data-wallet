@@ -9,7 +9,7 @@
     },
     "allowJs": true,
     "esModuleInterop": true,
-    "jsx": "react",
+    "jsx": "react-native",
     "lib": [
       "DOM",
       "ESNext"

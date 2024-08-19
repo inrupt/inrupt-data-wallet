@@ -19,21 +19,18 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 import type { Config } from "@jest/types";
-import { createJsWithBabelPreset } from "ts-jest";
 
 const config: Config.InitialOptions = {
-  preset: "react-native",
-  transform: {
-    "^.+\\.jsx?$": "babel-jest",
-    // "^.+\\.tsx?$": "ts-jest/presets/js-with-babel",
-    ...createJsWithBabelPreset().transform,
-  },
+  // FIXME: use jest-expo/universal preset
+  preset: "jest-expo/android",
   // The following must match the tsconfig paths.
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/$1",
   },
   rootDir: ".",
   testMatch: ["<rootDir>/app/**/*.test.tsx"],
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
+  testPathIgnorePatterns: ["e2e/"],
   testTimeout: 120000,
   maxWorkers: 1,
   verbose: true,

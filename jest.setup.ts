@@ -19,7 +19,4 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-// This is used by Jest to parse JSX.
-module.exports = {
-  presets: ["babel-preset-expo"],
-};
+import "@testing-library/react-native/extend-expect";

@@ -19,7 +19,19 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-// This is used by Jest to parse JSX.
-module.exports = {
-  presets: ["babel-preset-expo"],
-};
+import * as React from "react";
+import { screen } from "@testing-library/react-native";
+
+import { describe, it, expect } from "@jest/globals";
+import LoginScreen from "@/app/login";
+import { render } from "@/test/providers";
+
+describe("Snapshot testing the login screen", () => {
+  it("renders the default home screen when unauthenticated", async () => {
+    render(<LoginScreen />);
+    const loginButton = await screen.findByTestId("login-button");
+    expect(loginButton).toBeDefined();
+    expect(loginButton).toBeVisible();
+    expect(loginButton).toHaveTextContent("Login");
+  });
+});

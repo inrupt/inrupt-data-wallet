@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -24,18 +24,25 @@ import {
 } from "react-native";
 import { Redirect } from "expo-router";
 import Constants from "expo-constants";
-import Logo from "@/assets/images/future_co.svg";
+import { SvgXml } from "react-native-svg";
 import type { WebViewNavigation } from "react-native-webview";
 import { WebView } from "react-native-webview";
 import { useSession } from "@/hooks/session";
 import CustomButton from "@/components/Button";
 import { ThemedText } from "@/components/ThemedText";
 import { clearWebViewIOSCache } from "react-native-webview-ios-cache-clear";
+import LogoSvg from "../assets/images/future_co.svg";
 
 const isRunningInExpoGo = Constants.appOwnership === "expo";
 
+// Despite what TS says, this works, so we can keep this as is
+// for now.
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+const Logo = () => <SvgXml width="200" height="200" xml={LogoSvg} />;
+
 const LoginScreen = () => {
-  const [showWebView, setShowWebView] = React.useState(false);
+  const [showWebView, setShowWebView] = useState(false);
   const { signIn, session } = useSession();
 
   useEffect(() => {
@@ -87,6 +94,7 @@ const LoginScreen = () => {
         title="Login"
         variant="primary"
         customStyle={{ paddingHorizontal: 74 }}
+        testId="login-button"
       ></CustomButton>
 
       <Modal visible={showWebView} animationType="slide">

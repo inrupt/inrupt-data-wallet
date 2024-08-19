@@ -19,7 +19,26 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-// This is used by Jest to parse JSX.
-module.exports = {
-  presets: ["babel-preset-expo"],
+import type { ReactNode } from "react";
+import React from "react";
+import { render } from "@testing-library/react-native";
+import { DefaultTheme, ThemeProvider } from "@react-navigation/native";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { SessionProvider } from "@/hooks/session";
+
+const DefaultProviders = ({ children }: { children: ReactNode }) => {
+  // TODO: Mock query client
+  const queryClient = new QueryClient();
+  return (
+    <ThemeProvider value={DefaultTheme}>
+      <QueryClientProvider client={queryClient}>
+        <SessionProvider>{children}</SessionProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
+  );
 };
+
+const customRender = (ui: Parameters<typeof render>[0]) =>
+  render(ui, { wrapper: DefaultProviders });
+
+export { customRender as render };

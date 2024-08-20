@@ -64,13 +64,22 @@ keytool -genkeypair -v -storetype PKCS12 \
  -noprompt -dname "CN=wallet.example.com"
 ```
 
-Add the following to: `~/.gradle/gradle.properties` and update the placeholders.
+Add the following to: `.env` and update the placeholders.
 ```text
-WALLET_UPLOAD_STORE_FILE=<path>/inrupt-wallet-frontend/android/app/wallet.keystore
-WALLET_UPLOAD_STORE_PASSWORD=<keystore password>
-WALLET_UPLOAD_KEY_ALIAS=wallet
-WALLET_UPLOAD_KEY_PASSWORD=<keystore password>
+KEYSTORE_PATH=<path>/inrupt-wallet-frontend/android/app/wallet.keystore
+KEYSTORE_PASSWORD=<keystore password>
 ```
+
+#### Make the keystore available to CI
+
+In order to make the keystore available to CI, it has to be present in the repository secret.
+To 
+- Encrypting the keystore with a GPG key to get a Base64 representation: `gpg -c --armor wallet.keystore`
+- Create Github repository secrets:
+  - ENCRYPTED_KEYSTORE with the Base64-encoded encrypted keystore
+  - KEYSTORE_DECRYPTION_KEY with the GPG key
+  - KEYSTORE_PASSWORD with the keystore password
+- In CI, decrypt the keystore back: `gpg -d --passphrase "..." --batch wallet.keystore.asc > wallet.keystore`
 
 ## Running the application
 
@@ -104,7 +113,7 @@ The tests require access credentials for a Pod which will be used by this instan
 Make a copy of the provided `.env.sample` named `.env`, and replace placeholders with actual values
 specific to your setup.
 
-#### Running the tests on iOS
+### Running the tests on iOS
 
 To build the iOS wallet app in an iOS simulator, just run the following command:
 
@@ -134,7 +143,7 @@ Execute the command below to start Detox test on iOS.
 npx detox test --configuration=ios.sim.release
 ```
 
-#### Running the tests on Android
+### Running the tests on Android
 
 Ensure that a virtual device has been added to the Android emulator.
 

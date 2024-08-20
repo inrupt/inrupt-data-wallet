@@ -1,11 +1,11 @@
 android {
   signingConfigs {
     release {
-      if (project.hasProperty('WALLET_UPLOAD_STORE_FILE')) {
-        storeFile file(WALLET_UPLOAD_STORE_FILE)
-        storePassword WALLET_UPLOAD_STORE_PASSWORD
-        keyAlias WALLET_UPLOAD_KEY_ALIAS
-        keyPassword WALLET_UPLOAD_KEY_PASSWORD
+      if (project.hasProperty('inrupt.wallet.frontend.keystore.file')) {
+        storeFile file(project.property('inrupt.wallet.frontend.keystore.file'))
+        storePassword project.property('inrupt.wallet.frontend.keystore.password')
+        keyAlias project.property('inrupt.wallet.frontend.key.alias')
+        keyPassword project.property('inrupt.wallet.frontend.key.password')
       }
     }
   }

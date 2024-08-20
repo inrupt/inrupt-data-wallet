@@ -18,20 +18,21 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+import { expect, web, by } from "detox";
+
 class PermissionPage {
   private continueButton: Detox.WebElement;
 
   constructor() {
     this.continueButton = web.element(
-      by.web.xpath('//button[text()="Continue"]')
+      by.web.cssSelector('button[data-testid="prompt-continue"]')
     );
   }
 
   async clickContinueButton() {
-    // await waitFor(this.continueButton).toExist().withTimeout(5000);
-    await this.continueButton.runScript((element: HTMLButtonElement) => {
-      element.click();
-    });
+    await expect(this.continueButton).toExist();
+    await this.continueButton.tap();
   }
 }
 

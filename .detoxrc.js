@@ -47,7 +47,7 @@ module.exports = {
       type: 'android.emulator',
       device: {
         avdName: process.env.TEST_ANDROID_EMU
-      }
+      },
     }
   },
   configurations: {
@@ -69,6 +69,23 @@ module.exports = {
     }
   },
   custom: {
-    defaultTestTimeout: 5000
+    defaultTestTimeout: 15000
+  },
+  artifacts: {
+    rootDir: "./screenshots/",
+    plugins: {
+      log: {"enabled": true},
+      uiHierarchy: {"enabled": true},
+      screenshot: {
+        keepOnlyFailedTestsArtifacts: false,
+        takeWhen: {
+          "testStart": true,
+          "testDone": true
+        }
+      },
+      video: {
+        enabled: true
+      }
+    }
   }
 };

@@ -28,17 +28,47 @@ module.exports = function withSigningConfig(config) {
   // Add path to gradle signing snippet to gradle.properties.
   // This is then used by the android/app/build.gradle mod.
   withGradleProperties(config, async (gradleProps) => {
-    gradleProps.modResults.push({
-      type: "comment",
-      value: "Path to the signing configuration gradle snippet",
-    });
     if (process.env.SIGNING_CONFIG_PATH === undefined) {
       throw new Error("Missing environment variable SIGNING_CONFIG_PATH");
     }
     gradleProps.modResults.push({
+      type: "comment",
+      value: "Path to the signing configuration gradle snippet",
+    });
+    gradleProps.modResults.push({
       type: "property",
       key: "inrupt.wallet.frontend.signing",
       value: process.env.SIGNING_CONFIG_PATH,
+    });
+    if (process.env.KEYSTORE_PATH === undefined) {
+      throw new Error("Missing environment variable KEYSTORE_PATH");
+    }
+    if (process.env.KEYSTORE_PASSWORD === undefined) {
+      throw new Error("Missing environment variable KEYSTORE_PASSWORD");
+    }
+    gradleProps.modResults.push({
+      type: "comment",
+      value: "Keystore configuration for app signing.",
+    });
+    gradleProps.modResults.push({
+      type: "property",
+      key: "inrupt.wallet.frontend.keystore.file",
+      value: process.env.KEYSTORE_PATH,
+    });
+    gradleProps.modResults.push({
+      type: "property",
+      key: "inrupt.wallet.frontend.keystore.password",
+      value: process.env.KEYSTORE_PASSWORD,
+    });
+    gradleProps.modResults.push({
+      type: "property",
+      key: "inrupt.wallet.frontend.key.alias",
+      value: "wallet",
+    });
+    gradleProps.modResults.push({
+      type: "property",
+      key: "inrupt.wallet.frontend.key.password",
+      value: process.env.KEYSTORE_PASSWORD,
     });
     return gradleProps;
   });

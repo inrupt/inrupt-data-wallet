@@ -28,3 +28,6 @@ expo-env.d.ts
 .env
 
 *.keystore
+
+# Folder where the UI tests get stored.
+screenshots/

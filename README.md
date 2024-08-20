@@ -176,28 +176,6 @@ After completion, the binary apps will be located in:
 
 You can share the .apk files with others who need to run the Detox tests without building the Android app locally.
 
-### Running the tests in Docker
-
-The UI-based tests can be packaged to run in Docker (experimental at the time of writing).
-
-- Follow the build steps above (keystore, detox android build) to generate the release build with the Detox version of the APK.
-- Build the docker container from the provided Dockerfile: 
-```
-docker build --network=host --tag inrupt-wallet-frontend-ui-tests:test .
-```
-- Run the docker container (after replacing the placeholders)
-```
-docker run -it \
-  --privileged \
-  --device /dev/kvm \
-  --mount type=bind,source=./screenshots/,target=/screenshots \
-  --env TEST_ACCOUNT_USERNAME=<test username> \
-  --env TEST_ACCOUNT_PASSWORD=<test user password> \
-  --env EXPO_PUBLIC_LOGIN_URL="https://datawallet.inrupt.com/oauth2/authorization/wallet-app" \
-  --env EXPO_PUBLIC_WALLET_API="https://datawallet.inrupt.com" \
-  inrupt-wallet-frontend-ui-tests:test
-```
-
 ## UI overview
 
 Upon execution, the application prompts the user to log in. After successful authentication, the wallet app presents various views, located in the `app/(tabs)` directory: 

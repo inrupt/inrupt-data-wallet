@@ -29,8 +29,6 @@ import LoginScreen from "@/app/login";
 import { render } from "@/test/providers";
 import * as SessionHooks from "@/hooks/session";
 
-import { Redirect } from "expo-router";
-
 const { useSession } = SessionHooks;
 
 jest.mock("@/hooks/session", () => {
@@ -56,6 +54,7 @@ jest.mock("expo-router", () => {
 
 describe("Snapshot testing the login screen", () => {
   it("renders the login screen when unauthenticated", async () => {
+    // Mocks start...
     const { useSession: mockedUseSession } = jest.requireMock(
       "@/hooks/session"
     ) as jest.Mocked<typeof SessionHooks>;
@@ -70,6 +69,8 @@ describe("Snapshot testing the login screen", () => {
       signOut: mockedSignOut,
       session: mockedSession,
     });
+    // ... mocks end.
+
     render(<LoginScreen />);
     const loginButton = await screen.findByTestId("login-button");
     expect(loginButton).toBeDefined();
@@ -82,6 +83,7 @@ describe("Snapshot testing the login screen", () => {
   });
 
   it("redirects to the home screen when authenticated", async () => {
+    // Mocks start...
     const { useSession: mockedUseSession } = jest.requireMock(
       "@/hooks/session"
     ) as jest.Mocked<typeof SessionHooks>;
@@ -98,9 +100,12 @@ describe("Snapshot testing the login screen", () => {
     const { Redirect: mockedRedirect } = jest.requireMock(
       "expo-router"
     ) as jest.Mocked<typeof ExpoRouter>;
+    // This checks that the Redirect component is returned.
     mockedRedirect.mockReturnValue("Dummy return" as unknown as null);
+    // ... mocks end.
+
     render(<LoginScreen />);
-    // The login button should not be mounted
+    // The login button should *not* be mounted
     await expect(() => screen.findByTestId("login-button")).rejects.toThrow();
     // Check that what we get back here is the result of the redirect.
     expect(screen.toJSON()).toBe("Dummy return");

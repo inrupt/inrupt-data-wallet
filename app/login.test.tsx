@@ -22,12 +22,39 @@
 import * as React from "react";
 import { screen } from "@testing-library/react-native";
 
-import { describe, it, expect } from "@jest/globals";
+import { jest, describe, it, expect } from "@jest/globals";
 import LoginScreen from "@/app/login";
 import { render } from "@/test/providers";
+import * as SessionHooks from "@/hooks/session";
+
+const { useSession } = SessionHooks;
+
+jest.mock("@/hooks/session", () => {
+  const actualSessionModule = jest.requireActual(
+    "@/hooks/session"
+  ) as typeof SessionHooks;
+  const actualSessionProvider = actualSessionModule.SessionProvider;
+  return {
+    useSession: jest.fn<typeof useSession>(),
+    SessionProvider: actualSessionProvider,
+  };
+});
 
 describe("Snapshot testing the login screen", () => {
   it("renders the default home screen when unauthenticated", async () => {
+    const { useSession: mockedUseSession } = jest.requireMock(
+      "@/hooks/session"
+    ) as jest.Mocked<typeof SessionHooks>;
+    const [mockedSignIn, mockedSignOut, mockedSession] = [
+      jest.fn(),
+      jest.fn(),
+      undefined,
+    ];
+    mockedUseSession.mockReturnValueOnce({
+      signIn: mockedSignIn,
+      signOut: mockedSignOut,
+      session: mockedSession,
+    });
     render(<LoginScreen />);
     const loginButton = await screen.findByTestId("login-button");
     expect(loginButton).toBeDefined();

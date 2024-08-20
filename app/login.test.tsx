@@ -23,9 +23,13 @@ import * as React from "react";
 import { screen } from "@testing-library/react-native";
 
 import { jest, describe, it, expect } from "@jest/globals";
+import type * as ExpoRouter from "expo-router";
+
 import LoginScreen from "@/app/login";
 import { render } from "@/test/providers";
 import * as SessionHooks from "@/hooks/session";
+
+import { Redirect } from "expo-router";
 
 const { useSession } = SessionHooks;
 
@@ -40,14 +44,25 @@ jest.mock("@/hooks/session", () => {
   };
 });
 
+jest.mock("expo-router", () => {
+  const actualExpoRouter = jest.requireActual(
+    "expo-router"
+  ) as typeof ExpoRouter;
+  return {
+    ...actualExpoRouter,
+    Redirect: jest.fn<typeof actualExpoRouter.Redirect>(),
+  };
+});
+
 describe("Snapshot testing the login screen", () => {
-  it("renders the default home screen when unauthenticated", async () => {
+  it("renders the login screen when unauthenticated", async () => {
     const { useSession: mockedUseSession } = jest.requireMock(
       "@/hooks/session"
     ) as jest.Mocked<typeof SessionHooks>;
     const [mockedSignIn, mockedSignOut, mockedSession] = [
       jest.fn(),
       jest.fn(),
+      // When the session is logged out, the sessionId is undefined.
       undefined,
     ];
     mockedUseSession.mockReturnValueOnce({
@@ -60,5 +75,34 @@ describe("Snapshot testing the login screen", () => {
     expect(loginButton).toBeDefined();
     expect(loginButton).toBeVisible();
     expect(loginButton).toHaveTextContent("Login");
+    const { Redirect: mockedRedirect } = jest.requireMock(
+      "expo-router"
+    ) as jest.Mocked<typeof ExpoRouter>;
+    expect(mockedRedirect).not.toHaveBeenCalledWith();
+  });
+
+  it("redirects to the home screen when authenticated", async () => {
+    const { useSession: mockedUseSession } = jest.requireMock(
+      "@/hooks/session"
+    ) as jest.Mocked<typeof SessionHooks>;
+    const [mockedSignIn, mockedSignOut, mockedSession] = [
+      jest.fn(),
+      jest.fn(),
+      "some-session-id",
+    ];
+    mockedUseSession.mockReturnValueOnce({
+      signIn: mockedSignIn,
+      signOut: mockedSignOut,
+      session: mockedSession,
+    });
+    const { Redirect: mockedRedirect } = jest.requireMock(
+      "expo-router"
+    ) as jest.Mocked<typeof ExpoRouter>;
+    mockedRedirect.mockReturnValue("Dummy return" as unknown as null);
+    render(<LoginScreen />);
+    // The login button should not be mounted
+    await expect(() => screen.findByTestId("login-button")).rejects.toThrow();
+    // Check that what we get back here is the result of the redirect.
+    expect(screen.toJSON()).toBe("Dummy return");
   });
 });

@@ -86,17 +86,21 @@ export default function Profile() {
             <AccessSolid style={styles.profileUri} />
           )}
           <View style={styles.profileDetail}>
-            <ThemedText style={styles.profileName}>
+            <ThemedText style={styles.profileName} testID="username">
               {name || webId
                 ? formatResourceName(name || webId || "", false, webId)
                 : null}
             </ThemedText>
-            <ThemedText fontWeight="light" style={styles.profileWebId}>
+            <ThemedText
+              fontWeight="light"
+              style={styles.profileWebId}
+              testID="webid"
+            >
               {webId}
             </ThemedText>
           </View>
         </View>
-        <View style={styles.QR}>
+        <View style={styles.QR} testID="qrCode">
           <QRCode size={226} value={webId} backgroundColor="#E7F1F7" />
         </View>
       </View>

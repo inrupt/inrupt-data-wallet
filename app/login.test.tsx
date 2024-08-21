@@ -51,6 +51,14 @@ jest.mock("expo-router", () => {
   };
 });
 
+// Not mocking this results in an exception during rendering.
+jest.mock("react-native-svg");
+
+jest.mock("expo-constants", () => ({
+  // Pretend we run in expo to avoid the cookie clearing issue.
+  appOwnership: "expo",
+}));
+
 describe("Snapshot testing the login screen", () => {
   it("renders the login screen when unauthenticated", async () => {
     // Mocks start...

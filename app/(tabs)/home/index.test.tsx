@@ -35,7 +35,7 @@ jest.mock("expo-router", () => {
     "expo-router"
   ) as typeof ExpoRouter;
   return {
-    // ...actualExpoRouter,
+    ...actualExpoRouter,
     useRouter: jest.fn<typeof actualExpoRouter.useRouter>().mockReturnValue({
       // Only mock a subset of the Expo Router
       navigate: jest.fn(),
@@ -69,6 +69,16 @@ jest.mock("@tanstack/react-query", () => {
     } as unknown as ReturnType<typeof ReactQuery.useQuery>),
   };
 });
+
+// This module is ESM-only, which is problematic for Jest imports.
+jest.mock("@fortawesome/react-native-fontawesome", () => ({
+  FontAwesomeIcon: jest.fn(),
+}));
+
+// This module is ESM-only, which is problematic for Jest imports.
+jest.mock("mime", () => ({
+  default: jest.fn(),
+}));
 
 describe("Snapshot testing the home screen", () => {
   it("shows the given file list", async () => {

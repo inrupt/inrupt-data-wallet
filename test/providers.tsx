@@ -23,17 +23,16 @@ import type { ReactNode } from "react";
 import React from "react";
 import { render } from "@testing-library/react-native";
 import { DefaultTheme, ThemeProvider } from "@react-navigation/native";
-import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+
 import { SessionProvider } from "@/hooks/session";
 
 const DefaultProviders = ({ children }: { children: ReactNode }) => {
-  // TODO: Mock query client
-  const queryClient = new QueryClient();
   return (
     <ThemeProvider value={DefaultTheme}>
-      <QueryClientProvider client={queryClient}>
+      <BottomSheetModalProvider>
         <SessionProvider>{children}</SessionProvider>
-      </QueryClientProvider>
+      </BottomSheetModalProvider>
     </ThemeProvider>
   );
 };

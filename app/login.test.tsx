@@ -20,13 +20,12 @@
 //
 
 import * as React from "react";
-import { screen } from "@testing-library/react-native";
+import { screen, render } from "@testing-library/react-native";
 
 import { jest, describe, it, expect } from "@jest/globals";
 import type * as ExpoRouter from "expo-router";
 
 import LoginScreen from "@/app/login";
-import { render } from "@/test/providers";
 import * as SessionHooks from "@/hooks/session";
 
 const { useSession } = SessionHooks;

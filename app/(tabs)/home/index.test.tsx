@@ -20,7 +20,7 @@
 //
 
 import * as React from "react";
-import { screen, fireEvent } from "@testing-library/react-native";
+import { screen } from "@testing-library/react-native";
 
 import { jest, describe, it, expect } from "@jest/globals";
 import type * as ExpoRouter from "expo-router";

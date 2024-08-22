@@ -24,7 +24,7 @@ interface CustomButtonProps {
   variant: "primary" | "tertiary" | "secondary";
   customStyle?: StyleProp<ViewStyle> | undefined;
   disabled?: boolean;
-  testId?: string
+  testId?: string;
 }
 
 const CustomButton: React.FC<CustomButtonProps> = ({
@@ -67,7 +67,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
 
   return (
     <TouchableOpacity
-    testID={testId}
+      testID={testId}
       disabled={disabled}
       style={[
         styles.button,

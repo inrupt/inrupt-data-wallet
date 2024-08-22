@@ -39,6 +39,7 @@ const WebIdAccessGrantList: React.FC<WebIdAccessGrantListProps> = ({
         <FlatList
           {...props}
           data={data}
+          testID="access-grants-list"
           renderItem={({ item: { ownerName, webId, logo } }) => (
             <WebIdAccessGrantCard
               name={ownerName}
@@ -51,7 +52,7 @@ const WebIdAccessGrantList: React.FC<WebIdAccessGrantListProps> = ({
           keyExtractor={(item) => item.webId}
         />
       ) : (
-        <View style={styles.emptyState}>
+        <View style={styles.emptyState} testID="no-access-grants-text">
           <ThemedText style={styles.emptyStateText}>
             No access has been granted
           </ThemedText>

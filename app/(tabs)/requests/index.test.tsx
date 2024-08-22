@@ -27,12 +27,9 @@ import type * as ExpoRouter from "expo-router";
 import type * as ReactQuery from "@tanstack/react-query";
 
 import { render } from "@/test/providers";
-import * as SessionHooks from "@/hooks/session";
 import type { AccessRequest } from "@/types/accessRequest";
 import { AccessRequestMode } from "@/types/enums";
 import RequestsScreen from "./index";
-
-const { useSession } = SessionHooks;
 
 function mockUseQuery(
   data: AccessRequest[]
@@ -79,26 +76,6 @@ jest.mock("expo-router", () => {
     Redirect: jest.fn<typeof actualExpoRouter.Redirect>(),
   };
 });
-
-jest.mock("@/hooks/session", () => {
-  const actualSessionModule = jest.requireActual(
-    "@/hooks/session"
-  ) as typeof SessionHooks;
-  const actualSessionProvider = actualSessionModule.SessionProvider;
-  return {
-    useSession: jest.fn<typeof useSession>().mockReturnValue({
-      signOut: jest.fn(),
-      signIn: jest.fn(),
-      session: "some-session-id",
-    }),
-    SessionProvider: actualSessionProvider,
-  };
-});
-
-// This module is ESM-only, which is problematic for Jest imports.
-jest.mock("@fortawesome/react-native-fontawesome", () => ({
-  FontAwesomeIcon: jest.fn(),
-}));
 
 describe("Snapshot testing the home screen", () => {
   it("shows text when no requests are pending", async () => {

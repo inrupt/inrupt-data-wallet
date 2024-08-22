@@ -27,11 +27,8 @@ import type * as ExpoRouter from "expo-router";
 import type * as ReactQuery from "@tanstack/react-query";
 
 import { render } from "@/test/providers";
-import * as SessionHooks from "@/hooks/session";
 import type { AccessPromptResource } from "@/types/accessPrompt";
 import PromptScreen from "./index";
-
-const { useSession } = SessionHooks;
 
 function mockUseQuery(
   data?: AccessPromptResource
@@ -75,21 +72,6 @@ jest.mock("expo-router", () => {
       .fn<typeof actualExpoRouter.useNavigation>()
       .mockReturnValue({ setOptions: jest.fn() }),
     Redirect: jest.fn<typeof actualExpoRouter.Redirect>(),
-  };
-});
-
-jest.mock("@/hooks/session", () => {
-  const actualSessionModule = jest.requireActual(
-    "@/hooks/session"
-  ) as typeof SessionHooks;
-  const actualSessionProvider = actualSessionModule.SessionProvider;
-  return {
-    useSession: jest.fn<typeof useSession>().mockReturnValue({
-      signOut: jest.fn(),
-      signIn: jest.fn(),
-      session: "some-session-id",
-    }),
-    SessionProvider: actualSessionProvider,
   };
 });
 

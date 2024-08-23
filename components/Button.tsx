@@ -37,7 +37,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   ...restProps
 }) => {
   const buttonStyle: {
-    [key in CustomButtonProps["variant"]]: {
+    [_key in CustomButtonProps["variant"]]: {
       backgroundColor: string;
       borderColor: string;
       borderWidth?: number;

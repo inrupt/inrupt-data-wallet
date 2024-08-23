@@ -87,7 +87,7 @@ const Page: React.FC = () => {
       },
     });
   };
-  if (!data) return <View style={styles.container} />;
+  if (!data) return <View style={styles.container} testID="no-prompts" />;
 
   return (
     <View style={styles.container}>

@@ -41,6 +41,8 @@ const HomeScreen = () => {
 
   const toggleMenu = (type: "topMiddle" | "bottomLeft" | "bottomMiddle") => {
     if (addButtonRef && addButtonRef.current) {
+      // Because addButtonRef is passed as the `ref` prop of a component,
+      // addButtonRef.current references the component itself.
       (
         addButtonRef.current as unknown as {
           measure: (
@@ -90,6 +92,7 @@ const HomeScreen = () => {
               variant="tertiary"
               title="Add Data"
               onPress={() => toggleMenu("topMiddle")}
+              testID="default-add-button"
             ></CustomButton>
           </TouchableOpacity>
         </View>

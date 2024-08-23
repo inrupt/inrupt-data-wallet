@@ -41,13 +41,14 @@ const AccessRequestList: React.FC<AccessRequestListProps> = ({
   return (
     <>
       {data && data.length === 0 ? (
-        <View style={styles.container}>
+        <View style={styles.container} testID="no-access-requests-text">
           <ThemedText style={styles.emptyText}>No active requests</ThemedText>
         </View>
       ) : (
         <FlatList
           {...props}
           data={data}
+          testID="access-requests-list"
           renderItem={({
             item: { ownerName, webId, logo, uuid, issuedDate },
           }) => (

@@ -94,7 +94,7 @@ const LoginScreen = () => {
         title="Login"
         variant="primary"
         customStyle={{ paddingHorizontal: 74 }}
-        testId="login-button"
+        testID="login-button"
       ></CustomButton>
 
       <Modal visible={showWebView} animationType="slide">

@@ -92,7 +92,7 @@ const HomeScreen = () => {
               variant="tertiary"
               title="Add Data"
               onPress={() => toggleMenu("topMiddle")}
-              testId="default-add-button"
+              testID="default-add-button"
             ></CustomButton>
           </TouchableOpacity>
         </View>

@@ -15,7 +15,6 @@
 //
 import { useStorageState } from "@/hooks/useStorageState";
 import React from "react";
-import { logout } from "@/api/user";
 import { SESSION_KEY } from "@/api/apiRequest";
 
 const AuthContext = React.createContext<{
@@ -51,10 +50,6 @@ export function SessionProvider(props: React.PropsWithChildren) {
         },
         signOut: async () => {
           setSession(null);
-          logout().catch((e) =>
-            // eslint-disable-next-line no-console
-            console.log("Error during logout:", e)
-          );
         },
         session,
       }}

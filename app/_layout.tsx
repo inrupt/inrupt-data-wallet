@@ -30,6 +30,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import type { AppStateStatus } from "react-native";
 import { AppState, Platform } from "react-native";
+import { LoginWebViewProvider } from "@/hooks/useInruptLogin";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -79,22 +80,24 @@ export default function RootLayout() {
         <GestureHandlerRootView style={{ flex: 1 }}>
           <BottomSheetModalProvider>
             <SessionProvider>
-              <Stack
-                screenOptions={{
-                  headerShown: false,
-                }}
-              >
-                <Stack.Screen
-                  name="scan-qr"
-                  options={{
+              <LoginWebViewProvider>
+                <Stack
+                  screenOptions={{
                     headerShown: false,
-                    // Set the presentation mode to modal for our modal route.
-                    // presentation: "fullScreenModal",
-                    animation: "slide_from_bottom",
-                    animationDuration: 200,
                   }}
-                />
-              </Stack>
+                >
+                  <Stack.Screen
+                    name="scan-qr"
+                    options={{
+                      headerShown: false,
+                      // Set the presentation mode to modal for our modal route.
+                      // presentation: "fullScreenModal",
+                      animation: "slide_from_bottom",
+                      animationDuration: 200,
+                    }}
+                  />
+                </Stack>
+              </LoginWebViewProvider>
             </SessionProvider>
           </BottomSheetModalProvider>
         </GestureHandlerRootView>

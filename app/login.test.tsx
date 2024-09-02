@@ -54,6 +54,20 @@ jest.mock("expo-constants", () => ({
   appOwnership: "expo",
 }));
 
+// Jest chokes on importing native SVG.
+jest.mock("@/assets/images/future_co.svg", () => {
+  return jest.fn();
+});
+
+// Mock the react-native RCTNetworking module
+jest.mock("react-native/Libraries/Network/RCTNetworking", () => ({
+  default: {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    clearCookies: jest.fn((callback) => callback(true)),
+  },
+}));
+
 describe("Snapshot testing the login screen", () => {
   it("renders the login screen when unauthenticated", async () => {
     // Mocks start...

@@ -14,6 +14,7 @@
 // limitations under the License.
 //
 const { getDefaultConfig } = require("expo/metro-config");
+const exclusionList = require('metro-config/src/defaults/exclusionList');
 
 module.exports = (() => {
   // eslint-disable-next-line no-undef
@@ -29,6 +30,7 @@ module.exports = (() => {
     ...resolver,
     assetExts: resolver.assetExts.filter((ext) => ext !== "svg"),
     sourceExts: [...resolver.sourceExts, "svg"],
+    blacklistRE: exclusionList([/.*\.test\.tsx$/]),
   };
 
   return config;

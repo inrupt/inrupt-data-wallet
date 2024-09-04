@@ -13,88 +13,93 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-import React, { useEffect, useRef, useState } from "react";
-import type { WebViewNavigation } from "react-native-webview";
-import { WebView } from "react-native-webview";
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity } from "react-native";
+import React, { useRef } from "react";
+import {
+  SafeAreaView,
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  Modal,
+} from "react-native";
+import { WebView, type WebViewNavigation } from "react-native-webview";
 
-const HTML_BLANK =
-  '<html lang="us"><body style="background-color:white;"></body></html>';
-
-const LoginWebViewModal = ({
-  visible = false,
-  onLoginSuccess = () => null,
-  onLogoutSuccess = () => null,
-  onClose = () => null,
-  requestMode = "blank",
-}: {
-  visible: boolean;
+interface LoginWebViewModalProps {
   onClose: () => void;
   onLoginSuccess: () => void;
   onLogoutSuccess: () => void;
   requestMode: "login" | "logout" | "blank";
+}
+
+const LoginWebViewModal: React.FC<LoginWebViewModalProps> = ({
+  onClose = () => null,
+  onLoginSuccess = () => null,
+  onLogoutSuccess = () => null,
+  requestMode = "blank",
 }) => {
-  const BASE_URL = `${process.env.EXPO_PUBLIC_WALLET_API}/`;
+  const BASE_URL = process.env.EXPO_PUBLIC_WALLET_API || "";
   const LOGIN_URL = process.env.EXPO_PUBLIC_LOGIN_URL || "";
-  const LOGOUT_URL = `${BASE_URL}logout`;
+  const LOGOUT_URL = `${BASE_URL}/logout`;
 
-  const webViewRef = useRef(null);
-  const [webUrl, setWebUrl] = useState(LOGIN_URL);
+  const webViewRef = useRef<WebView | null>(null);
 
-  useEffect(() => {
-    if (requestMode === "login") {
-      setWebUrl(LOGIN_URL);
-    }
-    if (requestMode === "logout") {
-      setWebUrl(LOGOUT_URL);
-    }
-    if (requestMode === "blank") {
-      setWebUrl("");
-    }
-    if (visible) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      webViewRef.current!.reload();
-    }
-  }, [visible, requestMode]);
-
-  const handleNavigationStateChange = async (navState: WebViewNavigation) => {
-    const { url } = navState;
-    const isLoginSuccess = url.includes("/login/success");
-    const isLogout = url === `${process.env.EXPO_PUBLIC_WALLET_API}/`;
-
-    if (isLoginSuccess) {
+  const handleNavigationStateChange = ({ url }: WebViewNavigation) => {
+    if (url.includes("/login/success")) {
       onLoginSuccess();
     }
+  };
 
-    if (isLogout) {
+  const handleLoadEnd = () => {
+    if (requestMode === "logout") {
       onLogoutSuccess();
     }
   };
 
+  const handleCloseModal = () => {
+    if (!webViewRef.current) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      webViewRef.current?.clearCache(true);
+    }
+    onClose();
+  };
+
+  if (requestMode === "logout") {
+    return (
+      <SafeAreaView style={[styles.container, { display: "none", opacity: 0 }]}>
+        <WebView
+          ref={webViewRef}
+          source={{ uri: LOGOUT_URL }}
+          onNavigationStateChange={handleNavigationStateChange}
+          incognito={false}
+          domStorageEnabled={false}
+          sharedCookiesEnabled
+          thirdPartyCookiesEnabled
+          onLoadEnd={handleLoadEnd}
+        />
+      </SafeAreaView>
+    );
+  }
+
+  const isVisible = requestMode === "login";
+
   return (
-    <SafeAreaView
-      style={[
-        styles.container,
-        {
-          display: visible ? "flex" : "none",
-          opacity: visible ? 1 : 0,
-        },
-      ]}
-    >
-      <WebView
-        ref={webViewRef}
-        source={webUrl ? { uri: webUrl } : { html: HTML_BLANK }}
-        onNavigationStateChange={handleNavigationStateChange}
-        incognito={false}
-        domStorageEnabled={false}
-        sharedCookiesEnabled={true}
-        thirdPartyCookiesEnabled={true}
-      />
-      <TouchableOpacity style={styles.closeButton} onPress={() => onClose()}>
-        <Text style={styles.closeButtonText}>Close</Text>
-      </TouchableOpacity>
-    </SafeAreaView>
+    <Modal visible={isVisible} transparent>
+      <SafeAreaView style={[styles.container]}>
+        <WebView
+          ref={webViewRef}
+          source={{ uri: LOGIN_URL }}
+          onNavigationStateChange={handleNavigationStateChange}
+          incognito={false}
+          domStorageEnabled={false}
+          sharedCookiesEnabled
+          thirdPartyCookiesEnabled
+          onLoadEnd={handleLoadEnd}
+        />
+        <TouchableOpacity style={styles.closeButton} onPress={handleCloseModal}>
+          <Text style={styles.closeButtonText}>Close</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
+    </Modal>
   );
 };
 

@@ -63,12 +63,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         },
       },
     ],
-    [
-      "expo-dev-launcher",
-      {
-        launchMode: "most-recent",
-      },
-    ],
     "./plugins/withSigningConfig",
   ],
   experiments: {

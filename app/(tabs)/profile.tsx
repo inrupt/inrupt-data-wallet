@@ -113,7 +113,10 @@ export default function Profile() {
         <BottomSheetView style={styles.bottomSheetContent}>
           <TouchableOpacity
             style={styles.logoutContainer}
-            onPress={() => router.navigate("/login?logout=true")}
+            onPress={() => {
+              bottomSheetModalRef.current?.close();
+              router.navigate("/login?logout=true");
+            }}
           >
             <FontAwesomeIcon icon={faRightFromBracket} size={22} />
             <ThemedText style={{ paddingLeft: 16 }}>Logout</ThemedText>

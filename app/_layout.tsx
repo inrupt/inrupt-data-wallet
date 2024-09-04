@@ -87,6 +87,12 @@ export default function RootLayout() {
                   }}
                 >
                   <Stack.Screen
+                    name="login"
+                    options={{
+                      animation: "none",
+                    }}
+                  />
+                  <Stack.Screen
                     name="scan-qr"
                     options={{
                       headerShown: false,

@@ -15,13 +15,13 @@
 //
 import React, { useEffect } from "react";
 import { View, StyleSheet } from "react-native";
-import { Redirect, useLocalSearchParams } from "expo-router";
 import Constants from "expo-constants";
 import CustomButton from "@/components/Button";
 import { ThemedText } from "@/components/ThemedText";
 import { clearWebViewIOSCache } from "react-native-webview-ios-cache-clear";
 import Logo from "@/assets/images/future_co.svg";
 import { useLoginWebView } from "@/hooks/useInruptLogin";
+import { useLocalSearchParams } from "expo-router";
 import { useSession } from "@/hooks/session";
 
 const isRunningInExpoGo = Constants.appOwnership === "expo";
@@ -32,12 +32,18 @@ const LoginScreen = () => {
   const { session } = useSession();
 
   useEffect(() => {
-    if (logout) {
+    if (session && logout) {
       requestLogout();
     }
-  }, [logout, requestLogout]);
+  }, [logout, session]);
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires,global-require
+    const RCTNetworking = require("react-native/Libraries/Network/RCTNetworking");
+    RCTNetworking.default.clearCookies((result: never) => {
+      console.log("clearCookies", result);
+    });
+
     if (!isRunningInExpoGo) {
       clearWebViewIOSCache();
       import("@react-native-cookies/cookies")
@@ -47,22 +53,14 @@ const LoginScreen = () => {
             .then((success) => console.log("Cleared all cookies?", success))
         )
         .catch((error) => console.log("Failed to clear cookies", error));
-    } else {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires,global-require
-      const RCTNetworking = require("react-native/Libraries/Network/RCTNetworking");
-      RCTNetworking.default.clearCookies((result: never) => {
-        console.log("clearCookies", result);
-      });
     }
   }, []);
 
   const handleLoginPress = () => {
-    showLoginPage();
+    if (!logout) {
+      showLoginPage();
+    }
   };
-
-  if (session) {
-    return <Redirect href="/home" />;
-  }
 
   return (
     <View style={styles.container}>
@@ -84,7 +82,7 @@ const LoginScreen = () => {
         variant="primary"
         customStyle={{ paddingHorizontal: 74 }}
         testID="login-button"
-      ></CustomButton>
+      />
     </View>
   );
 };

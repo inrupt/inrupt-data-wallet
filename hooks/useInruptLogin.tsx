@@ -27,28 +27,24 @@ const LoginWebViewContext = createContext<{
 });
 
 export const LoginWebViewProvider = ({ children }: React.PropsWithChildren) => {
-  const [visible, setVisible] = useState(false);
   const [modalRequestMode, setModalRequestMode] = useState<
-    "login" | "blank" | "logout"
+    "login" | "logout" | "blank"
   >("blank");
   const { signIn, signOut } = useSession();
 
   const handleLoginSuccess = () => {
-    setVisible(false);
     signIn();
+    closeModal();
     router.replace("/home");
-    setModalRequestMode("blank");
   };
 
   const handleLogoutSuccess = () => {
-    setVisible(false);
     signOut();
+    closeModal();
     router.replace("/login");
-    setModalRequestMode("blank");
   };
 
-  const handleCloseModal = () => {
-    setVisible(false);
+  const closeModal = () => {
     setModalRequestMode("blank");
   };
 
@@ -56,11 +52,9 @@ export const LoginWebViewProvider = ({ children }: React.PropsWithChildren) => {
     <LoginWebViewContext.Provider
       value={{
         showLoginPage: () => {
-          setVisible(true);
           setModalRequestMode("login");
         },
         requestLogout: () => {
-          setVisible(false);
           setModalRequestMode("logout");
         },
       }}
@@ -68,10 +62,9 @@ export const LoginWebViewProvider = ({ children }: React.PropsWithChildren) => {
       {children}
       <LoginWebViewModal
         requestMode={modalRequestMode}
-        visible={visible}
         onLoginSuccess={handleLoginSuccess}
         onLogoutSuccess={handleLogoutSuccess}
-        onClose={handleCloseModal}
+        onClose={handleLogoutSuccess}
       />
     </LoginWebViewContext.Provider>
   );

@@ -12,7 +12,9 @@
     "lint:fix": "npm run lint:eslint -- --fix",
     "lint:eslint": "eslint --config .eslintrc.js .",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
-    "test:snapshot": "jest --config jest.config.ts"
+    "test:snapshot": "jest --config jest.config.ts",
+    "test:ui:build": "npx expo prebuild --platform android & npx detox build --configuration android.emu.release",
+    "test:ui:run": "npx detox test --configuration android.emu.release --loglevel verbose --record-logs all"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",

@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-import React, { createContext, useState } from "react";
+import React, { createContext, useCallback, useState } from "react";
 import LoginWebViewModal from "@/components/login/LoginWebViewModal";
 import { useSession } from "@/hooks/session";
 import { router } from "expo-router";
@@ -48,15 +48,19 @@ export const LoginWebViewProvider = ({ children }: React.PropsWithChildren) => {
     setModalRequestMode("blank");
   };
 
+  const showLoginPage = useCallback(() => {
+    setModalRequestMode("login");
+  }, []);
+
+  const requestLogout = useCallback(() => {
+    setModalRequestMode("logout");
+  }, []);
+
   return (
     <LoginWebViewContext.Provider
       value={{
-        showLoginPage: () => {
-          setModalRequestMode("login");
-        },
-        requestLogout: () => {
-          setModalRequestMode("logout");
-        },
+        showLoginPage,
+        requestLogout,
       }}
     >
       {children}

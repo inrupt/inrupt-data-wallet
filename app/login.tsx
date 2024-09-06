@@ -13,41 +13,39 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Modal,
-  SafeAreaView,
-} from "react-native";
-import { Redirect } from "expo-router";
+import React, { useEffect } from "react";
+import { View, StyleSheet } from "react-native";
 import Constants from "expo-constants";
-import { SvgXml } from "react-native-svg";
-import type { WebViewNavigation } from "react-native-webview";
-import { WebView } from "react-native-webview";
-import { useSession } from "@/hooks/session";
 import CustomButton from "@/components/Button";
 import { ThemedText } from "@/components/ThemedText";
 import { clearWebViewIOSCache } from "react-native-webview-ios-cache-clear";
-import LogoSvg from "../assets/images/future_co.svg";
+import Logo from "@/assets/images/future_co.svg";
+import { useLoginWebView } from "@/hooks/useInruptLogin";
+import { useLocalSearchParams } from "expo-router";
+import { useSession } from "@/hooks/session";
 
 const isRunningInExpoGo = Constants.appOwnership === "expo";
 
-// Despite what TS says, this works, so we can keep this as is
-// for now.
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
-const Logo = () => <SvgXml width="200" height="200" xml={LogoSvg} />;
-
 const LoginScreen = () => {
-  const [showWebView, setShowWebView] = useState(false);
-  const { signIn, session } = useSession();
+  const { showLoginPage, requestLogout } = useLoginWebView();
+  const { logout } = useLocalSearchParams();
+  const { session } = useSession();
 
   useEffect(() => {
-    clearWebViewIOSCache();
+    if (session && logout) {
+      requestLogout();
+    }
+  }, [logout, session, requestLogout]);
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires,global-require
+    const RCTNetworking = require("react-native/Libraries/Network/RCTNetworking");
+    RCTNetworking.default.clearCookies((result: never) => {
+      console.log("clearCookies", result);
+    });
+
     if (!isRunningInExpoGo) {
+      clearWebViewIOSCache();
       import("@react-native-cookies/cookies")
         .then((CookieManager) =>
           CookieManager.default
@@ -58,27 +56,16 @@ const LoginScreen = () => {
     }
   }, []);
 
-  if (session) {
-    return <Redirect href="/home" />;
-  }
   const handleLoginPress = () => {
-    setShowWebView(true);
-  };
-
-  const handleNavigationStateChange = async (navState: WebViewNavigation) => {
-    const { url } = navState;
-
-    const isLoginSuccess = url.includes("/login/success");
-
-    if (isLoginSuccess) {
-      signIn();
+    if (!logout) {
+      showLoginPage();
     }
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
-        <Logo />
+        <Logo width="200" height="200" />
         <ThemedText
           style={[styles.header, { paddingTop: 16 }]}
           fontWeight="bold"
@@ -95,26 +82,7 @@ const LoginScreen = () => {
         variant="primary"
         customStyle={{ paddingHorizontal: 74 }}
         testID="login-button"
-      ></CustomButton>
-
-      <Modal visible={showWebView} animationType="slide">
-        <SafeAreaView style={{ flex: 1, backgroundColor: "transparent" }}>
-          <WebView
-            source={{ uri: process.env.EXPO_PUBLIC_LOGIN_URL || "" }}
-            onNavigationStateChange={handleNavigationStateChange}
-            incognito={false}
-            domStorageEnabled={false}
-            sharedCookiesEnabled={true}
-            thirdPartyCookiesEnabled={true}
-          />
-          <TouchableOpacity
-            style={styles.closeButton}
-            onPress={() => setShowWebView(false)}
-          >
-            <Text style={styles.closeButtonText}>Close</Text>
-          </TouchableOpacity>
-        </SafeAreaView>
-      </Modal>
+      />
     </View>
   );
 };
@@ -125,20 +93,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#fff",
-  },
-
-  closeButton: {
-    position: "absolute",
-    top: 40,
-    right: 20,
-    backgroundColor: "#fff",
-    padding: 10,
-    borderRadius: 5,
-    elevation: 2,
-  },
-  closeButtonText: {
-    fontSize: 16,
-    color: "#007BFF",
   },
   logoContainer: {
     marginBottom: 40,

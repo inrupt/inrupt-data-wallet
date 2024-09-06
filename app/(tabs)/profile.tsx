@@ -13,9 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-import { useSession } from "@/hooks/session";
 import { View, StyleSheet, Image, TouchableOpacity } from "react-native";
-import { useLocalSearchParams, useNavigation } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import React, { useEffect, useRef } from "react";
 import { ThemedText } from "@/components/ThemedText";
 import QRCode from "react-native-qrcode-svg";
@@ -31,7 +30,6 @@ import AccessSolid from "@/assets/images/access-solid.svg";
 import { formatResourceName } from "@/utils/fileUtils";
 
 export default function Profile() {
-  const { signOut } = useSession();
   const { data: userInfo } = useQuery<UserInfo>({
     queryKey: ["userInfo"],
     enabled: false,
@@ -40,12 +38,6 @@ export default function Profile() {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const navigation = useNavigation();
 
-  const { forceLogout } = useLocalSearchParams();
-  useEffect(() => {
-    if (forceLogout) {
-      signOut();
-    }
-  }, [forceLogout, signOut]);
   useEffect(() => {
     navigation.setOptions({
       headerTitle: "",
@@ -121,7 +113,10 @@ export default function Profile() {
         <BottomSheetView style={styles.bottomSheetContent}>
           <TouchableOpacity
             style={styles.logoutContainer}
-            onPress={() => signOut()}
+            onPress={() => {
+              bottomSheetModalRef.current?.close();
+              router.navigate("/login?logout=true");
+            }}
           >
             <FontAwesomeIcon icon={faRightFromBracket} size={22} />
             <ThemedText style={{ paddingLeft: 16 }}>Logout</ThemedText>

@@ -23,6 +23,10 @@ module.exports = function withSigningConfig(config) {
   // Add path to gradle signing snippet to gradle.properties.
   // This is then used by the android/app/build.gradle mod.
   withGradleProperties(config, async (gradleProps) => {
+    // Leave signing config unchanged in EAS builds
+    if (process.env.EAS_BUILD) {
+      return gradleProps;
+    }
     if (process.env.SIGNING_CONFIG_PATH === undefined) {
       throw new Error("Missing environment variable SIGNING_CONFIG_PATH");
     }

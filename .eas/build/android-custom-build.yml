@@ -5,9 +5,8 @@ build:
     - run:
         name: Install dependencies
         command: npm ci
-    - run:
-        name: Android prebuild
-        command: npx expo prebuild --platform android
-    - run:
-        name: Android release build
-        command: npx eas build --platform android --variant release
+    - eas/prebuild
+    - eas/inject_android_credentials
+    - eas/configure_android_version
+    - eas/run_gradle
+    - eas/find_and_upload_build_artifacts

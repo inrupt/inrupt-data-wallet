@@ -54,16 +54,36 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   plugins: [
     "expo-router",
     "expo-secure-store",
-    "@config-plugins/detox",
+    [
+      "@config-plugins/detox",
+      {
+        subdomains: "*",
+      },
+    ],
     [
       "expo-build-properties",
       {
         android: {
-          usesCleartextTraffic: process.env.NODE_ENV === "development",
+          // usesCleartextTraffic: process.env.NODE_ENV === "development",
+          usesCleartextTraffic: true,
         },
       },
     ],
     "./plugins/withSigningConfig",
+    [
+      "./plugins/withNetworkSecurityConfig",
+      {
+        networkSecurityConfig: "./android-config/network_security_config.xml",
+        enable: true,
+      },
+    ],
+    // [
+    //   "expo-network-security-config",
+    //   {
+    //     networkSecurityConfig: "./android-config/network_security_config.xml",
+    //     enable: true,
+    //   },
+    // ],
   ],
   experiments: {
     typedRoutes: true,

@@ -10,4 +10,4 @@ build:
         command: npx expo prebuild --platform android
     - run:
         name: Android release build
-        command: npx expo build:android --variant release
+        command: npx eas build --platform android --variant release

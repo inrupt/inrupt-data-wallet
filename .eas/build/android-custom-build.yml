@@ -1,0 +1,13 @@
+build:
+  name: Run tests
+  steps:
+    - eas/checkout
+    - run:
+        name: Install dependencies
+        command: npm ci
+    - run:
+        name: Android prebuild
+        command: npx expo prebuild --platform android
+    - run:
+        name: Android release build
+        command: npx expo build:android --variant release

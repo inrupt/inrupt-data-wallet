@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: 12,
   },
-  button: { marginBottom: 24, width: 211 },
+  button: { marginBottom: 16, width: 211 },
   name: {
     fontSize: 16,
   },

@@ -6,7 +6,11 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_LOGIN_URL" : "https://datawallet.dev.inrupt.com/oauth2/authorization/wallet-app",
+        "EXPO_PUBLIC_WALLET_API": "https://datawallet.dev.inrupt.com"
+      }
     },
     "preview": {
       "distribution": "internal",

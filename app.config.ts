@@ -15,8 +15,15 @@
 //
 import type { ExpoConfig, ConfigContext } from "expo/config";
 
-export default ({ config }: ConfigContext): ExpoConfig => ({
-  ...config,
+const isDevelopmentMode =
+  process.env.NODE_ENV === "development" ||
+  process.env.EAS_BUILD_PROFILE === "development";
+const isTestMode =
+  !isDevelopmentMode &&
+  process.env.EAS_BUILD_PROFILE !== "production" &&
+  process.env.EAS_BUILD_PROFILE === "preview";
+
+const baseConfig: ExpoConfig = {
   name: "inrupt-data-wallet",
   slug: "inrupt-data-wallet",
   version: "1.0.0",
@@ -58,35 +65,17 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     "expo-router",
     "expo-secure-store",
     [
-      "@config-plugins/detox",
-      {
-        subdomains: "*",
-      },
-    ],
-    [
       "expo-build-properties",
       {
         android: {
-          // usesCleartextTraffic: process.env.NODE_ENV === "development",
-          usesCleartextTraffic: true,
+          usesCleartextTraffic: isDevelopmentMode,
         },
       },
     ],
     "./plugins/withSigningConfig",
-    [
-      "./plugins/withNetworkSecurityConfig",
-      {
-        networkSecurityConfig: "./android-config/network_security_config.xml",
-        enable: true,
-      },
-    ],
-    // [
-    //   "expo-network-security-config",
-    //   {
-    //     networkSecurityConfig: "./android-config/network_security_config.xml",
-    //     enable: true,
-    //   },
-    // ],
+    // The detox plugin interferes with the generated output, so
+    // only include it when actually building for tests.
+    ...(isTestMode ? ["@config-plugins/detox"] : []),
   ],
   experiments: {
     typedRoutes: true,
@@ -97,4 +86,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     },
   },
   owner: "inrupt",
+};
+
+export default ({ config }: ConfigContext): ExpoConfig => ({
+  ...config,
+  ...baseConfig,
 });

@@ -1,6 +1,9 @@
 /** @type {Detox.DetoxConfig} */
 const dotenv = require('dotenv');
 dotenv.config();
+
+process.env.DETOX_TEST = "true";
+
 module.exports = {
   testRunner: {
     args: {

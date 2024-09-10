@@ -22,6 +22,7 @@ import {
   Modal,
 } from "react-native";
 import { WebView, type WebViewNavigation } from "react-native-webview";
+import { DEFAULT_LOGIN_URL, DEFAULT_WALLET_API } from "@/constants/defaults";
 
 interface LoginWebViewModalProps {
   onClose: () => void;
@@ -36,8 +37,8 @@ const LoginWebViewModal: React.FC<LoginWebViewModalProps> = ({
   onLogoutSuccess = () => null,
   requestMode = "blank",
 }) => {
-  const BASE_URL = process.env.EXPO_PUBLIC_WALLET_API || "";
-  const LOGIN_URL = process.env.EXPO_PUBLIC_LOGIN_URL || "";
+  const BASE_URL = process.env.EXPO_PUBLIC_WALLET_API ?? DEFAULT_LOGIN_URL;
+  const LOGIN_URL = process.env.EXPO_PUBLIC_LOGIN_URL ?? DEFAULT_WALLET_API;
   const LOGOUT_URL = `${BASE_URL}/logout`;
 
   const webViewRef = useRef<WebView | null>(null);

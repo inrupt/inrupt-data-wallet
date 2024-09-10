@@ -23,6 +23,27 @@ const isTestMode =
   process.env.EAS_BUILD_PROFILE !== "production" &&
   process.env.EAS_BUILD_PROFILE === "preview";
 
+function validateEnv() {
+  if (
+    typeof process.env.EXPO_PUBLIC_WALLET_API !== "string" ||
+    !URL.canParse(process.env.EXPO_PUBLIC_WALLET_API)
+  ) {
+    throw new Error(
+      `Missing or invalid environment variable EXPO_PUBLIC_WALLET_API. Expected a valid URL, found ${process.env.EXPO_PUBLIC_WALLET_API}`
+    );
+  }
+  if (
+    typeof process.env.EXPO_PUBLIC_LOGIN_URL !== "string" ||
+    !URL.canParse(process.env.EXPO_PUBLIC_LOGIN_URL)
+  ) {
+    throw new Error(
+      `Missing or invalid environment variable EXPO_PUBLIC_LOGIN_URL. Expected a valid URL, found ${process.env.EXPO_PUBLIC_LOGIN_URL}`
+    );
+  }
+}
+// Check that all required environment variables are defined at build time.
+validateEnv();
+
 const baseConfig: ExpoConfig = {
   name: "inrupt-data-wallet",
   slug: "inrupt-data-wallet",

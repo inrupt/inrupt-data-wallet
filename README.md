@@ -66,7 +66,7 @@ keytool -genkeypair -v -storetype PKCS12 \
 
 Add the following to: `.env` and update the placeholders.
 ```text
-KEYSTORE_PATH=<path>/inrupt-wallet-frontend/android/app/wallet.keystore
+KEYSTORE_PATH=<path>/inrupt-data-wallet/android/app/wallet.keystore
 KEYSTORE_PASSWORD=<keystore password>
 ```
 
@@ -133,7 +133,7 @@ xcodebuild -workspace ios/inruptwalletfrontend.xcworkspace -scheme inruptwalletf
 After completion, the iOS binary should be located at:
 
 ```bash
-inrupt-wallet-frontend/ios/build/Build/Products/inruptwalletfrontend.app
+inrupt-data-wallet/ios/build/Build/Products/inruptwalletfrontend.app
 ```
 
 You can share the .app file with others who need to run the Detox tests without building the iOS app locally.

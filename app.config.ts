@@ -40,6 +40,9 @@ function validateEnv() {
       `Missing or invalid environment variable EXPO_PUBLIC_LOGIN_URL. Expected a valid URL, found ${process.env.EXPO_PUBLIC_LOGIN_URL}`
     );
   }
+  if (typeof process.env.EAS_PROJECT_ID !== "string") {
+    throw new Error(`Missing environment variable EAS_PROJECT_ID.`);
+  }
 }
 if (process.env.EAS_BUILD === "true") {
   // Check that all required environment variables are defined at build time.
@@ -105,7 +108,7 @@ const baseConfig: ExpoConfig = {
   },
   extra: {
     eas: {
-      projectId: "8a342ede-71b4-43f7-8d7d-b23b2df34456",
+      projectId:  process.env.EAS_PROJECT_ID,
     },
   },
   owner: "inrupt",

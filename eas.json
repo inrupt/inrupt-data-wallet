@@ -9,22 +9,30 @@
       "developmentClient": true,
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_LOGIN_URL" : "https://datawallet.dev.inrupt.com/oauth2/authorization/wallet-app",
-        "EXPO_PUBLIC_WALLET_API": "https://datawallet.dev.inrupt.com"
+        "EXPO_PUBLIC_LOGIN_URL" : "https://datawallet.inrupt.com/oauth2/authorization/wallet-app",
+        "EXPO_PUBLIC_WALLET_API": "https://datawallet.inrupt.com"
       }
     },
     "preview": {
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_LOGIN_URL" : "https://datawallet.dev.inrupt.com/oauth2/authorization/wallet-app",
-        "EXPO_PUBLIC_WALLET_API": "https://datawallet.dev.inrupt.com"
+        "EXPO_PUBLIC_LOGIN_URL" : "https://datawallet.inrupt.com/oauth2/authorization/wallet-app",
+        "EXPO_PUBLIC_WALLET_API": "https://datawallet.inrupt.com"
       }
+    },
+    "preview-ios": {
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_LOGIN_URL" : "https://datawallet.inrupt.com/oauth2/authorization/wallet-app",
+        "EXPO_PUBLIC_WALLET_API": "https://datawallet.inrupt.com"
+      },
+      "credentialsSource": "local"
     },
     "production": {
       "autoIncrement": true,
       "env": {
-        "EXPO_PUBLIC_LOGIN_URL" : "https://datawallet.dev.inrupt.com/oauth2/authorization/wallet-app",
-        "EXPO_PUBLIC_WALLET_API": "https://datawallet.dev.inrupt.com"
+        "EXPO_PUBLIC_LOGIN_URL" : "https://datawallet.inrupt.com/oauth2/authorization/wallet-app",
+        "EXPO_PUBLIC_WALLET_API": "https://datawallet.inrupt.com"
       }
     }
   },

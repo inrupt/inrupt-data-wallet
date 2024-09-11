@@ -72,9 +72,7 @@ const baseConfig: ExpoConfig = {
       backgroundColor: "#ffffff",
     },
     package: "com.inrupt.inrupt_data_wallet",
-    permissions: [
-      "android.permission.CAMERA"
-    ],
+    permissions: ["android.permission.CAMERA"],
     blockedPermissions: [
       "android.permission.RECORD_AUDIO",
       "android.permission.READ_EXTERNAL_STORAGE",

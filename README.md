@@ -20,7 +20,7 @@ This README provides information on:
   * [Access](#access)
 
 
-## Setup
+## Build the app locally
 
 ### Prerequisites
 
@@ -80,6 +80,18 @@ To
   - KEYSTORE_DECRYPTION_KEY with the GPG key
   - KEYSTORE_PASSWORD with the keystore password
 - In CI, decrypt the keystore back: `gpg -d --passphrase "..." --batch wallet.keystore.asc > wallet.keystore`
+
+## Build the app on EAS
+
+Both the Android and the iOS versions of the app can be built using the Expo Application Service (EAS). To do so, follow
+the instructions from the [EAS documentation](https://docs.expo.dev/build/setup/).
+
+Note that the project ID is not hard-coded in the `app.config.ts`, but provided as an environment variable instead.
+In order to trigger an EAS build, please add the appropriate project ID in your environment, e.g.
+
+```
+EAS_PROJECT_ID="..." eas build --platform android --local --profile preview
+```
 
 ## Running the application
 

@@ -17,8 +17,8 @@ import type { ExpoConfig, ConfigContext } from "expo/config";
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  name: "inrupt-wallet-frontend",
-  slug: "inrupt-wallet-frontend",
+  name: "inrupt-data-wallet",
+  slug: "inrupt-data-wallet",
   version: "1.0.0",
   orientation: "portrait",
   icon: "./assets/images/logo.png",

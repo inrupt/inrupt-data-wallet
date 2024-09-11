@@ -1,5 +1,5 @@
 {
-  "name": "inrupt-wallet-frontend",
+  "name": "inrupt-data-wallet",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {

@@ -72,13 +72,11 @@ const baseConfig: ExpoConfig = {
       backgroundColor: "#ffffff",
     },
     package: "com.inrupt.wallet",
-    permissions: [
-      "android.permission.CAMERA",
-      "android.permission.WRITE_EXTERNAL_STORAGE",
-    ],
+    permissions: ["android.permission.CAMERA"],
     blockedPermissions: [
       "android.permission.RECORD_AUDIO",
       "android.permission.READ_EXTERNAL_STORAGE",
+      "android.permission.WRITE_EXTERNAL_STORAGE",
     ],
     allowBackup: false,
   },
@@ -108,7 +106,7 @@ const baseConfig: ExpoConfig = {
   },
   extra: {
     eas: {
-      projectId:  process.env.EAS_PROJECT_ID,
+      projectId: process.env.EAS_PROJECT_ID,
     },
   },
   owner: "inrupt",

@@ -55,7 +55,7 @@ const baseConfig: ExpoConfig = {
   version: "1.0.0",
   orientation: "portrait",
   icon: "./assets/images/logo.png",
-  scheme: "inrupt-wallet",
+  scheme: "inrupt-data-wallet",
   userInterfaceStyle: "automatic",
   splash: {
     image: "./assets/images/splash.png",
@@ -64,14 +64,14 @@ const baseConfig: ExpoConfig = {
   },
   ios: {
     supportsTablet: true,
-    bundleIdentifier: "com.inrupt.inrupt-wallet",
+    bundleIdentifier: "com.inrupt.inrupt-data-wallet",
   },
   android: {
     adaptiveIcon: {
       foregroundImage: "./assets/images/adaptive-icon.png",
       backgroundColor: "#ffffff",
     },
-    package: "com.inrupt.wallet",
+    package: "com.inrupt.inrupt-data-wallet",
     permissions: ["android.permission.CAMERA"],
     blockedPermissions: [
       "android.permission.RECORD_AUDIO",

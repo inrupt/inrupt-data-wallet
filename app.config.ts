@@ -41,8 +41,10 @@ function validateEnv() {
     );
   }
 }
-// Check that all required environment variables are defined at build time.
-validateEnv();
+if (process.env.EAS_BUILD === "true") {
+  // Check that all required environment variables are defined at build time.
+  validateEnv();
+}
 
 const baseConfig: ExpoConfig = {
   name: "inrupt-data-wallet",

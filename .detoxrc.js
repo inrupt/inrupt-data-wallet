@@ -1,6 +1,7 @@
 /** @type {Detox.DetoxConfig} */
 const dotenv = require('dotenv');
 dotenv.config();
+
 module.exports = {
   testRunner: {
     args: {

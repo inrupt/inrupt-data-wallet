@@ -15,8 +15,41 @@
 //
 import type { ExpoConfig, ConfigContext } from "expo/config";
 
-export default ({ config }: ConfigContext): ExpoConfig => ({
-  ...config,
+const isDevelopmentMode =
+  process.env.NODE_ENV === "development" ||
+  process.env.EAS_BUILD_PROFILE === "development";
+const isTestMode =
+  !isDevelopmentMode &&
+  process.env.EAS_BUILD_PROFILE !== "production" &&
+  process.env.EAS_BUILD_PROFILE === "preview";
+
+function validateEnv() {
+  if (
+    typeof process.env.EXPO_PUBLIC_WALLET_API !== "string" ||
+    !URL.canParse(process.env.EXPO_PUBLIC_WALLET_API)
+  ) {
+    throw new Error(
+      `Missing or invalid environment variable EXPO_PUBLIC_WALLET_API. Expected a valid URL, found ${process.env.EXPO_PUBLIC_WALLET_API}`
+    );
+  }
+  if (
+    typeof process.env.EXPO_PUBLIC_LOGIN_URL !== "string" ||
+    !URL.canParse(process.env.EXPO_PUBLIC_LOGIN_URL)
+  ) {
+    throw new Error(
+      `Missing or invalid environment variable EXPO_PUBLIC_LOGIN_URL. Expected a valid URL, found ${process.env.EXPO_PUBLIC_LOGIN_URL}`
+    );
+  }
+  if (typeof process.env.EAS_PROJECT_ID !== "string") {
+    throw new Error(`Missing environment variable EAS_PROJECT_ID.`);
+  }
+}
+if (process.env.EAS_BUILD === "true") {
+  // Check that all required environment variables are defined at build time.
+  validateEnv();
+}
+
+const baseConfig: ExpoConfig = {
   name: "inrupt-data-wallet",
   slug: "inrupt-data-wallet",
   version: "1.0.0",
@@ -39,6 +72,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       backgroundColor: "#ffffff",
     },
     package: "com.inrupt.wallet",
+    permissions: ["android.permission.CAMERA"],
     blockedPermissions: [
       "android.permission.RECORD_AUDIO",
       "android.permission.READ_EXTERNAL_STORAGE",
@@ -54,18 +88,31 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   plugins: [
     "expo-router",
     "expo-secure-store",
-    "@config-plugins/detox",
     [
       "expo-build-properties",
       {
         android: {
-          usesCleartextTraffic: process.env.NODE_ENV === "development",
+          usesCleartextTraffic: isDevelopmentMode,
         },
       },
     ],
     "./plugins/withSigningConfig",
+    // The detox plugin interferes with the generated output, so
+    // only include it when actually building for tests.
+    ...(isTestMode ? ["@config-plugins/detox"] : []),
   ],
   experiments: {
     typedRoutes: true,
   },
+  extra: {
+    eas: {
+      projectId: process.env.EAS_PROJECT_ID,
+    },
+  },
+  owner: "inrupt",
+};
+
+export default ({ config }: ConfigContext): ExpoConfig => ({
+  ...config,
+  ...baseConfig,
 });

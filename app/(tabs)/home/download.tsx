@@ -25,6 +25,7 @@ import IconResourceName from "@/components/common/IconResourceName";
 import { RDF_CONTENT_TYPE } from "@/utils/constants";
 import type { WalletFile } from "@/types/WalletFile";
 import { isDownloadQR } from "@/types/accessPrompt";
+import { useError } from "@/hooks/useError";
 
 interface FileDetailProps {
   file: WalletFile;
@@ -34,6 +35,7 @@ interface FileDetailProps {
 
 const Page: React.FC<FileDetailProps> = () => {
   const params = useLocalSearchParams();
+  const { showErrorMsg } = useError();
   if (!isDownloadQR(params)) {
     throw new Error(
       "Incorrect params for download request: uri and contentType are required"
@@ -50,8 +52,8 @@ const Page: React.FC<FileDetailProps> = () => {
       await queryClient.invalidateQueries({ queryKey: ["files"] });
     },
     onError: (error) => {
-      // TODO: there needs to be better error handling here...
       console.warn(error);
+      showErrorMsg("Unable to save the file into your Wallet.");
     },
     mutationKey: ["filesMutation"],
   });

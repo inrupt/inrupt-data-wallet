@@ -31,16 +31,18 @@ import { isAccessPromptQR } from "@/types/accessPrompt";
 import { faEye } from "@fortawesome/free-solid-svg-icons/faEye";
 import CardInfo from "@/components/common/CardInfo";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import Loading from "@/components/LoadingButton";
 
 const Page: React.FC = () => {
   const params = useLocalSearchParams();
+
   if (!isAccessPromptQR(params)) {
     throw new Error(
       "Incorrect params for access prompt request: webId, client and type are required"
     );
   }
   const router = useRouter();
-  const { data } = useQuery<AccessPromptResource>({
+  const { data, isLoading, isFetching } = useQuery<AccessPromptResource>({
     queryKey: ["accessPromptResource"],
     queryFn: () =>
       getAccessPromptResource({
@@ -87,7 +89,23 @@ const Page: React.FC = () => {
       },
     });
   };
-  if (!data) return <View style={styles.container} testID="no-prompts" />;
+
+  if (isLoading || isFetching)
+    return (
+      <View style={styles.container} testID="no-prompts">
+        <Loading isLoading={true} />
+      </View>
+    );
+
+  if (!data) {
+    return (
+      <View style={styles.emptyState} testID="no-resource">
+        <ThemedText style={styles.emptyStateText}>
+          Resource not found
+        </ThemedText>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -134,6 +152,7 @@ const Page: React.FC = () => {
           customStyle={styles.button}
         />
       </View>
+      <Loading isLoading={isLoading || isFetching} />
     </View>
   );
 };
@@ -147,6 +166,15 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
+  },
+  emptyState: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  emptyStateText: {
+    fontSize: 18,
+    color: Colors.light.grey,
   },
   title: {
     paddingTop: 20,

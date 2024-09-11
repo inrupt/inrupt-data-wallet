@@ -16,6 +16,7 @@
 import { View, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
 import { useNavigation, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
+import { useError } from "@/hooks/useError";
 import { ThemedText } from "@/components/ThemedText";
 import type { BarcodeScanningResult } from "expo-camera";
 import { Camera, CameraView } from "expo-camera";
@@ -31,6 +32,7 @@ class UnrecognisedQrCodeError extends Error {
 
 export default function Logout() {
   const { goBack } = useNavigation();
+  const { showErrorMsg } = useError();
   const { replace, navigate } = useRouter();
   const [scanned, setScanned] = useState(false);
   useEffect(() => {
@@ -68,6 +70,7 @@ export default function Logout() {
         throw new UnrecognisedQrCodeError();
       }
     } catch (err) {
+      showErrorMsg("QR code not a valid format");
       if (err instanceof UnrecognisedQrCodeError) {
         console.warn(err);
       } else {

@@ -51,6 +51,11 @@ export const makeApiRequest = async <T>(
     router.replace("/login?logout=true");
     throw new Error(`Unauthorized: ${response.status}`);
   }
+
+  if (response.status === 404) {
+    return null as T;
+  }
+
   if (!response.ok) {
     throw new Error(`Network response was not ok: ${response.statusText}`);
   }

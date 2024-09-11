@@ -92,14 +92,14 @@ const Page: React.FC = () => {
 
   if (isLoading || isFetching)
     return (
-      <View style={styles.container} testID="no-prompts">
+      <View style={styles.container}>
         <Loading isLoading={true} />
       </View>
     );
 
   if (!data) {
     return (
-      <View style={styles.emptyState} testID="no-resource">
+      <View style={styles.emptyState} testID="no-prompts">
         <ThemedText style={styles.emptyStateText}>
           Resource not found
         </ThemedText>

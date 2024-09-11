@@ -14,6 +14,7 @@ npm-debug.*
 *.orig.*
 web-build/
 .idea
+.vscode/
 
 # macOS
 .DS_Store
@@ -28,6 +29,7 @@ expo-env.d.ts
 .env
 
 *.keystore
+*.apk
 
 # Folder where the UI tests get stored.
 screenshots/

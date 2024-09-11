@@ -51,7 +51,7 @@ if (process.env.EAS_BUILD === "true") {
 
 const baseConfig: ExpoConfig = {
   name: "inrupt-data-wallet",
-  slug: "inrupt-data-wallet",
+  slug: "inrupt-data-wallet-frontend",
   version: "1.0.0",
   orientation: "portrait",
   icon: "./assets/images/logo.png",
@@ -71,8 +71,11 @@ const baseConfig: ExpoConfig = {
       foregroundImage: "./assets/images/adaptive-icon.png",
       backgroundColor: "#ffffff",
     },
-    package: "com.inrupt.inrupt-data-wallet",
-    permissions: ["android.permission.CAMERA"],
+    package: "com.inrupt.inrupt_data_wallet",
+    permissions: [
+      "android.permission.CAMERA",
+      "android.permission.WRITE_EXTERNAL_STORAGE",
+    ],
     blockedPermissions: [
       "android.permission.RECORD_AUDIO",
       "android.permission.READ_EXTERNAL_STORAGE",

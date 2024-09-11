@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import Close from "@/assets/images/close.svg";
 import { ThemedText } from "../ThemedText";
 
@@ -30,12 +30,9 @@ const ErrorPopup: React.FC<ErrorPopupProps> = ({
   return (
     <View style={styles.errorPopup}>
       <ThemedText style={styles.loadingText}>{errorMsg}</ThemedText>
-      <Close
-        width="20"
-        height="20"
-        style={styles.closeView}
-        onPress={onClose}
-      />
+      <TouchableOpacity onPress={onClose} style={styles.closeView}>
+        <Close width="20" height="20" onPress={onClose} />
+      </TouchableOpacity>
     </View>
   );
 };

@@ -15,6 +15,7 @@
 //
 import * as SecureStore from "expo-secure-store";
 import { router } from "expo-router";
+import { handleErrorResponse } from "@inrupt/solid-client-errors";
 
 export const SESSION_KEY = "session";
 
@@ -52,12 +53,12 @@ export const makeApiRequest = async <T>(
     throw new Error(`Unauthorized: ${response.status}`);
   }
 
-  if (response.status === 404) {
-    return null as T;
-  }
-
   if (!response.ok) {
-    throw new Error(`Network response was not ok: ${response.statusText}`);
+    throw handleErrorResponse(
+      response,
+      await response.text(),
+      `${endpoint} returned an error response.`
+    );
   }
 
   const responseType = response.headers.get("content-type");

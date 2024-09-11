@@ -88,18 +88,16 @@ const baseConfig: ExpoConfig = {
   plugins: [
     "expo-router",
     "expo-secure-store",
+    "@config-plugins/detox",
     [
       "expo-build-properties",
       {
         android: {
-          usesCleartextTraffic: isDevelopmentMode,
+          usesCleartextTraffic: process.env.NODE_ENV === "development",
         },
       },
     ],
     "./plugins/withSigningConfig",
-    // The detox plugin interferes with the generated output, so
-    // only include it when actually building for tests.
-    ...(isTestMode ? ["@config-plugins/detox"] : []),
   ],
   experiments: {
     typedRoutes: true,

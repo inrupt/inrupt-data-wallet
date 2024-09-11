@@ -24,12 +24,14 @@ import type * as ReactQuery from "@tanstack/react-query";
 import { render } from "@/test/providers";
 import type { AccessPromptResource } from "@/types/accessPrompt";
 import PromptScreen from "./index";
+import { error } from "console";
 
 function mockUseQuery(
   data?: AccessPromptResource
 ): ReturnType<typeof ReactQuery.useQuery> {
   return {
     data,
+    error: null,
     isLoading: false,
     isFetching: false,
     refetch: jest.fn<ReturnType<typeof ReactQuery.useQuery>["refetch"]>(),

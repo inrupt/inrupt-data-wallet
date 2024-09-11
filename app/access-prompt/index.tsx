@@ -99,7 +99,7 @@ const Page: React.FC = () => {
     error.problemDetails.status === 404
   ) {
     return (
-      <View style={styles.emptyState} testID="no-prompts">
+      <View style={styles.emptyState}>
         <ThemedText style={styles.emptyStateText}>
           Resource not found
         </ThemedText>
@@ -113,6 +113,8 @@ const Page: React.FC = () => {
         <Loading isLoading={true} />
       </View>
     );
+
+  if (!data) return <View style={styles.container} testID="no-prompts" />;
 
   return (
     <View style={styles.container}>

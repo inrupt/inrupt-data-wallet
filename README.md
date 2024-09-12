@@ -38,7 +38,7 @@ Ensure that you have the following dependencies installed and configured:
 First, install any react native dependencies.
 
 ```bash
-npm install
+npm ci
 ```
 
 ### Configure build environment

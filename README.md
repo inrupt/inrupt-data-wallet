@@ -18,7 +18,11 @@ This README provides information on:
   * [Profile](#profile)
   * [Requests](#requests)
   * [Access](#access)
-
+* [Issues & Help](#issues--help)
+  * [Bugs and Feature Requests](#bugs-and-feature-requests)
+  * [Documentation](#documentation)
+  * [Changelog](#changelog)
+  * [License](#license)
 
 ## Build the app locally
 
@@ -219,3 +223,28 @@ From here, the user can view all the requests along with their details (requesto
 This page shows what access has been granted to other agents.
 
 For each authorized agent, there is a list of the wallet resources to which they have access. Users also have the option to revoke access to each resource from this page.
+
+
+
+## Issues & Help
+
+### Bugs and Feature Requests
+
+- For public feedback, bug reports, and feature requests please file an issue
+  via [Github](https://github.com/inrupt/inrupt-data-wallet/issues/).
+- For non-public feedback or support inquiries please use the [Inrupt Service
+  Desk](https://inrupt.atlassian.net/servicedesk).
+
+### Documentation
+
+- [Inrupt Data Wallet](https://docs.inrupt.com/data-wallet/)
+- [Homepage](https://docs.inrupt.com/)
+
+### Changelog
+
+See [the release
+notes](https://github.com/inrupt/inrupt-data-wallet/releases).
+
+### License
+
+Apache 2.0 © [Inrupt](https://inrupt.com)

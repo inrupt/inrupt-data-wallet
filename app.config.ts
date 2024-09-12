@@ -76,6 +76,7 @@ const baseConfig: ExpoConfig = {
     blockedPermissions: [
       "android.permission.RECORD_AUDIO",
       "android.permission.READ_EXTERNAL_STORAGE",
+      "android.permission.WRITE_EXTERNAL_STORAGE",
     ],
     allowBackup: false,
   },

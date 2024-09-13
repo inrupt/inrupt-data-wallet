@@ -1,0 +1,25 @@
+name: Inrupt Data Wallet CD
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  CI: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+            node-version-file: ".nvmrc"
+            cache: npm
+      - run: npm ci
+      - run: npm install -g eas-cli
+      - run: eas build --platform all --profile preview --message "SNAPSHOT build"
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          EAS_PROJECT_ID: ${{ secrets.EAS_PROJECT_ID }}
+  

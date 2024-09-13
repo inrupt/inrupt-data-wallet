@@ -13,14 +13,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-import { View, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Dimensions,
+  Alert,
+  TouchableOpacity,
+} from "react-native";
 import { useNavigation, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { useError } from "@/hooks/useError";
-import { ThemedText } from "@/components/ThemedText";
 import type { BarcodeScanningResult } from "expo-camera";
-import { Camera, CameraView } from "expo-camera";
+import { CameraView, Camera } from "expo-camera";
 import { isAccessPromptQR, isDownloadQR } from "@/types/accessPrompt";
+import * as Linking from "expo-linking";
+import { PermissionStatus } from "expo-image-picker";
+import { ThemedText } from "@/components/ThemedText";
 
 const { width } = Dimensions.get("window");
 
@@ -34,19 +42,38 @@ export default function Logout() {
   const { goBack } = useNavigation();
   const { showErrorMsg } = useError();
   const { replace, navigate } = useRouter();
-  const [scanned, setScanned] = useState(false);
+  const [showScanned, setShowScanned] = useState(false);
+  const handleDeniedPermissions = () => {
+    Alert.alert(
+      "Permission Denied",
+      "Camera access is required. Please enable it in your device settings.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Open Settings",
+          onPress: () => Linking.openSettings(), // This will open the app settings page
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
   useEffect(() => {
     const getCameraPermissions = async () => {
-      await Camera.requestCameraPermissionsAsync();
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      if (status !== PermissionStatus.GRANTED) {
+        handleDeniedPermissions();
+        return;
+      }
+      setShowScanned(true);
     };
-    getCameraPermissions().catch(() =>
-      // eslint-disable-next-line no-console
-      console.log("Don't have camera permission")
-    );
+    getCameraPermissions().catch(() => {
+      console.log("Don't have camera permission");
+    });
   }, []);
 
   const handleBarCodeScanned = ({ data }: BarcodeScanningResult) => {
-    setScanned(true);
+    setShowScanned(false);
     try {
       const resourceInfo = JSON.parse(data);
       if (isAccessPromptQR(resourceInfo)) {
@@ -95,15 +122,16 @@ export default function Logout() {
         </TouchableOpacity>
       </View>
       <View style={styles.cameraContainer}>
-        <CameraView
-          onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
-          barcodeScannerSettings={{
-            barcodeTypes: ["qr"],
-          }}
-          style={styles.camera}
-        />
+        {showScanned && (
+          <CameraView
+            onBarcodeScanned={handleBarCodeScanned}
+            barcodeScannerSettings={{
+              barcodeTypes: ["qr"],
+            }}
+            style={styles.camera}
+          />
+        )}
       </View>
-
       <View style={styles.footer}>
         <ThemedText style={styles.footerText}>Scan a QR code</ThemedText>
       </View>

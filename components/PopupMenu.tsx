@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 import React, { useRef } from "react";
-import { Dimensions, StyleSheet, TouchableOpacity } from "react-native";
+import { Dimensions, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
 import { PermissionStatus } from "expo-image-picker";
@@ -26,6 +26,7 @@ import { faImage } from "@fortawesome/free-solid-svg-icons/faImage";
 import { faFile } from "@fortawesome/free-solid-svg-icons/faFile";
 import { faCamera } from "@fortawesome/free-solid-svg-icons/faCamera";
 import { faQrcode } from "@fortawesome/free-solid-svg-icons/faQrcode";
+import * as Linking from "expo-linking";
 import { ThemedText } from "./ThemedText";
 
 const { width } = Dimensions.get("window");
@@ -80,9 +81,25 @@ const PopupMenu: React.FC<PopupMenuProps> = ({
       break;
   }
 
+  const handleDeniedPermissions = (note: string) => {
+    Alert.alert(
+      "Permission Denied",
+      `${note}. Please enable it in your device settings.`,
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Open Settings",
+          onPress: () => Linking.openSettings(), // This will open the app settings page
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
   const takePicture = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== PermissionStatus.GRANTED) {
+      handleDeniedPermissions("Camera access is required to take photos");
       return;
     }
     const result = await ImagePicker.launchCameraAsync({
@@ -111,6 +128,7 @@ const PopupMenu: React.FC<PopupMenuProps> = ({
       const { status } =
         await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (status !== PermissionStatus.GRANTED) {
+        handleDeniedPermissions("Image Library access is required");
         return;
       }
       const result = await ImagePicker.launchImageLibraryAsync();

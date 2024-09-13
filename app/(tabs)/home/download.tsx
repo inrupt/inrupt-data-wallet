@@ -26,6 +26,7 @@ import { RDF_CONTENT_TYPE } from "@/utils/constants";
 import type { WalletFile } from "@/types/WalletFile";
 import { isDownloadQR } from "@/types/accessPrompt";
 import { useError } from "@/hooks/useError";
+import { hasProblemDetails } from "@inrupt/solid-client-errors";
 
 interface FileDetailProps {
   file: WalletFile;
@@ -52,7 +53,15 @@ const Page: React.FC<FileDetailProps> = () => {
       await queryClient.invalidateQueries({ queryKey: ["files"] });
     },
     onError: (error) => {
-      console.warn(error);
+      if (hasProblemDetails(error)) {
+        console.debug(
+          `${error.problemDetails.status}: ${error.problemDetails.title}.`
+        );
+        console.debug(error.problemDetails.detail);
+      } else {
+        console.debug("A non-HTTP error happened.");
+        console.debug(error);
+      }
       showErrorMsg("Unable to save the file into your Wallet.");
     },
     mutationKey: ["filesMutation"],

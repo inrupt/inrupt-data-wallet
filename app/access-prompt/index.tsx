@@ -32,6 +32,7 @@ import { faEye } from "@fortawesome/free-solid-svg-icons/faEye";
 import CardInfo from "@/components/common/CardInfo";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import Loading from "@/components/LoadingButton";
+import { hasProblemDetails } from "@inrupt/solid-client-errors";
 
 const Page: React.FC = () => {
   const params = useLocalSearchParams();
@@ -42,14 +43,16 @@ const Page: React.FC = () => {
     );
   }
   const router = useRouter();
-  const { data, isLoading, isFetching } = useQuery<AccessPromptResource>({
-    queryKey: ["accessPromptResource"],
-    queryFn: () =>
-      getAccessPromptResource({
-        type: params.type,
-        webId: params.webId,
-      }),
-  });
+  const { data, error, isLoading, isFetching } = useQuery<AccessPromptResource>(
+    {
+      queryKey: ["accessPromptResource"],
+      queryFn: () =>
+        getAccessPromptResource({
+          type: params.type,
+          webId: params.webId,
+        }),
+    }
+  );
   const navigation = useNavigation();
   const mutation = useMutation({
     mutationFn: requestAccessPrompt,
@@ -90,6 +93,20 @@ const Page: React.FC = () => {
     });
   };
 
+  if (
+    error !== null &&
+    hasProblemDetails(error) &&
+    error.problemDetails.status === 404
+  ) {
+    return (
+      <View style={styles.emptyState}>
+        <ThemedText style={styles.emptyStateText}>
+          Resource not found
+        </ThemedText>
+      </View>
+    );
+  }
+
   if (isLoading || isFetching)
     return (
       <View style={styles.container}>
@@ -97,15 +114,7 @@ const Page: React.FC = () => {
       </View>
     );
 
-  if (!data) {
-    return (
-      <View style={styles.emptyState} testID="no-prompts">
-        <ThemedText style={styles.emptyStateText}>
-          Resource not found
-        </ThemedText>
-      </View>
-    );
-  }
+  if (!data) return <View style={styles.container} testID="no-prompts" />;
 
   return (
     <View style={styles.container}>

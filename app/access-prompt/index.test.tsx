@@ -30,6 +30,7 @@ function mockUseQuery(
 ): ReturnType<typeof ReactQuery.useQuery> {
   return {
     data,
+    error: null,
     isLoading: false,
     isFetching: false,
     refetch: jest.fn<ReturnType<typeof ReactQuery.useQuery>["refetch"]>(),

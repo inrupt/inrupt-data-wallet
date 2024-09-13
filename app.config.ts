@@ -72,11 +72,15 @@ const baseConfig: ExpoConfig = {
       backgroundColor: "#ffffff",
     },
     package: "com.inrupt.inrupt_data_wallet",
-    permissions: ["android.permission.CAMERA"],
+    permissions: [
+      "android.permission.CAMERA",
+      // Not including the following prevents from taking pictures
+      // and reading the media gallery in Android 12.
+      "android.permission.WRITE_EXTERNAL_STORAGE",
+    ],
     blockedPermissions: [
       "android.permission.RECORD_AUDIO",
       "android.permission.READ_EXTERNAL_STORAGE",
-      "android.permission.WRITE_EXTERNAL_STORAGE",
     ],
     allowBackup: false,
   },

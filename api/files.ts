@@ -99,3 +99,13 @@ export const getFile = async (fileId: string): Promise<Blob> => {
     "GET"
   );
 };
+
+export const downloadFile = async (fileId: string): Promise<Blob> => {
+  return makeApiRequest<Blob>(
+    `wallet/${encodeURIComponent(fileId)}?raw=true`,
+    "GET",
+    null,
+    null,
+    true
+  );
+};

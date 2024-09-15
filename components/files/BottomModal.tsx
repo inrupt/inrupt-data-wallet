@@ -13,13 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-import React, { useState } from "react";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import { View, StyleSheet, TouchableOpacity, ActivityIndicator } from "react-native";
 import { BottomSheetView } from "@gorhom/bottom-sheet";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteFile, getFile } from "@/api/files";
+import { deleteFile, downloadFile } from "@/api/files";
 import * as Sharing from "expo-sharing";
 import * as FileSystem from "expo-file-system";
 import QRCode from "react-native-qrcode-svg";
@@ -43,6 +43,7 @@ const BottomModal: React.FC<BottomModalProps> = ({
   onChangeSnapPoint,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [fileDownload, setFileDownload] = useState<string | null>(null);
   const { data: userInfo } = useQuery<UserInfo>({
     queryKey: ["userInfo"],
     staleTime: Infinity,
@@ -53,27 +54,41 @@ const BottomModal: React.FC<BottomModalProps> = ({
     onSuccess: () => queryClient.refetchQueries({ queryKey: ["files"] }),
     mutationKey: ["filesMutation"],
   });
-  const { data } = useQuery<Blob>({
-    queryKey: ["file", file?.fileName],
-    queryFn: () => getFile(file?.fileName as string),
-  });
   const queryClient = useQueryClient();
 
-  const onFileShare = async (fileName: string) => {
-    if (!data) return;
-    const fr = new FileReader();
-    fr.onload = async () => {
-      const fileUri = `${FileSystem.documentDirectory}/${fileName}`;
-      if (typeof fr.result !== "string") {
-        throw new Error("An error happened while reading the file.");
-      }
-      await FileSystem.writeAsStringAsync(fileUri, fr.result?.split(",")[1], {
-        encoding: FileSystem.EncodingType.Base64,
+  const onFileShare = useCallback(
+    async (fileName: string) => {
+      const data = await queryClient.fetchQuery<Blob>({
+        queryKey: ["downloadFile", fileName],
+        queryFn: () => downloadFile(fileName),
       });
-      await Sharing.shareAsync(fileUri);
-    };
-    fr.readAsDataURL(data);
-  };
+
+      setFileDownload(null);
+
+      if (!data) return;
+      const fr = new FileReader();
+      fr.onload = async () => {
+        const fileUri = `${FileSystem.documentDirectory}/${fileName}`;
+        if (typeof fr.result !== "string") {
+          throw new Error("An error happened while reading the file.");
+        }
+        await FileSystem.writeAsStringAsync(fileUri, fr.result?.split(",")[1], {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+        await Sharing.shareAsync(fileUri);
+      };
+
+      fr.readAsDataURL(data);
+    },
+    [queryClient]
+  );
+
+  useEffect(() => {
+    if (fileDownload) {
+      onFileShare(fileDownload).catch(() => console.log("Shared file"));
+    }
+  }, [fileDownload, onFileShare]);
+
   const onDeleteFile = async (fileName: string) => {
     deleteMutation
       .mutateAsync(fileName)
@@ -108,6 +123,8 @@ const BottomModal: React.FC<BottomModalProps> = ({
           )}
 
           <ThemedText
+            ellipsizeMode={"tail"}
+            numberOfLines={1}
             style={{ fontSize: 18, paddingLeft: isShowQRCode ? 16 : 0 }}
           >
             {formatResourceName(
@@ -139,12 +156,19 @@ const BottomModal: React.FC<BottomModalProps> = ({
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.fileDetailMenuContainer}
-              onPress={() => file && onFileShare(file?.fileName)}
+              onPress={() => file && setFileDownload(file?.fileName)}
             >
               <FontAwesome6 size={24} name="download" />
-              <ThemedText style={{ paddingLeft: 24, fontSize: 16 }}>
+              <ThemedText style={{ paddingLeft: 16, fontSize: 16 }}>
                 Download a copy
               </ThemedText>
+              {Boolean(fileDownload) && (
+                <ActivityIndicator
+                  style={{ paddingLeft: 24 }}
+                  size={24}
+                  color="#000"
+                />
+              )}
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.fileDetailMenuContainer}

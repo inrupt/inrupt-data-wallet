@@ -51,7 +51,7 @@ if (process.env.EAS_BUILD === "true") {
 
 const baseConfig: ExpoConfig = {
   name: "inrupt-data-wallet",
-  slug: "inrupt-data-wallet-frontend",
+  slug: "inrupt-data-wallet",
   version: "1.0.0",
   orientation: "portrait",
   icon: "./assets/images/logo.png",

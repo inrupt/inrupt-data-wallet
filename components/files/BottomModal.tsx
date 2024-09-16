@@ -14,7 +14,12 @@
 // limitations under the License.
 //
 import React, { useCallback, useEffect, useState } from "react";
-import { View, StyleSheet, TouchableOpacity, ActivityIndicator } from "react-native";
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import { BottomSheetView } from "@gorhom/bottom-sheet";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";

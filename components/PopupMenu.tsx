@@ -26,6 +26,7 @@ import { faImage } from "@fortawesome/free-solid-svg-icons/faImage";
 import { faFile } from "@fortawesome/free-solid-svg-icons/faFile";
 import { faCamera } from "@fortawesome/free-solid-svg-icons/faCamera";
 import { faQrcode } from "@fortawesome/free-solid-svg-icons/faQrcode";
+import { useError } from "@/hooks/useError";
 import { ThemedText } from "./ThemedText";
 
 const { width } = Dimensions.get("window");
@@ -51,12 +52,18 @@ const PopupMenu: React.FC<PopupMenuProps> = ({
 }) => {
   const router = useRouter();
   const menuRef = useRef(null);
+  const { showErrorMsg } = useError();
 
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: postFile,
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["files"] });
+    },
+    onError: (error) => {
+      console.debug("A non-HTTP error happened.");
+      console.debug(error);
+      showErrorMsg("Unable to save the file into your Wallet.");
     },
     mutationKey: ["filesMutation"],
   });

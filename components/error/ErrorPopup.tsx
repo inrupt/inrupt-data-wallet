@@ -41,8 +41,8 @@ const styles = StyleSheet.create({
   errorPopup: {
     position: "absolute",
     bottom: 80,
-    left: 24,
-    right: 24,
+    left: 16,
+    right: 16,
     backgroundColor: "white",
     justifyContent: "space-between",
     alignItems: "center",
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   },
   closeView: {
     alignItems: "center",
-    paddingLeft: 24,
+    paddingLeft: 8,
     paddingRight: 16,
   },
 });

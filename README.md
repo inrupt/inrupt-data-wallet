@@ -1,18 +1,22 @@
-# Data Wallet Front-end Application
+# Data Wallet Application
 
-This project produces a front-end react native application for use with the Inrupt Data Wallet.
+This project produces a front-end react native application for use with the Inrupt Data Wallet service.
 This README provides information on:
 
-* [Setup](#setup)
+* [Setup and configuration](#setup-and-configuration)
   * [Prerequisites](#prerequisites)
   * [Install dependencies](#install-dependencies)
   * [Configure build environment](#configure-build-environment)
     * [Create keystore](#create-keystore)
-* [Running](#running)
-  * [Configure test environment](#configure-test-environment)
-  * [Test native versions](#test-native-versions)
-    * [iOS app](#ios-app)
-    * [Android app](#android-app)
+    * [Make the keystore available to CI](#make-the-keystore-available-to-ci)
+* [Running the application locally](#running-the-application-locally)
+  * [On a device with Expo Go](#on-a-device-with-expo-go)
+  * [On an Android emulator](#on-an-android-emulator)
+  * [On an iOS simulator](#on-an-ios-simulator)
+* [Build the app on EAS](#build-the-app-on-eas)
+* [Testing with Detox](#testing-with-detox)
+  * [On Android](#on-android)
+  * [On iOS](#on-ios)
 * [UI overview](#ui-overview)
   * [Home](#home)
   * [Profile](#profile)
@@ -24,18 +28,20 @@ This README provides information on:
   * [Changelog](#changelog)
   * [License](#license)
 
-## Build the app locally
+## Setup and configuration
 
 ### Prerequisites
 
 Ensure that you have the following dependencies installed and configured:
-- Xcode
-- iOS simulators
+
+- [Expo Go](https://expo.dev/go) - app to be installed on a real device
+- [Xcode](https://apps.apple.com/us/app/xcode/id497799835)
+- [iOS simulators](https://developer.apple.com/documentation/safari-developer-tools/installing-xcode-and-simulators)
 - [Android emulators](https://developer.android.com/studio/install)
 
 ### Install dependencies
 
-First, install any react native dependencies.
+First, install all the project dependencies.
 
 ```bash
 npm ci
@@ -51,7 +57,29 @@ EXPO_PUBLIC_LOGIN_URL=
 EXPO_PUBLIC_WALLET_API=
 ```
 
-#### Create keystore
+Automated testing also requires access credentials for the Data Wallet:
+```bash
+TEST_ACCOUNT_USERNAME=<Wallet username>
+TEST_ACCOUNT_PASSWORD=<Wallet password>
+```
+
+For testing with iOS simulators, you will need:
+```bash
+IOS_BINARY_PATH=<Path to the built iOS binary>
+TEST_IOS_SIM=<Name of the iOS simulator on your device>
+```
+
+For testing with Android emulators, you will need:
+```bash
+ANDROID_BINARY_PATH=<Path to the main Android binary>
+ANDROID_TEST_BINARY_PATH=<Path to the test Android binary>
+TEST_ANDROID_EMU=<Name of the Android emulator on your device>
+```
+Ensure that the ``TEST_ANDROID_EMU`` configuration aligns with a device emulator in Android Studio.
+For example: ``TEST_ANDROID_EMU=Android_34``. If the emulated device is called "Test Emulator 33",
+the EMU name will be ``Test_Emulator_33``.
+
+#### Create keystore for Android
 
 The Android app will need to be signed for it to be installed. See: https://reactnative.dev/docs/signed-apk-android
 for more information on this.
@@ -59,7 +87,8 @@ for more information on this.
 __WARNING:__ The following is only to be used for development. In production the keystore should
 be generated and configured in a more secure manner.
 
-To generate a keystore with a key and cert run the following from the root of the project:
+To generate a keystore with a key and cert run the following from the root of the project (this requires a Java JDK
+installation):
 
 ```bash
 keytool -genkeypair -v -storetype PKCS12 \
@@ -77,13 +106,54 @@ KEYSTORE_PASSWORD=<keystore password>
 #### Make the keystore available to CI
 
 In order to make the keystore available to CI, it has to be present in the repository secret.
-To 
 - Encrypting the keystore with a GPG key to get a Base64 representation: `gpg -c --armor wallet.keystore`
-- Create Github repository secrets:
+- Create GitHub repository secrets:
   - ENCRYPTED_KEYSTORE with the Base64-encoded encrypted keystore
   - KEYSTORE_DECRYPTION_KEY with the GPG key
   - KEYSTORE_PASSWORD with the keystore password
 - In CI, decrypt the keystore back: `gpg -d --passphrase "..." --batch wallet.keystore.asc > wallet.keystore`
+
+## Running the application locally
+
+Start the application:
+
+```bash
+npx expo start
+```
+
+In the output, you'll find options to open the app in a
+- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo.
+- [Development build](https://docs.expo.dev/develop/development-builds/introduction/)
+- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
+- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
+
+### On a device with Expo Go
+
+Press ``s`` to switch to the Expo Go environment. This will display a QR code which you will need to scan from your
+device's Expo Go application.
+
+The Wallet application will then build and install into your device for you to test & debug.
+
+### On an Android emulator
+
+For Android, ensure that a virtual device has been added to the Android emulator by opening the new Device Manager with
+the following actions: 
+* Go to the Android Studio Welcome screen
+* Select **More Actions > Virtual Device Manager.**
+
+```bash
+npm run android
+```
+Note: When running on the android emulator, there is a special loopback IP, 10.0.2.2, which points to the host machine 127.0.0.1. You can use it if the emulator complains about cleartext communication to the local network IP of the host.
+### On an iOS simulator
+
+To build the iOS wallet app in an iOS simulator, just run the following command:
+
+```bash
+npm run ios
+```
+
+This will install the necessary CocoaPods and compile the application. Upon completion, the iOS simulator should be open and the wallet app running.
 
 ## Build the app on EAS
 
@@ -97,52 +167,38 @@ In order to trigger an EAS build, please add the appropriate project ID in your 
 EAS_PROJECT_ID="..." eas build --platform android --local --profile preview
 ```
 
-## Running the application
+## Testing with Detox
 
-If you are going to run the application in an emulator or simulator, you need to build the development version using
-one of the following:
-   ```bash
-    npm run android
-    npm run ios
-   ```
+### On Android
 
-Start the application:
-
-   ```bash
-    npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-Note: When running on the android emulator, there is a special loopback IP, 10.0.2.2, which points to the host machine 127.0.0.1. You can use it if the emulator complains about cleartext communication to the local network IP of the host.
-
-## Running the UI-based tests
-
-### Configure test environment
-
-The tests require access credentials for a Pod which will be used by this instance of the wallet.
-Make a copy of the provided `.env.sample` named `.env`, and replace placeholders with actual values
-specific to your setup.
-
-### Running the tests on iOS
-
-To build the iOS wallet app in an iOS simulator, just run the following command:
+Run the following command to build the Android app. This process may take up to 30 minutes to complete.
 
 ```bash
-npm run ios
+npx detox build --configuration=android.emu.release
 ```
 
-This will install the necessary CocoaPods and compile the application. Upon completion, the iOS simulator should be open and the wallet app running.
+For local development (a back-end server running on localhost or at an alternative location), use
+the `android.emu.debug` configuration. If running the debug configuration, make sure to run the
+development server (`npx expo start`).
 
-If you want to generate the iOS binary as well, run the following commands. Note that this process may take around 30 minutes to complete.
+Once built, run the detox tests for the relevant configuration:
 
 ```bash
-npx expo run:ios
+npx detox test --configuration=android.emu.release
+```
+
+After completion, the binary apps will be located in:
+```bash
+./android/app/build/outputs
+```
+
+You can share the .apk files with others who need to run the Detox tests without building the Android app locally.
+
+### On iOS
+
+If you want to generate the iOS binary, run the following commands. Note that this process may take around 30 minutes to complete.
+
+```bash
 xcodebuild -workspace ios/inruptwalletfrontend.xcworkspace -scheme inruptwalletfrontend -configuration Release -sdk iphonesimulator -derivedDataPath ios/build
 ```
 
@@ -158,39 +214,6 @@ Execute the command below to start Detox test on iOS.
 ```bash
 npx detox test --configuration=ios.sim.release
 ```
-
-### Running the tests on Android
-
-Ensure that a virtual device has been added to the Android emulator.
-
-First, you'll need to generate the app metadata with the following command:
-
-```bash
-npx expo prebuild --platform android
-```
-
-Run the following command to build the Android app. This process may take up to 30 minutes to complete.
-
-```bash
-npx detox build --configuration android.emu.release
-```
-
-For local development (a back-end server running on localhost or at an alternative location), use
-the `android.emu.debug` configuration. If running the debug configuration, make sure to run the
-development server (`npx expo start`).
-
-Once built, run the detox tests for the relevant configuration:
-
-```bash
-npx detox test --configuration android.emu.release
-```
-
-After completion, the binary apps will be located in:
-```bash
-./android/app/build/outputs
-```
-
-You can share the .apk files with others who need to run the Detox tests without building the Android app locally.
 
 ## UI overview
 
@@ -224,16 +247,14 @@ This page shows what access has been granted to other agents.
 
 For each authorized agent, there is a list of the wallet resources to which they have access. Users also have the option to revoke access to each resource from this page.
 
-
-
 ## Issues & Help
 
 ### Bugs and Feature Requests
 
 - For public feedback, bug reports, and feature requests please file an issue
   via [Github](https://github.com/inrupt/inrupt-data-wallet/issues/).
-- For non-public feedback or support inquiries please use the [Inrupt Service
-  Desk](https://inrupt.atlassian.net/servicedesk).
+- For non-public feedback or support inquiries please use the
+  [Inrupt Service Desk](https://inrupt.atlassian.net/servicedesk).
 
 ### Documentation
 
@@ -242,8 +263,7 @@ For each authorized agent, there is a list of the wallet resources to which they
 
 ### Changelog
 
-See [the release
-notes](https://github.com/inrupt/inrupt-data-wallet/releases).
+See [the release notes](https://github.com/inrupt/inrupt-data-wallet/releases).
 
 ### License
 

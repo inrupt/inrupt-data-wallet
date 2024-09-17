@@ -7,7 +7,7 @@ This README provides information on:
   * [Prerequisites](#prerequisites)
   * [Install dependencies](#install-dependencies)
   * [Configure build environment](#configure-build-environment)
-    * [Create keystore](#create-keystore)
+    * [Create keystore for Android](#create-keystore-for-android)
     * [Make the keystore available to CI](#make-the-keystore-available-to-ci)
 * [Running the application locally](#running-the-application-locally)
   * [On a device with Expo Go](#on-a-device-with-expo-go)

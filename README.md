@@ -155,12 +155,21 @@ npm run ios
 
 This will install the necessary CocoaPods and compile the application. Upon completion, the iOS simulator should be open and the wallet app running.
 
-## Build the app on EAS
+## Build the app on the Expo Application Service (EAS)
 
-Both the Android and the iOS versions of the app can be built using the Expo Application Service (EAS). To do so, follow
-the instructions from the [EAS documentation](https://docs.expo.dev/build/setup/).
+**Prerequisite**: All the following instructions are only applicable if you have an EAS account attached
+to the Inrupt organization on EAS.
 
-Note that the project ID is not hard-coded in the `app.config.ts`, but provided as an environment variable instead.
+Both the Android and the iOS versions of the app can be built using EAS. To do so, follow the instructions
+from the [EAS documentation](https://docs.expo.dev/build/setup/). Note that the project is already configured,
+the applicable instructions are the ones regarding your own environment.
+
+By default, the EAS CLI will trigger a build on the EAS infrastructure. It is also possible to 
+[run a build locally](https://docs.expo.dev/build-reference/local-builds/), which results in the built binary
+being available on the developer machine. This requires all the environment setup for being able to build
+the app locally, similar to `npx expo run:<android | ios>`.
+
+The project ID is not hard-coded in the `app.config.ts`, but provided as an environment variable instead.
 In order to trigger an EAS build, please add the appropriate project ID in your environment, e.g.
 
 ```

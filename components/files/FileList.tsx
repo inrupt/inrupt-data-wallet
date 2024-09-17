@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     paddingLeft: 18,
     flex: 1,
     fontSize: 16,
-    paddingRight: 2,
+    paddingRight: 8,
   },
   menuIconContainer: {
     width: 30,

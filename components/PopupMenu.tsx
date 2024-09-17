@@ -56,14 +56,14 @@ const PopupMenu: React.FC<PopupMenuProps> = ({
   const { showErrorMsg } = useError();
 
   const queryClient = useQueryClient();
+
   const mutation = useMutation({
     mutationFn: postFile,
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["files"] });
     },
     onError: (error) => {
-      console.debug("A non-HTTP error happened.");
-      console.debug(error);
+      console.debug("A non-HTTP error occurred.", error);
       showErrorMsg("Unable to save the file into your Wallet.");
     },
     mutationKey: ["filesMutation"],

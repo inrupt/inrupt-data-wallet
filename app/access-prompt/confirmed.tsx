@@ -83,7 +83,7 @@ const Page: React.FC = () => {
           <CustomButton
             variant="primary"
             title="Done"
-            onPress={() => router.replace("/")}
+            onPress={() => router.replace("/requests")}
             customStyle={styles.button}
           />
         </View>

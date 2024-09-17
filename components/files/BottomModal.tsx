@@ -73,16 +73,19 @@ const BottomModal: React.FC<BottomModalProps> = ({
       if (!data) return;
       const fr = new FileReader();
       fr.onload = async () => {
-        const fileUri = `${FileSystem.documentDirectory}${fileName}`;
+        const fileUri = new URL(fileName, FileSystem.documentDirectory!);
         if (typeof fr.result !== "string") {
           throw new Error("An error occurred while reading the file.");
         }
-        await FileSystem.writeAsStringAsync(fileUri, fr.result.split(",")[1], {
-          encoding: FileSystem.EncodingType.Base64,
-        });
-        await Sharing.shareAsync(fileUri);
+        await FileSystem.writeAsStringAsync(
+          fileUri.toString(),
+          fr.result.split(",")[1],
+          {
+            encoding: FileSystem.EncodingType.Base64,
+          }
+        );
+        await Sharing.shareAsync(fileUri.toString());
       };
-
       fr.readAsDataURL(data);
     },
     [queryClient]

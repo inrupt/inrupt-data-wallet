@@ -51,7 +51,7 @@ if (process.env.EAS_BUILD === "true") {
 
 const baseConfig: ExpoConfig = {
   name: "inrupt-data-wallet",
-  slug: "inrupt-data-wallet-frontend",
+  slug: "inrupt-data-wallet",
   version: "1.0.0",
   orientation: "portrait",
   icon: "./assets/images/logo.png",
@@ -72,11 +72,15 @@ const baseConfig: ExpoConfig = {
       backgroundColor: "#ffffff",
     },
     package: "com.inrupt.inrupt_data_wallet",
-    permissions: ["android.permission.CAMERA"],
+    permissions: [
+      "android.permission.CAMERA",
+      // Not including the following prevents from taking pictures
+      // and reading the media gallery in Android 12.
+      "android.permission.WRITE_EXTERNAL_STORAGE",
+    ],
     blockedPermissions: [
       "android.permission.RECORD_AUDIO",
       "android.permission.READ_EXTERNAL_STORAGE",
-      "android.permission.WRITE_EXTERNAL_STORAGE",
     ],
     allowBackup: false,
   },

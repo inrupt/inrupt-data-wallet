@@ -14,7 +14,9 @@
 // limitations under the License.
 //
 import mime from "mime";
+import FormData from "form-data";
 import type { WalletFile } from "@/types/WalletFile";
+import { handleErrorResponse } from "@inrupt/solid-client-errors";
 import { makeApiRequest } from "./apiRequest";
 
 interface FileObject {
@@ -27,38 +29,63 @@ export const fetchFiles = async (): Promise<WalletFile[]> => {
   return makeApiRequest<WalletFile[]>("wallet");
 };
 
-export const postFile = async (file: FileObject): Promise<void> => {
-  const formData = new FormData();
+export const postFile = async (fileMetadata: FileObject): Promise<void> => {
+  const acceptValue = fileMetadata.type ?? mime.getType(fileMetadata.name);
+  const acceptHeader = new Headers();
+  if (acceptValue !== null) {
+    acceptHeader.append("Accept", acceptValue);
+  }
+  // Make a HEAD request to the file to report on potential errors
+  // in more details than the fetch with the FormData.
+  const fileResponse = await fetch(fileMetadata.uri, {
+    headers: acceptHeader,
+    method: "HEAD",
+  });
+  if (!fileResponse.ok) {
+    throw handleErrorResponse(
+      fileResponse,
+      await fileResponse.text(),
+      "Failed to fetch file to upload"
+    );
+  }
+  // The following is declared as `any` because there is a type inconsistency,
+  // and the global FormData (expected by the fetch body) is actually not compliant
+  // with the Web spec and its TS declarations. formData.set doesn't exist, and
+  // formData.append doesn't support a Blob being passed.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const formData: any = new FormData();
   formData.append("file", {
-    name: file.name,
-    type: file.type || mime.getType(file.name) || "application/octet-stream",
-    uri: file.uri,
-  } as unknown as Blob);
-
+    name: fileMetadata.name,
+    type:
+      fileMetadata.type ||
+      mime.getType(fileMetadata.name) ||
+      "application/octet-stream",
+    uri: fileMetadata.uri,
+  });
+  let response: Response;
   try {
-    const response = await fetch(
-      `${process.env.EXPO_PUBLIC_WALLET_API}/wallet`,
+    response = await fetch(
+      new URL("wallet", process.env.EXPO_PUBLIC_WALLET_API),
       {
         method: "PUT",
         body: formData,
       }
     );
+  } catch (e) {
+    console.debug("Resolving the file and uploading it to the wallet failed.");
+    throw e;
+  }
 
-    if (response.ok) {
-      console.debug(
-        `Uploaded file to Wallet. HTTP response status:${response.status}`
-      );
-    } else {
-      throw Error(
-        `Failed to upload file to Wallet. HTTP response status from Wallet Backend service:${
-          response.status
-        }`
-      );
-    }
-  } catch (error) {
-    throw Error("Failed to retrieve and upload file to Wallet", {
-      cause: error,
-    });
+  if (response.ok) {
+    console.debug(
+      `Uploaded file to Wallet. HTTP response status:${response.status}`
+    );
+  } else {
+    throw handleErrorResponse(
+      response,
+      await response.text(),
+      "Failed to upload file to Wallet"
+    );
   }
 };
 
@@ -70,5 +97,15 @@ export const getFile = async (fileId: string): Promise<Blob> => {
   return makeApiRequest<Blob>(
     `wallet/${encodeURIComponent(fileId)}?raw=true`,
     "GET"
+  );
+};
+
+export const downloadFile = async (fileId: string): Promise<Blob> => {
+  return makeApiRequest<Blob>(
+    `wallet/${encodeURIComponent(fileId)}?raw=true`,
+    "GET",
+    null,
+    null,
+    true
   );
 };

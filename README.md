@@ -32,6 +32,7 @@ This README provides information on:
 
 ### Prerequisites
 
+In order to log into the Wallet, and for it to be able to persist data, you will need a [Podspaces Account](https://start.inrupt.com).
 Ensure that you have the following dependencies installed and configured:
 
 ##### On the mobile device

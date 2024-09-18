@@ -1,6 +1,6 @@
-# Data Wallet Application
+# Inrupt Data Wallet
 
-This project produces a front-end react native application for use with the Inrupt Data Wallet service.
+This project produces a mobile React Native application for use with the Inrupt Data Wallet service.
 This README provides information on:
 
 * [Setup and configuration](#setup-and-configuration)
@@ -34,9 +34,20 @@ This README provides information on:
 
 Ensure that you have the following dependencies installed and configured:
 
-- [Expo Go](https://expo.dev/go) - app to be installed on a real device
+##### On the mobile device
+
+- [Expo Go](https://expo.dev/go) - app to be installed on a real device (iOS and Android supported)
+
+##### On the dev machine (iOS)
+
+- [NodeJS and NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 - [Xcode](https://apps.apple.com/us/app/xcode/id497799835)
 - [iOS simulators](https://developer.apple.com/documentation/safari-developer-tools/installing-xcode-and-simulators)
+
+#### On the dev machine (Android)
+
+- [NodeJS and NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+- A Java JDK
 - [Android emulators](https://developer.android.com/studio/install)
 
 ### Install dependencies
@@ -103,16 +114,6 @@ KEYSTORE_PATH=<path>/inrupt-data-wallet/android/app/wallet.keystore
 KEYSTORE_PASSWORD=<keystore password>
 ```
 
-#### Make the keystore available to CI
-
-In order to make the keystore available to CI, it has to be present in the repository secret.
-- Encrypting the keystore with a GPG key to get a Base64 representation: `gpg -c --armor wallet.keystore`
-- Create GitHub repository secrets:
-  - ENCRYPTED_KEYSTORE with the Base64-encoded encrypted keystore
-  - KEYSTORE_DECRYPTION_KEY with the GPG key
-  - KEYSTORE_PASSWORD with the keystore password
-- In CI, decrypt the keystore back: `gpg -d --passphrase "..." --batch wallet.keystore.asc > wallet.keystore`
-
 ## Running the application locally
 
 Start the application:
@@ -129,8 +130,8 @@ In the output, you'll find options to open the app in a
 
 ### On a device with Expo Go
 
-Press ``s`` to switch to the Expo Go environment. This will display a QR code which you will need to scan from your
-device's Expo Go application.
+After expo has started, make sure it targets the Expo Go environment (as opposed to "development build").
+This will display a QR code which you will need to scan from your device's Expo Go application.
 
 The Wallet application will then build and install into your device for you to test & debug.
 
@@ -145,9 +146,10 @@ the following actions:
 npm run android
 ```
 Note: When running on the android emulator, there is a special loopback IP, 10.0.2.2, which points to the host machine 127.0.0.1. You can use it if the emulator complains about cleartext communication to the local network IP of the host.
+
 ### On an iOS simulator
 
-To build the iOS wallet app in an iOS simulator, just run the following command:
+To build the iOS wallet app in an iOS simulator, run the following command:
 
 ```bash
 npm run ios

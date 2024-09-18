@@ -157,12 +157,13 @@ This will install the necessary CocoaPods and compile the application. Upon comp
 
 ## Build the app on the Expo Application Service (EAS)
 
-**Prerequisite**: All the following instructions are only applicable if you have an EAS account attached
-to the Inrupt organization on EAS.
+**Prerequisite**: All the following instructions are only applicable if you have an EAS account. By default,
+the project is configured to be built on an Inrupt EAS project. In order to build a custom version in your
+own EAS account, you'll need to create a new EAS project, and make sure that EAS project and the data (e.g. 
+`name`, `slug`, `project-id`...) in your copy of `app.config.ts` are aligned.
 
 Both the Android and the iOS versions of the app can be built using EAS. To do so, follow the instructions
-from the [EAS documentation](https://docs.expo.dev/build/setup/). Note that the project is already configured,
-the applicable instructions are the ones regarding your own environment.
+from the [EAS documentation](https://docs.expo.dev/build/setup/) to setup your environment.
 
 By default, the EAS CLI will trigger a build on the EAS infrastructure. It is also possible to 
 [run a build locally](https://docs.expo.dev/build-reference/local-builds/), which results in the built binary
@@ -170,7 +171,7 @@ being available on the developer machine. This requires all the environment setu
 the app locally, similar to `npx expo run:<android | ios>`.
 
 The project ID is not hard-coded in the `app.config.ts`, but provided as an environment variable instead.
-In order to trigger an EAS build, please add the appropriate project ID in your environment, e.g.
+In order to trigger an EAS build, please add the appropriate project ID in your environment variables, e.g.
 
 ```
 EAS_PROJECT_ID="..." eas build --platform android --local --profile preview

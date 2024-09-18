@@ -15,37 +15,43 @@
 //
 import React, { createContext, useCallback, useState } from "react";
 import LoginWebViewModal from "@/components/login/LoginWebViewModal";
-import { useSession } from "@/hooks/session";
 import { router } from "expo-router";
+import type { AppStateStatus } from "react-native";
+import { useStorageState } from "@/hooks/useStorageState";
+import { SESSION_KEY } from "@/api/apiRequest";
 
 const LoginWebViewContext = createContext<{
   showLoginPage: () => void;
   requestLogout: () => void;
+  isLoggedIn: () => boolean;
+  isActiveScreen: () => boolean;
 }>({
   showLoginPage: () => null,
   requestLogout: () => null,
+  isLoggedIn: () => false,
+  isActiveScreen: () => false,
 });
 
-export const LoginWebViewProvider = ({ children }: React.PropsWithChildren) => {
+export const LoginWebViewProvider = ({
+  appStateStatus,
+  children,
+}: React.PropsWithChildren & { appStateStatus: AppStateStatus }) => {
   const [modalRequestMode, setModalRequestMode] = useState<
-    "login" | "logout" | "blank"
+    "login" | "logout" | "loginSuccess" | "blank"
   >("blank");
-  const { signIn, signOut } = useSession();
 
-  const handleLoginSuccess = () => {
-    signIn();
-    closeModal();
-    router.replace("/home");
+  const [session, setSession] = useStorageState(SESSION_KEY);
+
+  const handleLoginSuccess = async () => {
+    setSession("true");
+    setModalRequestMode("loginSuccess");
+    router.replace("/");
   };
 
   const handleLogoutSuccess = () => {
-    signOut();
-    closeModal();
-    router.replace("/login");
-  };
-
-  const closeModal = () => {
+    setSession(null);
     setModalRequestMode("blank");
+    router.replace("/login");
   };
 
   const showLoginPage = useCallback(() => {
@@ -56,11 +62,21 @@ export const LoginWebViewProvider = ({ children }: React.PropsWithChildren) => {
     setModalRequestMode("logout");
   }, []);
 
+  const isLoggedIn = useCallback(() => {
+    return !!session;
+  }, [session]);
+
+  const isActiveScreen = useCallback(() => {
+    return appStateStatus === "active";
+  }, [appStateStatus]);
+
   return (
     <LoginWebViewContext.Provider
       value={{
         showLoginPage,
         requestLogout,
+        isLoggedIn,
+        isActiveScreen,
       }}
     >
       {children}

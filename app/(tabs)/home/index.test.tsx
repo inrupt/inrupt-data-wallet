@@ -41,6 +41,10 @@ jest.mock("expo-router", () => {
   };
 });
 
+const mockRefetch = jest.fn().mockImplementation(() => {
+  return Promise.resolve({ data: {}, status: "success" });
+});
+
 function mockUseQuery(
   data: WalletFile[]
 ): ReturnType<typeof ReactQuery.useQuery> {
@@ -48,7 +52,7 @@ function mockUseQuery(
     data,
     isLoading: false,
     isFetching: false,
-    refetch: jest.fn<ReturnType<typeof ReactQuery.useQuery>["refetch"]>(),
+    refetch: mockRefetch,
   } as unknown as ReturnType<typeof ReactQuery.useQuery>;
 }
 

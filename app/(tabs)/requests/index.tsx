@@ -32,7 +32,16 @@ export default function AccessRequestScreen() {
   } = useQuery<AccessRequest[]>({
     queryKey: ["accessRequests"],
     queryFn: getAccessRequests,
+    enabled: false,
   });
+
+  useEffect(() => {
+    refetch().catch((err) => console.error(err));
+    return () => {
+      console.debug("Unmount AccessRequestScreen");
+    };
+  }, [refetch]);
+
   useRefreshOnFocus(refetch);
 
   const navigation = useNavigation("/(tabs)");

@@ -26,6 +26,10 @@ import { AccessRequestMode } from "@/types/enums";
 import type { AccessGrant } from "@/types/accessGrant";
 import GrantsScreen from "./index";
 
+const mockRefetch = jest.fn().mockImplementation(() => {
+  return Promise.resolve({ data: {}, status: "success" });
+});
+
 function mockUseQuery(
   data: AccessGrant[]
 ): ReturnType<typeof ReactQuery.useQuery> {
@@ -33,7 +37,7 @@ function mockUseQuery(
     data,
     isLoading: false,
     isFetching: false,
-    refetch: jest.fn<ReturnType<typeof ReactQuery.useQuery>["refetch"]>(),
+    refetch: mockRefetch,
   } as unknown as ReturnType<typeof ReactQuery.useQuery>;
 }
 

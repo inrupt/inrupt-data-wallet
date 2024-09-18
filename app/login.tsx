@@ -22,39 +22,34 @@ import { clearWebViewIOSCache } from "react-native-webview-ios-cache-clear";
 import Logo from "@/assets/images/future_co.svg";
 import { useLoginWebView } from "@/hooks/useInruptLogin";
 import { useLocalSearchParams } from "expo-router";
-import { useSession } from "@/hooks/session";
 
 const isRunningInExpoGo = Constants.appOwnership === "expo";
 
 const LoginScreen = () => {
   const { showLoginPage, requestLogout } = useLoginWebView();
   const { logout } = useLocalSearchParams();
-  const { session } = useSession();
 
   useEffect(() => {
-    if (session && logout) {
+    if (logout) {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires,global-require
+      const RCTNetworking = require("react-native/Libraries/Network/RCTNetworking");
+      RCTNetworking.default.clearCookies((result: never) => {
+        console.log("clearCookies", result);
+      });
+
+      if (!isRunningInExpoGo) {
+        clearWebViewIOSCache();
+        import("@react-native-cookies/cookies")
+          .then((CookieManager) =>
+            CookieManager.default
+              .clearAll()
+              .then((success) => console.log("Cleared all cookies?", success))
+          )
+          .catch((error) => console.log("Failed to clear cookies", error));
+      }
       requestLogout();
     }
-  }, [logout, session, requestLogout]);
-
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires,global-require
-    const RCTNetworking = require("react-native/Libraries/Network/RCTNetworking");
-    RCTNetworking.default.clearCookies((result: never) => {
-      console.log("clearCookies", result);
-    });
-
-    if (!isRunningInExpoGo) {
-      clearWebViewIOSCache();
-      import("@react-native-cookies/cookies")
-        .then((CookieManager) =>
-          CookieManager.default
-            .clearAll()
-            .then((success) => console.log("Cleared all cookies?", success))
-        )
-        .catch((error) => console.log("Failed to clear cookies", error));
-    }
-  }, []);
+  }, [logout, requestLogout]);
 
   const handleLoginPress = () => {
     if (!logout) {

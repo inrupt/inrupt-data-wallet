@@ -20,6 +20,8 @@ import {
   Text,
   StyleSheet,
   Modal,
+  ActivityIndicator,
+  View,
 } from "react-native";
 import { WebView, type WebViewNavigation } from "react-native-webview";
 import { DEFAULT_LOGIN_URL, DEFAULT_WALLET_API } from "@/constants/defaults";
@@ -28,48 +30,58 @@ interface LoginWebViewModalProps {
   onClose: () => void;
   onLoginSuccess: () => void;
   onLogoutSuccess: () => void;
-  requestMode: "login" | "logout" | "blank";
+  requestMode: "login" | "logout" | "loginSuccess" | "blank";
 }
 
 const LoginWebViewModal: React.FC<LoginWebViewModalProps> = ({
-  onClose = () => null,
-  onLoginSuccess = () => null,
-  onLogoutSuccess = () => null,
+  onClose,
+  onLoginSuccess,
+  onLogoutSuccess,
   requestMode = "blank",
 }) => {
   const BASE_URL = process.env.EXPO_PUBLIC_WALLET_API ?? DEFAULT_LOGIN_URL;
   const LOGIN_URL = process.env.EXPO_PUBLIC_LOGIN_URL ?? DEFAULT_WALLET_API;
   const LOGOUT_URL = `${BASE_URL}/logout`;
+  const LOGIN_SUCCESS_URL = `${BASE_URL}/login/success`;
 
   const webViewRef = useRef<WebView | null>(null);
 
   const handleNavigationStateChange = ({ url }: WebViewNavigation) => {
-    if (url.includes("/login/success")) {
+    if (requestMode === "login" && url.includes("/login/success")) {
       onLoginSuccess();
     }
   };
 
   const handleLoadEnd = () => {
     if (requestMode === "logout") {
+      if (webViewRef.current) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        webViewRef.current.clearCache(true);
+      }
       onLogoutSuccess();
     }
   };
 
   const handleCloseModal = () => {
-    if (!webViewRef.current) {
+    if (webViewRef.current) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      webViewRef.current?.clearCache(true);
+      webViewRef.current.clearCache(true);
     }
     onClose();
   };
 
-  if (requestMode === "logout") {
+  const isLogoutOrLoginSuccess =
+    requestMode === "logout" || requestMode === "loginSuccess";
+
+  if (isLogoutOrLoginSuccess) {
+    const sourceUri = requestMode === "logout" ? LOGOUT_URL : LOGIN_SUCCESS_URL;
     return (
       <SafeAreaView style={[styles.container, { display: "none", opacity: 0 }]}>
         <WebView
           ref={webViewRef}
-          source={{ uri: LOGOUT_URL }}
+          source={{ uri: sourceUri }}
           onNavigationStateChange={handleNavigationStateChange}
           incognito={false}
           domStorageEnabled={false}
@@ -94,7 +106,21 @@ const LoginWebViewModal: React.FC<LoginWebViewModalProps> = ({
           domStorageEnabled={false}
           sharedCookiesEnabled
           thirdPartyCookiesEnabled
-          onLoadEnd={handleLoadEnd}
+          startInLoadingState={true}
+          renderLoading={() => (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+                position: "absolute",
+                height: "100%",
+                width: "100%",
+              }}
+            >
+              <ActivityIndicator size={44} />
+            </View>
+          )}
         />
         <TouchableOpacity style={styles.closeButton} onPress={handleCloseModal}>
           <Text style={styles.closeButtonText}>Close</Text>

@@ -18,14 +18,13 @@ import { DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   QueryClientProvider,
   QueryClient,
   focusManager,
 } from "@tanstack/react-query";
 
-import { SessionProvider } from "@/hooks/session";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import type { AppStateStatus } from "react-native";
@@ -40,9 +39,13 @@ SplashScreen.preventAutoHideAsync();
 const queryClient = new QueryClient();
 
 export default function RootLayout() {
+  const [appStateStatus, setAppStateStatus] =
+    useState<AppStateStatus>("active");
+
   function onAppStateChange(status: AppStateStatus) {
     if (Platform.OS !== "web") {
       focusManager.setFocused(status === "active");
+      setAppStateStatus(status);
     }
   }
   useEffect(() => {
@@ -80,34 +83,32 @@ export default function RootLayout() {
       <QueryClientProvider client={queryClient}>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <BottomSheetModalProvider>
-            <SessionProvider>
-              <LoginWebViewProvider>
-                <ErrorViewProvider>
-                  <Stack
-                    screenOptions={{
-                      headerShown: false,
+            <LoginWebViewProvider appStateStatus={appStateStatus}>
+              <ErrorViewProvider>
+                <Stack
+                  screenOptions={{
+                    headerShown: false,
+                  }}
+                >
+                  <Stack.Screen
+                    name="login"
+                    options={{
+                      animation: "none",
                     }}
-                  >
-                    <Stack.Screen
-                      name="login"
-                      options={{
-                        animation: "none",
-                      }}
-                    />
-                    <Stack.Screen
-                      name="scan-qr"
-                      options={{
-                        headerShown: false,
-                        // Set the presentation mode to modal for our modal route.
-                        // presentation: "fullScreenModal",
-                        animation: "slide_from_bottom",
-                        animationDuration: 200,
-                      }}
-                    />
-                  </Stack>
-                </ErrorViewProvider>
-              </LoginWebViewProvider>
-            </SessionProvider>
+                  />
+                  <Stack.Screen
+                    name="scan-qr"
+                    options={{
+                      headerShown: false,
+                      // Set the presentation mode to modal for our modal route.
+                      // presentation: "fullScreenModal",
+                      animation: "slide_from_bottom",
+                      animationDuration: 200,
+                    }}
+                  />
+                </Stack>
+              </ErrorViewProvider>
+            </LoginWebViewProvider>
           </BottomSheetModalProvider>
         </GestureHandlerRootView>
       </QueryClientProvider>

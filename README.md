@@ -41,13 +41,19 @@ Ensure that you have the following dependencies installed and configured:
 
 ##### On the dev machine (iOS)
 
+If you are only running the app in Expo Go:
 - [NodeJS and NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+
+If you are building the app locally, you'll also need:
 - [Xcode](https://apps.apple.com/us/app/xcode/id497799835)
 - [iOS simulators](https://developer.apple.com/documentation/safari-developer-tools/installing-xcode-and-simulators)
 
 #### On the dev machine (Android)
 
+If you are only running the app in Expo Go:
 - [NodeJS and NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+
+If you are building the app locally, you'll also need:
 - A Java JDK
 - [Android emulators](https://developer.android.com/studio/install)
 

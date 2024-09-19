@@ -31,25 +31,30 @@ const LoginScreen = () => {
 
   useEffect(() => {
     if (logout) {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires,global-require
-      const RCTNetworking = require("react-native/Libraries/Network/RCTNetworking");
-      RCTNetworking.default.clearCookies((result: never) => {
-        console.log("clearCookies", result);
-      });
-
-      if (!isRunningInExpoGo) {
-        clearWebViewIOSCache();
-        import("@react-native-cookies/cookies")
-          .then((CookieManager) =>
-            CookieManager.default
-              .clearAll()
-              .then((success) => console.log("Cleared all cookies?", success))
-          )
-          .catch((error) => console.log("Failed to clear cookies", error));
-      }
       requestLogout();
     }
   }, [logout, requestLogout]);
+
+  useEffect(() => {
+    import("react-native/Libraries/Network/RCTNetworking")
+      .then((RCTNetworking) =>
+        RCTNetworking.default.clearCookies((result: never) => {
+          console.log("RCTNetworking:: clearCookies", result);
+        })
+      )
+      .catch((error) => console.log("Failed to clear cookies", error));
+
+    if (!isRunningInExpoGo) {
+      clearWebViewIOSCache();
+      import("@react-native-cookies/cookies")
+        .then((CookieManager) =>
+          CookieManager.default
+            .clearAll()
+            .then((success) => console.log("Cleared all cookies?", success))
+        )
+        .catch((error) => console.log("Failed to clear cookies", error));
+    }
+  }, []);
 
   const handleLoginPress = () => {
     if (!logout) {

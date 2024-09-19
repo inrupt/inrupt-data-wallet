@@ -27,7 +27,7 @@ import { AccessRequestMode } from "@/types/enums";
 import RequestsScreen from "./index";
 
 const mockRefetch = jest.fn().mockImplementation(() => {
-  return Promise.resolve({ data: {}, status: "success" });
+  return Promise.resolve({ data: [], status: "success" });
 });
 
 function mockUseQuery(

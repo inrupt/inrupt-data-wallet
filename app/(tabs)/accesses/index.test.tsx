@@ -27,7 +27,7 @@ import type { AccessGrant } from "@/types/accessGrant";
 import GrantsScreen from "./index";
 
 const mockRefetch = jest.fn().mockImplementation(() => {
-  return Promise.resolve({ data: {}, status: "success" });
+  return Promise.resolve({ data: [], status: "success" });
 });
 
 function mockUseQuery(

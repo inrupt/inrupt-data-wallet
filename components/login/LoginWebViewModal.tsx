@@ -54,20 +54,13 @@ const LoginWebViewModal: React.FC<LoginWebViewModalProps> = ({
 
   const handleLoadEnd = () => {
     if (requestMode === "logout") {
-      if (webViewRef.current) {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        webViewRef.current.clearCache(true);
-      }
       onLogoutSuccess();
     }
   };
 
   const handleCloseModal = () => {
     if (webViewRef.current) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      webViewRef.current.clearCache(true);
+      webViewRef.current!.clearCache(true);
     }
     onClose();
   };

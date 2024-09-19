@@ -38,7 +38,7 @@ class UnrecognisedQrCodeError extends Error {
   }
 }
 
-export default function Logout() {
+export default function ScanQr() {
   const { goBack } = useNavigation();
   const { showErrorMsg } = useError();
   const { replace, navigate } = useRouter();

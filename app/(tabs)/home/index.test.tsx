@@ -42,7 +42,7 @@ jest.mock("expo-router", () => {
 });
 
 const mockRefetch = jest.fn().mockImplementation(() => {
-  return Promise.resolve({ data: {}, status: "success" });
+  return Promise.resolve({ data: [], status: "success" });
 });
 
 function mockUseQuery(

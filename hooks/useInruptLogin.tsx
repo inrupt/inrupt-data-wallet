@@ -19,6 +19,7 @@ import { router } from "expo-router";
 import type { AppStateStatus } from "react-native";
 import { useStorageState } from "@/hooks/useStorageState";
 import { SESSION_KEY } from "@/api/apiRequest";
+import { useQueryClient } from "@tanstack/react-query";
 
 const LoginWebViewContext = createContext<{
   showLoginPage: () => void;
@@ -41,6 +42,7 @@ export const LoginWebViewProvider = ({
   >("blank");
 
   const [session, setSession] = useStorageState(SESSION_KEY);
+  const queryClient = useQueryClient();
 
   const handleLoginSuccess = async () => {
     setSession("true");
@@ -49,6 +51,7 @@ export const LoginWebViewProvider = ({
   };
 
   const handleLogoutSuccess = () => {
+    queryClient.removeQueries();
     setSession(null);
     setModalRequestMode("blank");
     router.replace("/login");

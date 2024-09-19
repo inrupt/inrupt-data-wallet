@@ -30,11 +30,6 @@ export const isImageFile = (filename: string): boolean => {
   return extension ? imageExtensions.includes(extension) : false;
 };
 
-export const getFileContainerByResource = (resource: string) => {
-  const match = resource.match(/\/([^/]+)\/?$/);
-  return match ? match[1] : "";
-};
-
 export const isDisplayDetailedPage = (file: WalletFile) => {
   return isImageFile(file.fileName) || file.isRDFResource;
 };
@@ -87,10 +82,15 @@ export const formatResourceName = (
   return lastPart;
 };
 
-export const removeFileExtension = (resource: string) => {
-  const parts = resource.split("/");
-  const lastPart = parts[parts.length - 1];
-  return lastPart.split(".").slice(0, -1).join(".");
+export const utf8EncodeResourceName = (input: string) => {
+  // encodeURIComponent() does not encode !'()*, so we manually do. This is
+  // required because these characters are allowed in resource names but not
+  // supported unencoded by the backend. For more details, see
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent#encoding_for_content-disposition_and_link_headers
+  return encodeURIComponent(input).replace(
+    /[!'()*]/g,
+    (char) => `%${char.charCodeAt(0).toString(16)}`
+  );
 };
 
 export const isWriteMode = (modes: AccessRequestMode[]) =>

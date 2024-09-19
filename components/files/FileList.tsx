@@ -90,7 +90,12 @@ const FileList: React.FC<FileListProps> = ({
         </ThemedText>
 
         <View style={styles.menuIconContainer}>
-          <TouchableOpacity onPress={() => onPressDetailedFile(item)}>
+          <TouchableOpacity
+            onPress={(event) => {
+              event.stopPropagation();
+              onPressDetailedFile(item);
+            }}
+          >
             <FontAwesomeIcon icon={faEllipsis} size={24} />
           </TouchableOpacity>
         </View>

@@ -51,9 +51,10 @@ export const LoginWebViewProvider = ({
   };
 
   const handleLogoutSuccess = () => {
-    queryClient.removeQueries();
     setSession(null);
     setModalRequestMode("blank");
+    queryClient.removeQueries();
+    queryClient.clear();
     router.replace("/login");
   };
 

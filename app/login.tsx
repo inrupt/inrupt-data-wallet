@@ -29,13 +29,7 @@ const LoginScreen = () => {
   const { showLoginPage, requestLogout } = useLoginWebView();
   const { logout } = useLocalSearchParams();
 
-  useEffect(() => {
-    if (logout) {
-      requestLogout();
-    }
-  }, [logout, requestLogout]);
-
-  useEffect(() => {
+  const clearCookies = () => {
     import("react-native/Libraries/Network/RCTNetworking")
       .then((RCTNetworking) =>
         RCTNetworking.default.clearCookies((result: never) => {
@@ -54,6 +48,17 @@ const LoginScreen = () => {
         )
         .catch((error) => console.log("Failed to clear cookies", error));
     }
+  };
+
+  useEffect(() => {
+    if (logout) {
+      clearCookies();
+      requestLogout();
+    }
+  }, [logout, requestLogout]);
+
+  useEffect(() => {
+    clearCookies();
   }, []);
 
   const handleLoginPress = () => {

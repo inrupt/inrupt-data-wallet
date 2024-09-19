@@ -124,7 +124,7 @@ export default function Profile() {
             style={styles.logoutContainer}
             onPress={() => {
               bottomSheetModalRef.current?.close();
-              router.navigate("/login?logout=true");
+              router.navigate(`/login?logout=${Date.now()}`);
             }}
           >
             <FontAwesomeIcon icon={faRightFromBracket} size={22} />

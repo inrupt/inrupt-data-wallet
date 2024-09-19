@@ -50,7 +50,7 @@ export const makeApiRequest = async <T>(
   );
 
   if (response.status === 401) {
-    router.replace("/login?logout=true");
+    router.replace(`/login?logout=${Date.now()}`);
     throw new Error(`Unauthorized: ${response.status}`);
   }
 

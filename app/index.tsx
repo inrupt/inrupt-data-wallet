@@ -55,8 +55,7 @@ const HomeScreen = () => {
         console.error("Error while signup", error);
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userInfo, loggedIn]);
+  }, [userInfo, loggedIn, signupMutation]);
 
   if (!loggedIn) {
     return <Redirect href="/login" />;

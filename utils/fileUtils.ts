@@ -83,6 +83,10 @@ export const formatResourceName = (
 };
 
 export const utf8EncodeResourceName = (input: string) => {
+  // encodeURIComponent() does not encode !'()*, so we manually do. This is
+  // required because these characters are allowed in resource names but not
+  // supported unencoded by the backend. For more details, see
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent#encoding_for_content-disposition_and_link_headers
   return encodeURIComponent(input).replace(
     /[!'()*]/g,
     (char) => `%${char.charCodeAt(0).toString(16)}`

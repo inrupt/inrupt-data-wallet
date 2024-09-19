@@ -1,6 +1,6 @@
-# Data Wallet Application
+# Inrupt Data Wallet
 
-This project produces a front-end react native application for use with the Inrupt Data Wallet service.
+This project produces a mobile React Native application for use with the Inrupt Data Wallet service.
 This README provides information on:
 
 * [Setup and configuration](#setup-and-configuration)
@@ -32,11 +32,29 @@ This README provides information on:
 
 ### Prerequisites
 
+In order to log into the Wallet, and for it to be able to persist data, you will need a [Podspaces Account](https://start.inrupt.com).
 Ensure that you have the following dependencies installed and configured:
 
-- [Expo Go](https://expo.dev/go) - app to be installed on a real device
+##### On the mobile device
+
+- [Expo Go](https://expo.dev/go) - app to be installed on a real device (iOS and Android supported)
+
+##### On the dev machine (iOS)
+
+If you are only running the app in Expo Go:
+- [NodeJS and NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+
+If you are building the app locally, you'll also need:
 - [Xcode](https://apps.apple.com/us/app/xcode/id497799835)
 - [iOS simulators](https://developer.apple.com/documentation/safari-developer-tools/installing-xcode-and-simulators)
+
+#### On the dev machine (Android)
+
+If you are only running the app in Expo Go:
+- [NodeJS and NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+
+If you are building the app locally, you'll also need:
+- A Java JDK
 - [Android emulators](https://developer.android.com/studio/install)
 
 ### Install dependencies
@@ -103,16 +121,6 @@ KEYSTORE_PATH=<path>/inrupt-data-wallet/android/app/wallet.keystore
 KEYSTORE_PASSWORD=<keystore password>
 ```
 
-#### Make the keystore available to CI
-
-In order to make the keystore available to CI, it has to be present in the repository secret.
-- Encrypting the keystore with a GPG key to get a Base64 representation: `gpg -c --armor wallet.keystore`
-- Create GitHub repository secrets:
-  - ENCRYPTED_KEYSTORE with the Base64-encoded encrypted keystore
-  - KEYSTORE_DECRYPTION_KEY with the GPG key
-  - KEYSTORE_PASSWORD with the keystore password
-- In CI, decrypt the keystore back: `gpg -d --passphrase "..." --batch wallet.keystore.asc > wallet.keystore`
-
 ## Running the application locally
 
 Start the application:
@@ -129,8 +137,8 @@ In the output, you'll find options to open the app in a
 
 ### On a device with Expo Go
 
-Press ``s`` to switch to the Expo Go environment. This will display a QR code which you will need to scan from your
-device's Expo Go application.
+After expo has started, make sure it targets the Expo Go environment (as opposed to "development build").
+This will display a QR code which you will need to scan from your device's Expo Go application.
 
 The Wallet application will then build and install into your device for you to test & debug.
 
@@ -145,9 +153,10 @@ the following actions:
 npm run android
 ```
 Note: When running on the android emulator, there is a special loopback IP, 10.0.2.2, which points to the host machine 127.0.0.1. You can use it if the emulator complains about cleartext communication to the local network IP of the host.
+
 ### On an iOS simulator
 
-To build the iOS wallet app in an iOS simulator, just run the following command:
+To build the iOS wallet app in an iOS simulator, run the following command:
 
 ```bash
 npm run ios
@@ -155,13 +164,23 @@ npm run ios
 
 This will install the necessary CocoaPods and compile the application. Upon completion, the iOS simulator should be open and the wallet app running.
 
-## Build the app on EAS
+## Build the app on the Expo Application Service (EAS)
 
-Both the Android and the iOS versions of the app can be built using the Expo Application Service (EAS). To do so, follow
-the instructions from the [EAS documentation](https://docs.expo.dev/build/setup/).
+**Prerequisite**: All the following instructions are only applicable if you have an EAS account. By default,
+the project is configured to be built on an Inrupt EAS project. In order to build a custom version in your
+own EAS account, you'll need to create a new EAS project, and make sure that EAS project and the data (e.g. 
+`name`, `slug`, `project-id`...) in your copy of `app.config.ts` are aligned.
 
-Note that the project ID is not hard-coded in the `app.config.ts`, but provided as an environment variable instead.
-In order to trigger an EAS build, please add the appropriate project ID in your environment, e.g.
+Both the Android and the iOS versions of the app can be built using EAS. To do so, follow the instructions
+from the [EAS documentation](https://docs.expo.dev/build/setup/) to setup your environment.
+
+By default, the EAS CLI will trigger a build on the EAS infrastructure. It is also possible to 
+[run a build locally](https://docs.expo.dev/build-reference/local-builds/), which results in the built binary
+being available on the developer machine. This requires all the environment setup for being able to build
+the app locally, similar to `npx expo run:<android | ios>`.
+
+The project ID is not hard-coded in the `app.config.ts`, but provided as an environment variable instead.
+In order to trigger an EAS build, please add the appropriate project ID in your environment variables, e.g.
 
 ```
 EAS_PROJECT_ID="..." eas build --platform android --local --profile preview

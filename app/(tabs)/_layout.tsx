@@ -14,9 +14,9 @@
 // limitations under the License.
 //
 
-import { Redirect, Tabs } from "expo-router";
+import { Tabs } from "expo-router";
 import type { MutableRefObject } from "react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import HouseOutLine from "@/assets/images/house-outline.svg";
 import AccessOutLine from "@/assets/images/access-outline.svg";
 import AccessSolid from "@/assets/images/access-solid.svg";
@@ -25,63 +25,18 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faBell } from "@fortawesome/free-solid-svg-icons/faBell";
 import { faUser } from "@fortawesome/free-solid-svg-icons/faUser";
-import { useSession } from "@/hooks/session";
-import {
-  Dimensions,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  Image,
-} from "react-native";
-// import { Image } from "expo-image";
+import { Dimensions, StyleSheet, TouchableOpacity, View } from "react-native";
 import PopupMenu from "@/components/PopupMenu";
 import { ThemedText } from "@/components/ThemedText";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { getUserInfo, signup } from "@/api/user";
-import type { UserInfo } from "@/constants/user";
 
 const { width, height } = Dimensions.get("window");
 
 export default function TabLayout() {
-  const [isShowSplash, setIsShowSplash] = useState(true);
-
-  const { session, signOut } = useSession();
-  const {
-    isFetching,
-    data: userInfo,
-    refetch,
-  } = useQuery<UserInfo>({
-    queryKey: ["userInfo"],
-    queryFn: getUserInfo,
-    enabled: !!session,
-  });
-
-  const signupMutation = useMutation({
-    mutationFn: signup,
-    onSuccess: async () => {
-      setIsShowSplash(false);
-      await refetch();
-    },
-    onError: () => {
-      setIsShowSplash(true);
-    },
-  });
-
   const [menuVisible, setMenuVisible] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const [positionType, setPositionType] = useState<
     "topMiddle" | "bottomLeft" | "bottomMiddle"
   >("bottomMiddle");
-
-  useEffect(() => {
-    if (userInfo && userInfo.signupRequired && session) {
-      signupMutation.mutateAsync().catch((error) => {
-        console.error("Error while signup", error);
-        signOut();
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userInfo, session]);
 
   const tabBarAddButtonRef = useRef(null);
   const rightHeaderAddButtonRef = useRef(null);
@@ -119,24 +74,6 @@ export default function TabLayout() {
       );
     }
   };
-
-  if (!session) {
-    return <Redirect href="/login" />;
-  }
-
-  if (isFetching || (userInfo!.signupRequired && isShowSplash)) {
-    return (
-      <View style={styles.container}>
-        {!isFetching && (
-          <Image
-            // eslint-disable-next-line global-require
-            source={require("../../assets/images/signup-splash.png")}
-            style={styles.image}
-          />
-        )}
-      </View>
-    );
-  }
 
   return (
     <>

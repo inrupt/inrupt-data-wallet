@@ -106,13 +106,17 @@ const PopupMenu: React.FC<PopupMenuProps> = ({
   const takePicture = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== PermissionStatus.GRANTED) {
+      onClose();
       handleDeniedPermissions("Camera access is required to take photos");
       return;
     }
     const result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
     });
-    if (result.canceled || result.assets.length === 0) return;
+    if (result.canceled || result.assets.length === 0) {
+      onClose();
+      return;
+    }
     const selectedPhoto = result.assets[0];
     mutation.mutate({
       uri: selectedPhoto.uri,
@@ -135,6 +139,7 @@ const PopupMenu: React.FC<PopupMenuProps> = ({
       const { status } =
         await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (status !== PermissionStatus.GRANTED) {
+        onClose();
         handleDeniedPermissions("Image Library access is required");
         return;
       }

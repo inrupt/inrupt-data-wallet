@@ -19,6 +19,7 @@ import { StyleSheet, View } from "react-native";
 import WebIdAccessGrantList from "@/components/accessGrants/WebIdAccessGrantList";
 import useRefreshOnFocus from "@/hooks/useRefreshOnFocus";
 import type { AccessGrantGroup } from "@/types/accessGrant";
+import { useEffect } from "react";
 
 export default function AccessGrantScreen() {
   const {
@@ -29,7 +30,16 @@ export default function AccessGrantScreen() {
   } = useQuery<AccessGrantGroup[]>({
     queryKey: ["accessGrants"],
     queryFn: getAccessGrants,
+    enabled: false,
   });
+
+  useEffect(() => {
+    refetch().catch((err) => console.log(err));
+    return () => {
+      console.debug("Unmount AccessGrantScreen");
+    };
+  }, [refetch]);
+
   useRefreshOnFocus(refetch);
 
   return (

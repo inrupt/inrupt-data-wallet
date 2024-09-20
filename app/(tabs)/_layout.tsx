@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "column",
-    paddingTop: 6,
+    paddingTop: 2,
   },
   container: {
     flex: 1,

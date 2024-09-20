@@ -125,6 +125,9 @@ const FileList: React.FC<FileListProps> = ({
         enablePanDownToClose
       >
         <BottomModal
+          onDeleteSuccessfully={() => {
+            if (props.onRefresh) props.onRefresh();
+          }}
           file={selectedFile}
           onCloseModal={() => bottomSheetModalRef.current?.close()}
           onChangeSnapPoint={(snapHeight: number) =>

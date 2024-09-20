@@ -110,6 +110,7 @@ const HomeScreen = () => {
       <PopupMenu
         visible={menuVisible}
         onClose={() => setMenuVisible(false)}
+        onUploadSuccess={refetch}
         position={menuPosition}
         positionType={positionType}
       />

@@ -28,6 +28,8 @@ import { faUser } from "@fortawesome/free-solid-svg-icons/faUser";
 import { Dimensions, StyleSheet, TouchableOpacity, View } from "react-native";
 import PopupMenu from "@/components/PopupMenu";
 import { ThemedText } from "@/components/ThemedText";
+import { fetchFiles } from "@/api/files";
+import { useQueryClient } from "@tanstack/react-query";
 
 const { width, height } = Dimensions.get("window");
 
@@ -37,7 +39,7 @@ export default function TabLayout() {
   const [positionType, setPositionType] = useState<
     "topMiddle" | "bottomLeft" | "bottomMiddle"
   >("bottomMiddle");
-
+  const queryClient = useQueryClient();
   const tabBarAddButtonRef = useRef(null);
   const rightHeaderAddButtonRef = useRef(null);
   const toggleMenu = (
@@ -145,7 +147,7 @@ export default function TabLayout() {
                   ref={tabBarAddButtonRef}
                   onPress={() => toggleMenu("topMiddle", tabBarAddButtonRef)}
                 >
-                  <FontAwesome6 size={26} name="circle-plus" />
+                  <FontAwesome6 size={24} name="circle-plus" />
                   <ThemedText style={{ fontSize: 12, paddingTop: 4 }}>
                     Add
                   </ThemedText>
@@ -183,6 +185,12 @@ export default function TabLayout() {
       <PopupMenu
         visible={menuVisible}
         onClose={() => toggleMenu("topMiddle", rightHeaderAddButtonRef)}
+        onUploadSuccess={async () => {
+          await queryClient.fetchQuery({
+            queryKey: ["files"],
+            queryFn: fetchFiles,
+          });
+        }}
         position={menuPosition}
         positionType={positionType}
       />
@@ -196,7 +204,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "column",
-    paddingTop: 4,
+    paddingTop: 6,
   },
   container: {
     flex: 1,

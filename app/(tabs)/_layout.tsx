@@ -25,9 +25,17 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faBell } from "@fortawesome/free-solid-svg-icons/faBell";
 import { faUser } from "@fortawesome/free-solid-svg-icons/faUser";
-import { Dimensions, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  Dimensions,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Platform,
+} from "react-native";
 import PopupMenu from "@/components/PopupMenu";
 import { ThemedText } from "@/components/ThemedText";
+import { fetchFiles } from "@/api/files";
+import { useQueryClient } from "@tanstack/react-query";
 
 const { width, height } = Dimensions.get("window");
 
@@ -37,7 +45,7 @@ export default function TabLayout() {
   const [positionType, setPositionType] = useState<
     "topMiddle" | "bottomLeft" | "bottomMiddle"
   >("bottomMiddle");
-
+  const queryClient = useQueryClient();
   const tabBarAddButtonRef = useRef(null);
   const rightHeaderAddButtonRef = useRef(null);
   const toggleMenu = (
@@ -145,8 +153,13 @@ export default function TabLayout() {
                   ref={tabBarAddButtonRef}
                   onPress={() => toggleMenu("topMiddle", tabBarAddButtonRef)}
                 >
-                  <FontAwesome6 size={26} name="circle-plus" />
-                  <ThemedText style={{ fontSize: 12, paddingTop: 4 }}>
+                  <FontAwesome6 size={24} name="circle-plus" />
+                  <ThemedText
+                    style={{
+                      fontSize: 12,
+                      paddingTop: Platform.OS === "ios" ? 6 : 2,
+                    }}
+                  >
                     Add
                   </ThemedText>
                 </TouchableOpacity>
@@ -183,6 +196,12 @@ export default function TabLayout() {
       <PopupMenu
         visible={menuVisible}
         onClose={() => toggleMenu("topMiddle", rightHeaderAddButtonRef)}
+        onUploadSuccess={async () => {
+          await queryClient.fetchQuery({
+            queryKey: ["files"],
+            queryFn: fetchFiles,
+          });
+        }}
         position={menuPosition}
         positionType={positionType}
       />

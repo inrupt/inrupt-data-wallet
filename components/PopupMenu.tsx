@@ -18,7 +18,7 @@ import { Dimensions, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
 import { PermissionStatus } from "expo-image-picker";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { postFile } from "@/api/files";
 import { useRouter } from "expo-router";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -34,6 +34,7 @@ const { width } = Dimensions.get("window");
 type PopupMenuProps = {
   visible: boolean;
   onClose: () => void;
+  onUploadSuccess: () => void;
   position: { x: number | undefined; y: number | undefined };
   positionType: "topMiddle" | "bottomLeft" | "bottomMiddle";
 };
@@ -50,18 +51,15 @@ const PopupMenu: React.FC<PopupMenuProps> = ({
   onClose,
   position,
   positionType,
+  onUploadSuccess,
 }) => {
   const router = useRouter();
   const menuRef = useRef(null);
   const { showErrorMsg } = useError();
 
-  const queryClient = useQueryClient();
-
   const mutation = useMutation({
     mutationFn: postFile,
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["files"] });
-    },
+    onSuccess: onUploadSuccess,
     onError: (error) => {
       console.debug("A non-HTTP error occurred.", error);
       showErrorMsg("Unable to save the file into your Wallet.");

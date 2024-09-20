@@ -25,7 +25,13 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faBell } from "@fortawesome/free-solid-svg-icons/faBell";
 import { faUser } from "@fortawesome/free-solid-svg-icons/faUser";
-import { Dimensions, StyleSheet, TouchableOpacity, View, Platform } from "react-native";
+import {
+  Dimensions,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Platform,
+} from "react-native";
 import PopupMenu from "@/components/PopupMenu";
 import { ThemedText } from "@/components/ThemedText";
 import { fetchFiles } from "@/api/files";

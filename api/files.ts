@@ -17,6 +17,7 @@ import mime from "mime";
 import FormData from "form-data";
 import type { WalletFile } from "@/types/WalletFile";
 import { handleErrorResponse } from "@inrupt/solid-client-errors";
+import { utf8EncodeResourceName } from "@/utils/fileUtils";
 import { makeApiRequest } from "./apiRequest";
 
 interface FileObject {
@@ -55,13 +56,14 @@ export const postFile = async (fileMetadata: FileObject): Promise<void> => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const formData: any = new FormData();
   formData.append("file", {
-    name: fileMetadata.name,
+    name: utf8EncodeResourceName(fileMetadata.name),
     type:
       fileMetadata.type ||
       mime.getType(fileMetadata.name) ||
       "application/octet-stream",
     uri: fileMetadata.uri,
   });
+  formData.append("fileName", fileMetadata.name);
   let response: Response;
   try {
     response = await fetch(
@@ -97,5 +99,15 @@ export const getFile = async (fileId: string): Promise<Blob> => {
   return makeApiRequest<Blob>(
     `wallet/${encodeURIComponent(fileId)}?raw=true`,
     "GET"
+  );
+};
+
+export const downloadFile = async (fileId: string): Promise<Blob> => {
+  return makeApiRequest<Blob>(
+    `wallet/${encodeURIComponent(fileId)}?raw=true`,
+    "GET",
+    null,
+    null,
+    true
   );
 };

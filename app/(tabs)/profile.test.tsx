@@ -28,12 +28,16 @@ import ProfileScreen from "./profile";
 
 const { useSession } = SessionHooks;
 
+const mockRefetch = jest.fn().mockImplementation(() => {
+  return Promise.resolve({ data: {}, status: "success" });
+});
+
 function mockUseQuery(data: UserInfo): ReturnType<typeof ReactQuery.useQuery> {
   return {
     data,
     isLoading: false,
     isFetching: false,
-    refetch: jest.fn<ReturnType<typeof ReactQuery.useQuery>["refetch"]>(),
+    refetch: mockRefetch,
   } as unknown as ReturnType<typeof ReactQuery.useQuery>;
 }
 

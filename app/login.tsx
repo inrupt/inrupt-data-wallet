@@ -22,27 +22,21 @@ import { clearWebViewIOSCache } from "react-native-webview-ios-cache-clear";
 import Logo from "@/assets/images/future_co.svg";
 import { useLoginWebView } from "@/hooks/useInruptLogin";
 import { useLocalSearchParams } from "expo-router";
-import { useSession } from "@/hooks/session";
 
 const isRunningInExpoGo = Constants.appOwnership === "expo";
 
 const LoginScreen = () => {
   const { showLoginPage, requestLogout } = useLoginWebView();
   const { logout } = useLocalSearchParams();
-  const { session } = useSession();
 
-  useEffect(() => {
-    if (session && logout) {
-      requestLogout();
-    }
-  }, [logout, session, requestLogout]);
-
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires,global-require
-    const RCTNetworking = require("react-native/Libraries/Network/RCTNetworking");
-    RCTNetworking.default.clearCookies((result: never) => {
-      console.log("clearCookies", result);
-    });
+  const clearCookies = () => {
+    import("react-native/Libraries/Network/RCTNetworking")
+      .then((RCTNetworking) =>
+        RCTNetworking.default.clearCookies((result: never) => {
+          console.log("RCTNetworking:: clearCookies", result);
+        })
+      )
+      .catch((error) => console.log("Failed to clear cookies", error));
 
     if (!isRunningInExpoGo) {
       clearWebViewIOSCache();
@@ -54,6 +48,17 @@ const LoginScreen = () => {
         )
         .catch((error) => console.log("Failed to clear cookies", error));
     }
+  };
+
+  useEffect(() => {
+    if (logout) {
+      clearCookies();
+      requestLogout();
+    }
+  }, [logout, requestLogout]);
+
+  useEffect(() => {
+    clearCookies();
   }, []);
 
   const handleLoginPress = () => {

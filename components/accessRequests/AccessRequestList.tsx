@@ -43,6 +43,9 @@ const AccessRequestList: React.FC<AccessRequestListProps> = ({
       {data && data.length === 0 ? (
         <View style={styles.container} testID="no-access-requests-text">
           <ThemedText style={styles.emptyText}>No active requests</ThemedText>
+          <ThemedText style={[styles.emptyText, { paddingTop: 8 }]}>
+            Refresh to check for new requests
+          </ThemedText>
         </View>
       ) : (
         <FlatList

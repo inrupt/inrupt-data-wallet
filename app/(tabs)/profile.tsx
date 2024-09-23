@@ -28,12 +28,21 @@ import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import type { UserInfo } from "@/constants/user";
 import AccessSolid from "@/assets/images/access-solid.svg";
 import { formatResourceName } from "@/utils/fileUtils";
+import { getUserInfo } from "@/api/user";
 
 export default function Profile() {
-  const { data: userInfo } = useQuery<UserInfo>({
+  const { data: userInfo, refetch } = useQuery<UserInfo>({
     queryKey: ["userInfo"],
+    queryFn: getUserInfo,
     enabled: false,
   });
+
+  useEffect(() => {
+    refetch().catch((err) => console.error(err));
+    return () => {
+      console.debug("Unmount Profile");
+    };
+  }, [refetch]);
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const navigation = useNavigation();
@@ -115,7 +124,7 @@ export default function Profile() {
             style={styles.logoutContainer}
             onPress={() => {
               bottomSheetModalRef.current?.close();
-              router.navigate("/login?logout=true");
+              router.navigate(`/login?logout=${Date.now()}`);
             }}
           >
             <FontAwesomeIcon icon={faRightFromBracket} size={22} />

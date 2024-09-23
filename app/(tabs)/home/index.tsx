@@ -16,7 +16,7 @@
 import CustomButton from "@/components/Button";
 import PopupMenu from "@/components/PopupMenu";
 import { ThemedText } from "@/components/ThemedText";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { fetchFiles } from "@/api/files";
@@ -29,7 +29,16 @@ const HomeScreen = () => {
   const { data, isLoading, isFetching, refetch } = useQuery<WalletFile[]>({
     queryKey: ["files"],
     queryFn: fetchFiles,
+    enabled: false,
   });
+
+  useEffect(() => {
+    refetch().catch((err) => console.error(err));
+    return () => {
+      console.debug("Unmount HomeScreen");
+    };
+  }, [refetch]);
+
   useRefreshOnFocus(refetch);
 
   const [menuVisible, setMenuVisible] = useState(false);
@@ -101,6 +110,7 @@ const HomeScreen = () => {
       <PopupMenu
         visible={menuVisible}
         onClose={() => setMenuVisible(false)}
+        onUploadSuccess={refetch}
         position={menuPosition}
         positionType={positionType}
       />

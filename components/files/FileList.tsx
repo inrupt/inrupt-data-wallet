@@ -90,7 +90,12 @@ const FileList: React.FC<FileListProps> = ({
         </ThemedText>
 
         <View style={styles.menuIconContainer}>
-          <TouchableOpacity onPress={() => onPressDetailedFile(item)}>
+          <TouchableOpacity
+            onPress={(event) => {
+              event.stopPropagation();
+              onPressDetailedFile(item);
+            }}
+          >
             <FontAwesomeIcon icon={faEllipsis} size={24} />
           </TouchableOpacity>
         </View>
@@ -120,6 +125,9 @@ const FileList: React.FC<FileListProps> = ({
         enablePanDownToClose
       >
         <BottomModal
+          onDeleteSuccessfully={() => {
+            if (props.onRefresh) props.onRefresh();
+          }}
           file={selectedFile}
           onCloseModal={() => bottomSheetModalRef.current?.close()}
           onChangeSnapPoint={(snapHeight: number) =>
@@ -158,7 +166,7 @@ const styles = StyleSheet.create({
     paddingLeft: 18,
     flex: 1,
     fontSize: 16,
-    paddingRight: 2,
+    paddingRight: 8,
   },
   menuIconContainer: {
     width: 30,

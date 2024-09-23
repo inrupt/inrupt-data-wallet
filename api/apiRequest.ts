@@ -23,7 +23,8 @@ export const makeApiRequest = async <T>(
   endpoint: string,
   method: string = "GET",
   body: unknown = null,
-  contentType: string | null = "application/json"
+  contentType: string | null = "application/json",
+  isBlob: boolean = false
 ): Promise<T> => {
   const session = await SecureStore.getItemAsync(SESSION_KEY);
   if (!session) return {} as T;
@@ -49,7 +50,7 @@ export const makeApiRequest = async <T>(
   );
 
   if (response.status === 401) {
-    router.replace("/login?logout=true");
+    router.replace(`/login?logout=${Date.now()}`);
     throw new Error(`Unauthorized: ${response.status}`);
   }
 
@@ -59,6 +60,10 @@ export const makeApiRequest = async <T>(
       await response.text(),
       `${endpoint} returned an error response.`
     );
+  }
+
+  if (isBlob) {
+    return (await response.blob()) as unknown as T;
   }
 
   const responseType = response.headers.get("content-type");

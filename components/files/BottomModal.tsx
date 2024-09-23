@@ -56,7 +56,9 @@ const BottomModal: React.FC<BottomModalProps> = ({
   const [isShowQRCode, setShowQRCode] = useState(false);
   const deleteMutation = useMutation({
     mutationFn: deleteFile,
-    onSuccess: () => queryClient.refetchQueries({ queryKey: ["files"] }),
+    onSuccess: () => {
+      onDeleteSuccessfully?.();
+    },
     mutationKey: ["filesMutation"],
   });
   const queryClient = useQueryClient();
@@ -105,11 +107,6 @@ const BottomModal: React.FC<BottomModalProps> = ({
       // eslint-disable-next-line no-console
       .catch(() => console.error("Error while deleting data"));
     onCloseModal();
-    onDeleteSuccessfully?.();
-    queryClient
-      .refetchQueries({ queryKey: ["files"] })
-      // eslint-disable-next-line no-console
-      .catch(() => console.error("Error while refetching data"));
   };
 
   const onShareViaQR = () => {
@@ -161,7 +158,7 @@ const BottomModal: React.FC<BottomModalProps> = ({
             >
               <FontAwesome6 size={24} name="share" />
               <ThemedText style={{ paddingLeft: 24, fontSize: 16 }}>
-                Share via QR Code
+                Show QR Code
               </ThemedText>
             </TouchableOpacity>
             <TouchableOpacity
@@ -170,7 +167,7 @@ const BottomModal: React.FC<BottomModalProps> = ({
             >
               <FontAwesome6 size={24} name="download" />
               <ThemedText style={{ paddingLeft: 16, fontSize: 16 }}>
-                Download a copy
+                Share
               </ThemedText>
               {Boolean(fileDownload) && (
                 <ActivityIndicator

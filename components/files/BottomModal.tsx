@@ -158,7 +158,7 @@ const BottomModal: React.FC<BottomModalProps> = ({
             >
               <FontAwesome6 size={24} name="share" />
               <ThemedText style={{ paddingLeft: 24, fontSize: 16 }}>
-                Show QR Code
+                Share via QR Code
               </ThemedText>
             </TouchableOpacity>
             <TouchableOpacity
@@ -167,7 +167,7 @@ const BottomModal: React.FC<BottomModalProps> = ({
             >
               <FontAwesome6 size={24} name="download" />
               <ThemedText style={{ paddingLeft: 16, fontSize: 16 }}>
-                Share
+                Download a copy
               </ThemedText>
               {Boolean(fileDownload) && (
                 <ActivityIndicator

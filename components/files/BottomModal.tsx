@@ -56,7 +56,9 @@ const BottomModal: React.FC<BottomModalProps> = ({
   const [isShowQRCode, setShowQRCode] = useState(false);
   const deleteMutation = useMutation({
     mutationFn: deleteFile,
-    onSuccess: () => queryClient.refetchQueries({ queryKey: ["files"] }),
+    onSuccess: () => {
+      onDeleteSuccessfully?.();
+    },
     mutationKey: ["filesMutation"],
   });
   const queryClient = useQueryClient();
@@ -105,11 +107,6 @@ const BottomModal: React.FC<BottomModalProps> = ({
       // eslint-disable-next-line no-console
       .catch(() => console.error("Error while deleting data"));
     onCloseModal();
-    onDeleteSuccessfully?.();
-    queryClient
-      .refetchQueries({ queryKey: ["files"] })
-      // eslint-disable-next-line no-console
-      .catch(() => console.error("Error while refetching data"));
   };
 
   const onShareViaQR = () => {

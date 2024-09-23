@@ -138,7 +138,7 @@ In the output, you'll find options to open the app in a
 ### On a device with Expo Go
 
 After expo has started, make sure it targets the Expo Go environment (as opposed to "development build").
-This will display a QR code which you will need to scan from your device's Expo Go application.
+This will display a QR code which you will need to scan with your device.
 
 The Wallet application will then build and install into your device for you to test & debug.
 

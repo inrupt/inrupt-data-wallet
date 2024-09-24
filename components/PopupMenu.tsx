@@ -28,10 +28,6 @@ import { faCamera } from "@fortawesome/free-solid-svg-icons/faCamera";
 import { faQrcode } from "@fortawesome/free-solid-svg-icons/faQrcode";
 import { useError } from "@/hooks/useError";
 import * as Linking from "expo-linking";
-import {
-  hasProblemDetails,
-  NOT_ACCEPTABLE_STATUS,
-} from "@inrupt/solid-client-errors";
 import { ThemedText } from "./ThemedText";
 
 const { width } = Dimensions.get("window");

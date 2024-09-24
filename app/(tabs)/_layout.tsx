@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-import { Tabs } from "expo-router";
+import { router, Tabs } from "expo-router";
 import type { MutableRefObject } from "react";
 import React, { useRef, useState } from "react";
 import HouseOutLine from "@/assets/images/house-outline.svg";
@@ -34,8 +34,6 @@ import {
 } from "react-native";
 import PopupMenu from "@/components/PopupMenu";
 import { ThemedText } from "@/components/ThemedText";
-import { fetchFiles } from "@/api/files";
-import { useQueryClient } from "@tanstack/react-query";
 
 const { width, height } = Dimensions.get("window");
 
@@ -45,7 +43,6 @@ export default function TabLayout() {
   const [positionType, setPositionType] = useState<
     "topMiddle" | "bottomLeft" | "bottomMiddle"
   >("bottomMiddle");
-  const queryClient = useQueryClient();
   const tabBarAddButtonRef = useRef(null);
   const rightHeaderAddButtonRef = useRef(null);
   const toggleMenu = (
@@ -109,6 +106,7 @@ export default function TabLayout() {
           name="home"
           options={{
             title: "Home",
+            href: "/home",
             tabBarIcon: ({ color, focused }) =>
               focused ? (
                 <FontAwesome6 size={24} name="house" color={color} />
@@ -195,12 +193,14 @@ export default function TabLayout() {
       </Tabs>
       <PopupMenu
         visible={menuVisible}
-        onClose={() => toggleMenu("topMiddle", rightHeaderAddButtonRef)}
-        onUploadSuccess={async () => {
-          await queryClient.fetchQuery({
-            queryKey: ["files"],
-            queryFn: fetchFiles,
-          });
+        onClose={() => {
+          toggleMenu(
+            "topMiddle",
+            tabBarAddButtonRef || rightHeaderAddButtonRef
+          );
+        }}
+        onUploadSuccess={() => {
+          router.replace("/home");
         }}
         position={menuPosition}
         positionType={positionType}

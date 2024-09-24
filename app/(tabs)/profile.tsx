@@ -22,13 +22,14 @@ import Logo from "@/assets/images/future_co.svg";
 import { faEllipsis } from "@fortawesome/free-solid-svg-icons/faEllipsis";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons/faRightFromBracket";
 
-import { useQuery } from "@tanstack/react-query";
+import { useIsMutating, useQuery } from "@tanstack/react-query";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import type { UserInfo } from "@/constants/user";
 import AccessSolid from "@/assets/images/access-solid.svg";
 import { formatResourceName } from "@/utils/fileUtils";
 import { getUserInfo } from "@/api/user";
+import Loading from "@/components/LoadingButton";
 
 export default function Profile() {
   const { data: userInfo, refetch } = useQuery<UserInfo>({
@@ -69,6 +70,8 @@ export default function Profile() {
     });
   }, [navigation]);
 
+  const isMutatingFiles = useIsMutating({ mutationKey: ["filesMutation"] });
+
   const { logo, name, webId } = userInfo || {};
 
   return (
@@ -105,6 +108,7 @@ export default function Profile() {
           <QRCode size={226} value={webId} backgroundColor="#E7F1F7" />
         </View>
       </View>
+      <Loading isLoading={!!isMutatingFiles} />
       <BottomSheetModal
         enableDismissOnClose
         ref={bottomSheetModalRef}

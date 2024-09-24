@@ -15,20 +15,26 @@
 //
 import { Stack } from "expo-router";
 import React from "react";
+import { useIsMutating } from "@tanstack/react-query";
+import Loading from "@/components/LoadingButton";
 
 export default function TabLayout() {
+  const isMutatingFiles = useIsMutating({ mutationKey: ["filesMutation"] });
   return (
-    <Stack
-      screenOptions={{
-        headerShadowVisible: false,
-        headerTitleStyle: { fontFamily: "ReadexPro-Regular" },
-      }}
-    >
-      <Stack.Screen
-        name="index"
-        options={{ headerShown: false, headerTitleAlign: "center" }}
-      />
-      <Stack.Screen name="[requestId]" />
-    </Stack>
+    <>
+      <Stack
+        screenOptions={{
+          headerShadowVisible: false,
+          headerTitleStyle: { fontFamily: "ReadexPro-Regular" },
+        }}
+      >
+        <Stack.Screen
+          name="index"
+          options={{ headerShown: false, headerTitleAlign: "center" }}
+        />
+        <Stack.Screen name="[requestId]" />
+      </Stack>
+      <Loading isLoading={!!isMutatingFiles} />
+    </>
   );
 }

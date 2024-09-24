@@ -15,7 +15,7 @@
 //
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
-import { useQuery } from "@tanstack/react-query";
+import { useIsMutating, useQuery } from "@tanstack/react-query";
 import { getFile } from "@/api/files";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faEllipsis } from "@fortawesome/free-solid-svg-icons/faEllipsis";
@@ -27,6 +27,7 @@ import { Colors } from "@/constants/Colors";
 import VcCard from "@/components/files/VcCard";
 import BottomModal from "@/components/files/BottomModal";
 import type { WalletFile } from "@/types/WalletFile";
+import Loading from "@/components/LoadingButton";
 
 interface FileDetailProps {
   file: WalletFile;
@@ -46,6 +47,8 @@ const blobToBase64 = (blob: Blob): Promise<string> => {
 };
 
 const Page: React.FC<FileDetailProps> = () => {
+  const isMutatingFiles = useIsMutating({ mutationKey: ["filesMutation"] });
+
   const { fileName, isRDFResourceStr, identifier } = useLocalSearchParams();
   const isRDFResource: boolean = isRDFResourceStr === "true";
   const [imageUri, setImageUri] = useState<string | null>(null);
@@ -114,6 +117,7 @@ const Page: React.FC<FileDetailProps> = () => {
         />
       )}
       {isRDFResource && data && <VcCard data={data} />}
+      <Loading isLoading={!!isMutatingFiles} />
       <BottomSheetModal
         enableDismissOnClose
         ref={bottomSheetModalRef}
@@ -135,7 +139,7 @@ const Page: React.FC<FileDetailProps> = () => {
             isRDFResource,
           }}
           onCloseModal={() => bottomSheetModalRef.current?.close()}
-          onDeleteSuccessfully={() => goBack()}
+          onDeleteSuccessfully={goBack}
           onChangeSnapPoint={(snapHeight: number) =>
             bottomSheetModalRef.current?.snapToPosition(snapHeight)
           }

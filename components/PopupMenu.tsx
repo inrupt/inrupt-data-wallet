@@ -65,15 +65,6 @@ const PopupMenu: React.FC<PopupMenuProps> = ({
     mutationFn: postFile,
     onSuccess: onUploadSuccess,
     onError: (error) => {
-      if (
-        error &&
-        hasProblemDetails(error) &&
-        error.problemDetails.status === NOT_ACCEPTABLE_STATUS
-      ) {
-        // This is the expected behavior of the Solid server. The file has already been uploaded to Solid, even though the server returned a 406 error.
-        onUploadSuccess();
-        return;
-      }
       console.debug("A non-HTTP error occurred.", error);
       showErrorMsg("Unable to save the file into your Wallet.");
     },

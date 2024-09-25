@@ -15,7 +15,7 @@ jobs:
   lint:
     uses: inrupt/typescript-sdk-tools/.github/workflows/reusable-lint.yml@v3
 
-  unit-test:
+  unit-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -33,7 +33,7 @@ jobs:
 
   sonar-scan:
     if: ${{ github.actor != 'dependabot[bot]' }}
-    needs: [unit-test]
+    needs: [unit-tests]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

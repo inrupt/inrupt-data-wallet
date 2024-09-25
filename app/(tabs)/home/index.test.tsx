@@ -76,6 +76,11 @@ jest.mock("@fortawesome/react-native-fontawesome", () => ({
 }));
 
 // This module is ESM-only, which is problematic for Jest imports.
+jest.mock("react-native-safe-area-context", () => ({
+  useSafeAreaInsets: jest.fn(),
+}));
+
+// This module is ESM-only, which is problematic for Jest imports.
 jest.mock("mime", () => ({
   default: jest.fn(),
 }));

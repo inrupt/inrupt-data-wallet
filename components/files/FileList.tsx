@@ -117,7 +117,7 @@ const FileList: React.FC<FileListProps> = ({
         enableDismissOnClose
         ref={bottomSheetModalRef}
         index={1}
-        snapPoints={[260, 260, "90%"]}
+        snapPoints={[260, 260, 360, "90%"]}
         backgroundStyle={styles.bottomSheetContainer}
         backdropComponent={({ style }) => (
           <View style={style} onTouchEnd={handleClose} />
@@ -130,9 +130,12 @@ const FileList: React.FC<FileListProps> = ({
           }}
           file={selectedFile}
           onCloseModal={() => bottomSheetModalRef.current?.close()}
-          onChangeSnapPoint={(snapHeight: number) =>
-            bottomSheetModalRef.current?.snapToPosition(snapHeight)
-          }
+          onChangeSnapPoint={(snapHeight: number) => {
+            if (snapHeight === 360) bottomSheetModalRef.current?.snapToIndex(2);
+            else if (snapHeight <= 260)
+              bottomSheetModalRef.current?.snapToIndex(1);
+            else bottomSheetModalRef.current?.snapToPosition(snapHeight);
+          }}
         />
       </BottomSheetModal>
     </>

@@ -28,6 +28,7 @@ import { faCamera } from "@fortawesome/free-solid-svg-icons/faCamera";
 import { faQrcode } from "@fortawesome/free-solid-svg-icons/faQrcode";
 import { useError } from "@/hooks/useError";
 import * as Linking from "expo-linking";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemedText } from "./ThemedText";
 
 const { width } = Dimensions.get("window");
@@ -53,6 +54,7 @@ const PopupMenu: React.FC<PopupMenuProps> = ({
   positionType,
   onUploadSuccess,
 }) => {
+  const insets = useSafeAreaInsets();
   const router = useRouter();
   const menuRef = useRef(null);
   const { showErrorMsg } = useError();
@@ -70,11 +72,10 @@ const PopupMenu: React.FC<PopupMenuProps> = ({
   const { x, y } = position;
   if (!x || !y) return null;
   const screenWidth = Dimensions.get("window").width;
-  const screenHeight = Dimensions.get("window").height;
   let menuStyle = {};
   switch (positionType) {
     case "topMiddle":
-      menuStyle = { bottom: screenHeight - y + 10, left: screenWidth / 2 - 79 };
+      menuStyle = { bottom: insets.bottom + 56, left: screenWidth / 2 - 79 };
       break;
     case "bottomLeft":
       menuStyle = { top: y + 40, left: x - 140 };

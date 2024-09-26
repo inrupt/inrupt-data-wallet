@@ -43,29 +43,31 @@ const AccessRequestList: React.FC<AccessRequestListProps> = ({
       {data && data.length === 0 ? (
         <View style={styles.container} testID="no-access-requests-text">
           <ThemedText style={styles.emptyText}>No active requests</ThemedText>
-          <ThemedText style={[styles.emptyText, { paddingTop: 8 }]}>
+          <ThemedText style={styles.emptyText}>
             Refresh to check for new requests
           </ThemedText>
         </View>
       ) : (
-        <FlatList
-          {...props}
-          data={data}
-          testID="access-requests-list"
-          renderItem={({
-            item: { ownerName, webId, logo, uuid, issuedDate },
-          }) => (
-            <AccessRequestCard
-              name={ownerName}
-              detail={webId}
-              logoUri={logo}
-              key={uuid}
-              id={uuid}
-              issuedDate={issuedDate}
-            />
-          )}
-          keyExtractor={(item) => item.uuid}
-        />
+        <View style={{ paddingHorizontal: 16 }}>
+          <FlatList
+            {...props}
+            data={data}
+            testID="access-requests-list"
+            renderItem={({
+              item: { ownerName, webId, logo, uuid, issuedDate },
+            }) => (
+              <AccessRequestCard
+                name={ownerName}
+                detail={webId}
+                logoUri={logo}
+                key={uuid}
+                id={uuid}
+                issuedDate={issuedDate}
+              />
+            )}
+            keyExtractor={(item) => item.uuid}
+          />
+        </View>
       )}
       <Loading isLoading={isLoading || !!isMutatingAccessRequest} />
     </>
@@ -78,6 +80,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  emptyText: { fontSize: 18, color: Colors.light.grey, marginTop: -4 },
+  emptyText: {
+    textAlign: "center",
+    fontSize: 18,
+    color: Colors.light.grey,
+  },
 });
 export default AccessRequestList;

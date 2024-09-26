@@ -70,7 +70,8 @@ export default function AccessRequestScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
+    paddingVertical: 24,
+    paddingHorizontal: 8,
     backgroundColor: "#fff",
   },
 });

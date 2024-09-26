@@ -25,21 +25,13 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faBell } from "@fortawesome/free-solid-svg-icons/faBell";
 import { faUser } from "@fortawesome/free-solid-svg-icons/faUser";
-import {
-  Dimensions,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  Platform,
-} from "react-native";
+import { TouchableOpacity } from "react-native";
 import PopupMenu from "@/components/PopupMenu";
-import { ThemedText } from "@/components/ThemedText";
-
-const { width, height } = Dimensions.get("window");
 
 export default function TabLayout() {
   const [menuVisible, setMenuVisible] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+
   const [positionType, setPositionType] = useState<
     "topMiddle" | "bottomLeft" | "bottomMiddle"
   >("bottomMiddle");
@@ -91,7 +83,6 @@ export default function TabLayout() {
             color: "#262626",
             fontSize: 12,
           },
-
           headerTitleAlign: "center",
           tabBarStyle: { borderTopWidth: 0, elevation: 0 },
           headerStyle: {
@@ -145,23 +136,13 @@ export default function TabLayout() {
           name="add"
           options={{
             title: "Add",
-            tabBarButton: () => (
-              <View style={styles.addTabBarButtonContainer}>
-                <TouchableOpacity
-                  ref={tabBarAddButtonRef}
-                  onPress={() => toggleMenu("topMiddle", tabBarAddButtonRef)}
-                >
-                  <FontAwesome6 size={24} name="circle-plus" />
-                  <ThemedText
-                    style={{
-                      fontSize: 12,
-                      paddingTop: Platform.OS === "ios" ? 6 : 2,
-                    }}
-                  >
-                    Add
-                  </ThemedText>
-                </TouchableOpacity>
-              </View>
+            tabBarIcon: () => <FontAwesome6 size={24} name="circle-plus" />,
+            tabBarButton: (props) => (
+              <TouchableOpacity
+                {...props}
+                ref={tabBarAddButtonRef}
+                onPress={() => toggleMenu("topMiddle", tabBarAddButtonRef)}
+              />
             ),
           }}
           redirect={false}
@@ -208,21 +189,3 @@ export default function TabLayout() {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  addTabBarButtonContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    flexDirection: "column",
-    paddingTop: 4,
-  },
-  container: {
-    flex: 1,
-  },
-  image: {
-    width,
-    height,
-    resizeMode: "cover",
-  },
-});

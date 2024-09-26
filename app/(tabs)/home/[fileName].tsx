@@ -28,6 +28,7 @@ import VcCard from "@/components/files/VcCard";
 import BottomModal from "@/components/files/BottomModal";
 import type { WalletFile } from "@/types/WalletFile";
 import Loading from "@/components/LoadingButton";
+import { ThemedText } from "@/components/ThemedText";
 
 interface FileDetailProps {
   file: WalletFile;
@@ -78,12 +79,30 @@ const Page: React.FC<FileDetailProps> = () => {
           <FontAwesomeIcon icon={faEllipsis} size={24} />
         </TouchableOpacity>
       ),
+      headerBackVisible: false,
       headerTitleAlign: "center",
-      headerTitle: data?.name || fileName,
+      headerTitleStyle: {
+        alignItems: "center",
+        justifyContent: "center",
+      },
+      headerTitle: () => (
+        <View
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+            width: "85%",
+            paddingRight: 16,
+          }}
+        >
+          <ThemedText numberOfLines={1} ellipsizeMode={"tail"}>
+            {data?.name || fileName}
+          </ThemedText>
+        </View>
+      ),
       headerLeft: () => (
         <TouchableOpacity
           onPress={() => currentNavigation.goBack()}
-          style={{ width: 60, paddingLeft: 8 }}
+          style={{ paddingLeft: 8 }}
         >
           <FontAwesome6 size={20} name="xmark" />
         </TouchableOpacity>
@@ -122,7 +141,7 @@ const Page: React.FC<FileDetailProps> = () => {
         enableDismissOnClose
         ref={bottomSheetModalRef}
         index={1}
-        snapPoints={[260, 260, "90%"]}
+        snapPoints={[260, 260, 360, "90%"]}
         backgroundStyle={styles.bottomSheetContainer}
         backdropComponent={({ style }) => (
           <View
@@ -140,9 +159,12 @@ const Page: React.FC<FileDetailProps> = () => {
           }}
           onCloseModal={() => bottomSheetModalRef.current?.close()}
           onDeleteSuccessfully={goBack}
-          onChangeSnapPoint={(snapHeight: number) =>
-            bottomSheetModalRef.current?.snapToPosition(snapHeight)
-          }
+          onChangeSnapPoint={(snapHeight: number) => {
+            if (snapHeight === 360) bottomSheetModalRef.current?.snapToIndex(2);
+            else if (snapHeight <= 260)
+              bottomSheetModalRef.current?.snapToIndex(1);
+            else bottomSheetModalRef.current?.snapToPosition(snapHeight);
+          }}
         />
       </BottomSheetModal>
     </View>

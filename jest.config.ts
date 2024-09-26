@@ -29,6 +29,9 @@ const config: Config.InitialOptions = {
   testTimeout: 120000,
   maxWorkers: 1,
   verbose: true,
+  collectCoverage: true,
+  coverageDirectory: "./coverage/",
+  coverageReporters: process.env.CI ? ["text", "lcov"] : ["text"],
 };
 
 export default config;

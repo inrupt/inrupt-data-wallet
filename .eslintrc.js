@@ -55,6 +55,6 @@ module.exports = {
     "no-console": "off",
 
     // Ensure all code has a license header:
-    "header/header": ["warn", require.resolve("./license-header.js")],
+    "header/header": ["warn", require.resolve("./header-license.js")],
   },
 };
